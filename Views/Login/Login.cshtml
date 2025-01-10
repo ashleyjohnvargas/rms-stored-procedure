@@ -3,6 +3,7 @@
     ViewData["Title"] = "Login";
 }
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -122,23 +123,23 @@
         <h1>Welcome to</h1>
         <h2>Cozy Homes Rental Management System</h2>
         <p>Please Login to your account.</p>
-        <form action="#">
+        <form asp-action="LoginUser" method="post">
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Enter your email" required>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
-            <div class="form-group">
+            @* <div class="form-group">
                 <label>
                     <input type="checkbox"> Remember Me
                 </label>
-            </div>
+            </div> *@
             <a asp-controller="Login" asp-action="ForgotPass" class="forgot-password">Forgot Password?</a>
             <!-- <a asp-controller="Home" asp-action="Index" class="login-btn">  </a>-->
-            <button type="submit" class="login-btn" asp-controller="Home" asp-action="Index">Log In</button>
+            <button type="submit" class="login-btn">Log In</button>
 
 
 

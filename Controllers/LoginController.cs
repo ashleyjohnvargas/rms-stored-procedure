@@ -17,22 +17,57 @@ namespace PMS.Controllers
         {
             return View();
         }
-        // POST: Login
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Login(string email, string password)
-        {
-            //var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
-            //if (user != null)
-            //{
-            //    HttpContext.Session.SetString("UserId", user.Id.ToString());
-            //    HttpContext.Session.SetString("UserFullName", user.FullName);
-            return RedirectToAction("Index", "Home");
-            //}
 
-            //ViewBag.ErrorMessage = "Invalid email or password. Please check your credentials or create an account";
-            // View("Login");
+        [HttpPost]
+        public IActionResult LoginUser(string email, string password)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                ModelState.AddModelError("", "Email and Password are required.");
+                return RedirectToAction("Login"); // Redirect back to the Login page
+            }
+
+            // Find the user with the given email
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User not found.");
+                return RedirectToAction("Login"); // Redirect back to the Login page
+            }
+
+            // Check if the password matches
+            if (user.Password != password)
+            {
+                ModelState.AddModelError("", "Invalid email or password.");
+                return RedirectToAction("Login"); // Redirect back to the Login page
+            }
+
+            // If the credentials are correct, store user information in session (or claims)
+            HttpContext.Session.SetInt32("UserId", user.UserID);
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("FirstName", user.FirstName);
+            HttpContext.Session.SetString("LastName", user.LastName);
+            HttpContext.Session.SetString("UserRole", user.Role);
+
+            // Redirect to the appropriate dashboard based on the user's role
+            if (user.Role == "Property Manager")
+            {
+                return RedirectToAction("PMDashboard", "PropertyManager");
+            }
+            else if (user.Role == "Staff")
+            {
+                return RedirectToAction("SMaintenanceAssignment", "Staff");
+            }
+            else if (user.Role == "Tenant")
+            {
+                return RedirectToAction("PTenantHomePage", "PTenant");
+            }
+
+            // Fallback redirect
+            return RedirectToAction("Login");
         }
+
 
         public IActionResult ForgotPass()
         {
@@ -78,6 +113,14 @@ namespace PMS.Controllers
             }
 
 
+            // Store user information in the session
+            HttpContext.Session.SetInt32("UserId", user.UserID);
+            HttpContext.Session.SetString("FirstName", user.FirstName);
+            HttpContext.Session.SetString("LastName", user.LastName);
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("UserRole", user.Role);
+
+
             // Create a new User object and populate it with data
             var newUser = new User
             {
@@ -110,6 +153,13 @@ namespace PMS.Controllers
             // If none of the conditions match, return to the Register action (or another appropriate action)
             return RedirectToAction("Register"); // This is the fallback action, should never be reached
 
+        }
+
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
         }
     }
 }

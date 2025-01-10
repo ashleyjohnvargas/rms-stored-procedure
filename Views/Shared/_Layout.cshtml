@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -36,7 +38,18 @@
                     <li><a asp-controller="PTenant" asp-action="PTenantHomePage">Home</a></li>
                     <li><a asp-controller="PTenant" asp-action="PTenantUnits">Units</a></li>
                     <li><a asp-controller="PTenant" asp-action="PTenantDetails">About</a></li>
-                    <li><a asp-controller="Login" asp-action="Register">Sign Up</a></li>
+                    @if (Context.Session.GetInt32("UserId") == null)
+                    {
+                        <!-- Display Login and Sign Up when user is not logged in -->
+                        <li><a asp-controller="Login" asp-action="Login">Sign In</a></li>
+                        <li><a asp-controller="Login" asp-action="Register">Sign Up</a></li>
+                    }
+                    else
+                    {
+                        <!-- Display "Contact" when user is logged in -->
+                        <li><a asp-controller="Login" asp-action="Logout">Logout</a></li>
+                    }
+                    
                 </ul>
             </nav>
         </div>

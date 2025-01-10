@@ -40,15 +40,14 @@ app.UseAuthorization();
 //    name: "default",
 //    pattern: "{controller=Staff}/{action=SMaintenanceAssignment}/{id?}");
 
-//property manager
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=propertymanager}/{action=pmdashboard}/{id?}");
-
-////Auth
+////property manager
 //app.MapControllerRoute(
 //    name: "default",
-//    pattern: "{controller=Login}/{action=Login}/{id?}")
-//    .WithStaticAssets();
+//    pattern: "{controller=propertymanager}/{action=pmdashboard}/{id?}");
+
+//Auth
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Login}/{action=Login}/{id?}");
 
 app.Run();

@@ -2,6 +2,8 @@
     Layout = null; // Disable the layout for this view
     ViewData["Title"] = "Register";
 }
+
+@model User
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,32 +106,40 @@
         <h1>Welcome to</h1>
         <h2>Cozy Homes Rental Management System</h2>
         <p>Register with your email or social account to access the system.</p>
-        <form action="your-target-page.html">
+
+        <!--REGISTER FORM-->
+        <form asp-action="RegisterUser" method="post">
             <div style="display: flex; justify-content: space-between;">
                 <div style="width: 48%;">
                     <label for="first-name">First Name</label>
-                    <input type="text" id="first-name" placeholder="Enter your first name" required>
+                    <input type="text" asp-for="FirstName" id="first-name" placeholder="Enter your first name" required>
                 </div>
                 <div style="width: 48%;">
                     <label for="last-name">Last Name</label>
-                    <input type="text" id="last-name" placeholder="Enter your last name" required>
+                    <input type="text" asp-for="LastName" id="last-name" placeholder="Enter your last name" required>
                 </div>
             </div>
             <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Enter your email" required>
+            <input type="email" asp-for="Email" id="email" placeholder="Enter your email" required>
             <div style="display: flex; justify-content: space-between;">
                 <div style="width: 48%;">
                     <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Create a password" required>
+                    <input type="password" asp-for="Password" id="password" placeholder="Create a password" required>
                 </div>
                 <div style="width: 48%;">
                     <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                    <input type="password" asp-for="ConfirmPassword" id="confirm-password" placeholder="Confirm your password" required>
                 </div>
             </div>
             <label>
-                <input type="checkbox"> I agree to the Terms and Conditions
+                <input type="checkbox" name="TermsAndConditions" value="true" @(Model.TermsAndConditions.HasValue && Model.TermsAndConditions.Value ? "checked" : "") />
+                I agree to the Terms and Conditions
             </label>
+
+
+            <!-- Hidden Properties-->
+            <input type="hidden" asp-for="Role" />
+            <input type="hidden" asp-for="IsActive" />
             @* <a asp-controller="Login" asp-action="Login"> *@
             <button type="submit" class="signup-btn">Sign Up with Email</button>
 

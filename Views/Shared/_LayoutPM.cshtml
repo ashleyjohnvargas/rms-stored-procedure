@@ -11,25 +11,28 @@
     <link rel="stylesheet" href="~/css/pm.css" asp-append-version="true" />
     <script src="/js/pm.js" defer></script>
 </head>
-<body>
-    <div class="sidebar">
-        <h2>Cozy Homes</h2>
-        <ul>
-            <li><a asp-controller="PropertyManager" asp-action="PMDashboard">Dashboard</a></li>
-            <li><a asp-controller="PropertyManager" asp-action="PMmanageUnits">Units</a></li>
-            <li><a asp-controller="PropertyManager" asp-action="PMTenants">Tenants</a></li>
-            <li><a asp-controller="PropertyManager" asp-action="PMManageLease">Lease</a></li>
-            <li><a asp-controller="PropertyManager" asp-action="PMPayments">Payments</a></li>
-            <li><a asp-controller="PropertyManager" asp-action="PMRequest">Request</a></li>
-            <li><a asp-controller="PropertyManager" asp-action="PMAssignMaintenance">Staff</a></li>
-        </ul>
-    </div>
+<body style="display: flex; flex-direction: column; min-height: 100vh; min-width: 100vh;">
+    <div class="parent-container">
+        <div class="sidebar">
+            <h2>Cozy Homes</h2>
+            <ul>
+                <li><a asp-controller="PropertyManager" asp-action="PMDashboard">Dashboard</a></li>
+                <li><a asp-controller="PropertyManager" asp-action="PMmanageUnits">Units</a></li>
+                <li><a asp-controller="PropertyManager" asp-action="PMTenants">Tenants</a></li>
+                <li><a asp-controller="PropertyManager" asp-action="PMManageLease">Lease</a></li>
+                <li><a asp-controller="PropertyManager" asp-action="PMPayments">Payments</a></li>
+                <li><a asp-controller="PropertyManager" asp-action="PMRequest">Request</a></li>
+                <li><a asp-controller="PropertyManager" asp-action="PMAssignMaintenance">Staff</a></li>
+            </ul>
+        </div>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
     </div>
+   
 
     <!-- Footer -->
 

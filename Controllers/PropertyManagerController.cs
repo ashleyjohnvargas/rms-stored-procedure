@@ -34,5 +34,10 @@ namespace PMS.Controllers
         {
             return View();
         }
+
+        public IActionResult AddUnitPage()
+        {
+            return View();
+        }
     }
 }

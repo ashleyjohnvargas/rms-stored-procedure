@@ -1,0 +1,195 @@
+﻿@{
+    ViewData["Title"] = "Cozy Homes - Add Unit";
+    Layout = "~/Views/Shared/_LayoutPM.cshtml";
+}
+
+@model Unit
+@Html.AntiForgeryToken()
+
+<link rel="stylesheet" href="~/css/addUnit.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+<div class="container mt-5" style="margin: 100px 20px;">
+    <div class="card fade-in shadow" style="min-width: 100vh; min-height: 100vh;">
+        <div class="card-body" style="min-width: 100vh; min-height: 100vh;">
+            <h2 class="fw-semibold mb-4 text-left" style="text-align: left; background-color: #B0836E; padding: 10px; color: white;">Add Unit</h2>
+            <form asp-action="AddUnit" method="post" enctype="multipart/form-data" class="add-unit-form">
+
+                <!--PARENT CONTAINER OF COLUMN ONE AND COLUMN TWO-->
+                <div class="mother-container">
+
+                    <!--COLUMN ONE CONTAINER-->
+                    <div class="column-one-container">
+                        <!-- General Information -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">General Information</h5>
+                            <div class="row">
+                                <!-- Unit Name -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="UnitName" class="form-label">Unit Name</label>
+                                    <input asp-for="UnitName" class="form-control" placeholder="Enter unit name" />
+                                </div>
+                                <!-- Unit Type -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="UnitType" class="form-label">Unit Type</label>
+                                    <select asp-for="UnitType" class="form-control" required>
+                                        <option value="">Select Unit Type</option>
+                                        <option value="Condominium">Condominium</option>
+                                        <option value="Duplex">Duplex</option>
+                                        <option value="Bungalow">Bungalow</option>
+                                        <option value="Beach House">Beach House</option>
+                                    </select>
+                                </div>
+                                <!-- Unit Status -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="UnitStatus" class="form-label">Unit Status</label>
+                                    <select asp-for="UnitStatus" class="form-control">
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ownership and Description -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Ownership and Description</h5>
+                            <div class="row">
+                                <!-- Unit Owner -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="UnitOwner" class="form-label">Unit Owner</label>
+                                    <input asp-for="UnitOwner" class="form-control" placeholder="Enter unit owner" />
+                                </div>
+                                <!-- Description -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="Description" class="form-label">Description</label>
+                                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Pricing</h5>
+                            <div class="row">
+                                <!-- Price Per Month-->
+                                <div class="col-md-6 mb-3">
+                                    <label for="PricePerMonth" class="form-label">Price Per Month</label>
+                                    <input asp-for="PricePerMonth" class="form-control" type="number" step="0.01" placeholder="Enter price per month" />
+                                </div>
+                                <!-- Security Deposit -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="SecurityDeposit" class="form-label">Security Deposit</label>
+                                    <input asp-for="SecurityDeposit" class="form-control" type="number" step="0.01" placeholder="Enter security deposit" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--COLUMN TWO CONTAINER-->
+                    <div class="column-two-container">
+                        <!-- Location -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Location</h5>
+                            <div class="row">
+                                <!-- Town -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="Town" class="form-label">Town</label>
+                                    <input asp-for="Town" class="form-control" placeholder="Enter town" />
+                                </div>
+                                <!-- Location -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="Location" class="form-label">Location</label>
+                                    <input asp-for="Location" class="form-control" placeholder="Enter location" />
+                                </div>
+                                <!-- Country -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="Country" class="form-label">Country</label>
+                                    <input asp-for="Country" class="form-control" placeholder="Enter country" />
+                                </div>
+                                <!--State-->
+                                <div class="col-md-4 mb-3">
+                                    <label for="State" class="form-label">State</label>
+                                    <input asp-for="State" class="form-control" placeholder="Enter state" />
+                                </div>
+                                <!--City-->
+                                <div class="col-md-4 mb-3">
+                                    <label for="City" class="form-label">City</label>
+                                    <input asp-for="City" class="form-control" placeholder="Enter city" />
+                                </div>
+                                <!--Zip Code-->
+                                <div class="col-md-4 mb-3">
+                                    <label for="ZipCode" class="form-label">Zip Code</label>
+                                    <input asp-for="ZipCode" class="form-control" placeholder="Enter zip code" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Features -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Features</h5>
+                            <div class="row">
+                                <!--Number of Units-->
+                                <div class="col-md-3 mb-3">
+                                    <label for="NumberOfUnits" class="form-label">Units</label>
+                                    <input asp-for="NumberOfUnits" class="form-control" type="number" min="0" />
+                                </div>
+                                <!--Number of Bedrooms-->
+                                <div class="col-md-3 mb-3">
+                                    <label for="NumberOfBedrooms" class="form-label">Bedrooms</label>
+                                    <input asp-for="NumberOfBedrooms" class="form-control" type="number" min="0" />
+                                </div>
+                                <!--Number of Bathrooms-->
+                                <div class="col-md-3 mb-3">
+                                    <label for="NumberOfBathrooms" class="form-label">Bathrooms</label>
+                                    <input asp-for="NumberOfBathrooms" class="form-control" type="number" min="0" />
+                                </div>
+                                <!--Number of Garages-->
+                                <div class="col-md-3 mb-3">
+                                    <label for="NumberOfGarages" class="form-label">Garages</label>
+                                    <input asp-for="NumberOfGarages" class="form-control" type="number" min="0" />
+                                </div>
+                                <!--Number of Floors-->
+                                <div class="col-md-3 mb-3">
+                                    <label for="NumberOfFloors" class="form-label">Floors</label>
+                                    <input asp-for="NumberOfFloors" class="form-control" type="number" min="0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+
+                <!--IMAGE CONTAINER-->
+                <div class="image-container">
+                    <!-- Images -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 text-left" style="text-align: left;">Images</h5>
+                        <div class="row" style="display: flex;">
+                            <!-- Unit Images -->
+                            <div class="col-md-6 mb-3" style="max-width: 395.7px; grid-template-columns: 194.03px 1fr; text-align: left;">
+                                <label for="Images" class="form-label">Unit Images</label>
+                                <input type="file" asp-for="Images" class="form-control" style="font-size: inherit;" accept="image/*" multiple />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+
+                <!-- Hidden Properties -->
+                <input type="hidden" name="UnitID" asp-for="UnitID" />
+                <input type="hidden" name="Images" asp-for="Images" />
+
+
+                <div class="text-end" style="background-color: #B0836E; padding: 10px; cursor: pointer;">
+                    <button type="submit" class="btn btn-success btn-lg px-4" style="color: white; border: none; background-color: transparent; font-size: 18px;">Add Unit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

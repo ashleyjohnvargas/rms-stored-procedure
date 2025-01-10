@@ -1,0 +1,82 @@
+﻿@{
+    //Layout = null; // Disable the layout for this view
+    ViewData["Title"] = "Cozy Homes - Homepage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<head>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/homepage.css" asp-append-version="true" />
+
+
+    <!-- <link rel="stylesheet" href="~/RMS.styles.css" asp-append-version="true" /> -->
+</head>
+
+
+<!-- Banner Section -->
+<section class="banner">
+    <img src="~/images/bg.png" alt="Banner Image" class="banner-image">
+    <!--   <div class="centered"> <span>Experience the warmth of nature and the simplicity of life. </span></div> -->
+</section>
+
+<!-- Categories Section -->
+<section class="categories">
+    <div class="container">
+        <h2>FIND THE HOME SUITABLE FOR YOU</h2>
+        <div class="categories-list">
+            <div class="category">
+                <!-- <i class="fa-solid fa-city"></i> -->
+                <img src="~/images/building.png" alt="Building Image">
+                <p>Condominium</p>
+                <span>2 Units Available</span>
+            </div>
+            <div class="category">
+                <img src="~/images/duplex.png" alt="Building Image">
+                <p>Duplex</p>
+                <span>1 Unit Available</span>
+            </div>
+            <div class="category">
+                <img src="~/images/country-house.png" alt="Building Image">
+                <p>Bungalow</p>
+                <span>3 Units Available</span>
+            </div>
+            <div class="category">
+                <img src="~/images/resort.png" alt="Building Image">
+                <p>Beach House</p>
+                <span>6 Units Available</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Home Section -->
+<section class="featured-home">
+    <div class="container">
+        <h2>MANAGER'S CHOICE HOME</h2>
+        <div class="home-container">
+            <div class="image-container">
+                <img src="~/images/house.png" alt="House Unit Sample">
+            </div>
+            <div class="info-container">
+                <div class="title">Oceanview Retreat</div>
+                <div class="details">
+                    <i class="fas fa-bed"></i> <span>4 Units</span>
+                    <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
+                </div>
+                <div align="left" class="description">
+                    Welcome to Oceanview Retreat, an exquisite beachfront
+                    <br>property located in the vibrant city of Miami, Florida.
+                    <br>Situated along the pristine shores of the Atlantic Ocean...
+                </div>
+                <a asp-controller="PTenant" asp-action="PTenantApply">
+                    <button>Sign Up & Book This Unit Now</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

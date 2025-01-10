@@ -1,0 +1,97 @@
+﻿
+/*CSS for Login, Register, Forgot Password*/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+label {
+    text-align: left;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #B0836E;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+    button:hover {
+        background-color: #B0836E;
+    }
+
+a {
+    color: #CBAD8D;
+}
+
+.google-btn {
+    background-color: #fff;
+    color: #4285f4;
+    padding: 12px 20px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .google-btn:hover {
+        background-color: #f1f1f1;
+        align-items: center;
+    }
+
+.forgot-password {
+    display: block;
+    margin: 10px 0;
+    color: #CBAD8D;
+    text-decoration: none;
+    text-align: right;
+}
+
+    .forgot-password:hover {
+        text-decoration: underline;
+    }

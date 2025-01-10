@@ -1,0 +1,279 @@
+﻿
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* General reset */
+body, ul {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Top Bar Header */
+.top-header {
+    background-color: #B0836E;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Main Header Container */
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background-color: whitesmoke;
+    color: #B0836E;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0;
+}
+
+    /* Logo */
+    .main-header h1 {
+        font-size: 25px;
+        margin: 0;
+        font-weight: bold;
+        color: #B0836E;
+    }
+
+.logo {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Center items vertically */
+}
+
+    .logo img {
+        height: 20px; /* Ensure the height is set */
+        width: 50px; /* Ensure the width is set */
+        margin-right: 10px; /* Add some space between the image and the text */
+    }
+
+/* Navigation Menu */
+.main-header nav ul {
+    display: flex;
+    list-style: none;
+}
+
+    .main-header nav ul li {
+        margin: 0 15px;
+    }
+
+        .main-header nav ul li a {
+            color: #B0836E;
+            text-decoration: none;
+            font-size: 18px;
+            position: relative;
+            font-weight: 500;
+        }
+
+
+            .main-header nav ul li a::after {
+                content: '';
+                width: 0%;
+                height: 3px;
+                background: #B0836E;
+                position: absolute;
+                left: 0;
+                bottom: -6px;
+                transition: 0.5s;
+            }
+
+            .main-header nav ul li a:hover::after {
+                width: 100%;
+            }
+
+/* Select A Home */
+.select-home {
+    padding: 10px 0;
+    background-color: #e7e1d3;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    width: 300px;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card img {
+        width: 100%;
+        height: auto;
+    }
+
+.content {
+    padding: 15px;
+}
+
+.details {
+    display: flex;
+    gap: 10px;
+    padding: 0px 10px;
+    color: #666666;
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+h2 {
+    font-size: 25px;
+    margin: 0;
+    font-weight: 500;
+}
+
+p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+
+/* Apply for Leasing Page */
+.apply-leasing {
+    padding: 40px 10px;
+    background-color: #e7e1d3;
+}
+
+.form-container {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+form fieldset {
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+form legend {
+    font-weight: bold;
+    color: #555;
+}
+
+form label {
+    display: block;
+    margin-top: 10px;
+    color: #555;
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+form textarea {
+    resize: none;
+}
+
+/* Fix for "I agree to the terms and conditions" alignment */
+fieldset {
+    display: block;
+}
+
+form label {
+    display: block;
+    margin-top: 10px;
+    color: #555;
+}
+
+fieldset input[type="checkbox"] {
+    vertical-align: middle;
+    margin-right: 5px; /* Add space between the checkbox and text */
+}
+
+fieldset label[for="agree"] {
+    display: inline-flex; /* Keeps the text next to the checkbox */
+    white-space: nowrap; /* Prevents text wrapping to a new line */
+    margin: 0;
+}
+
+form button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 30%;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    width: 40%;
+}
+
+    form button:hover {
+        background-color: #000;
+    }
+
+.cancel-button {
+    margin: 10px auto;
+    margin-left: 20px;
+    width: 13%;
+    max-width: 800px;
+    text-align: center; /* Align the button to the left */
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    color: #B0836E;
+    border: none;
+    border-radius: 5px;
+    justify-content: center;
+}
+
+    .cancel-button:hover {
+        color: #7d5847; /* Optional hover color */
+    }
+
+    .cancel-button i {
+        font-size: 30px;
+        margin-right: 5px; /* Space between the arrow and text */
+    }
+
+
+/* Footer */
+footer {
+    background-color: #B0836E;
+    color: #ffd8bd;
+    padding: 20px 0;
+}
+
+    footer p {
+        text-align: center;
+    }
+
+    footer a {
+        color: whitesmoke;
+        text-decoration: none;
+    }
+
+        footer a:hover {
+            text-decoration: underline;
+        }

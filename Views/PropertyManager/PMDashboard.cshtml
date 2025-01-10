@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Cozy Homes - Dashboard";
+    Layout = "~/Views/Shared/_LayoutPM.cshtml";
+}
+
+<div class="main-content">
+    <header>
+        <h1>Dashboard</h1>
+        <div class="user-info">
+            <span>cheryl</span>
+            <span>Admin</span>
+        </div>
+    </header>
+
+    <div class="stats">
+        <div class="card">
+            <h3>Total Units</h3>
+            <p>100</p>
+        </div>
+        <div class="card">
+            <h3>Total Tenants</h3>
+            <p>65</p>
+        </div>
+        <div class="card">
+            <h3>Occupancy Rate</h3>
+            <p>65%</p>
+        </div>
+        <div class="card">
+            <h3>Total Income of This Month</h3>
+            <p>156,456.00</p>
+        </div>
+        <div class="card">
+            <h3>Total Expense of This Month</h3>
+            <p>26,456.00</p>
+        </div>
+        <div class="card">
+            <h3>Units Available</h3>
+            <p>22</p>
+        </div>
+    </div>
+
+    <div class="charts">
+        <div class="chart">
+            <h3>Payment Status</h3>
+            <canvas id="paymentStatusChart"></canvas>
+        </div>
+        <div class="chart">
+            <h3>Maintenance Status</h3>
+            <canvas id="maintenanceStatusChart"></canvas>
+        </div>
+        <div class="chart">
+            <h3>Top Rented Units</h3>
+            <canvas id="topRentedUnitsChart"></canvas>
+        </div>
+        <div class="chart">
+            <h3>Most Picked Unit Type</h3>
+            <canvas id="mostPickedUnitTypeChart"></canvas>
+        </div>
+    </div>
+</div>

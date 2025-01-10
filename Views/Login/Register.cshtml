@@ -1,0 +1,148 @@
+﻿@{
+    Layout = null; // Disable the layout for this view
+    ViewData["Title"] = "Register";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Homes Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1, h2 {
+            color: #333;
+            margin: 10px 0;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        label {
+            text-align: left;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #B0836E;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+            button:hover {
+                background-color: #A06A5C;
+            }
+
+        .social-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 10px 0;
+        }
+
+        .social-icons img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .forgot-password, a {
+            color: #CBAD8D;
+            text-decoration: none;
+        }
+
+            .forgot-password:hover, a:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="~/images/cozy-logo.png" alt="Cozy Homes Logo">
+            <span>Cozy Homes</span>
+        </div>
+        <h1>Welcome to</h1>
+        <h2>Cozy Homes Rental Management System</h2>
+        <p>Register with your email or social account to access the system.</p>
+        <form action="your-target-page.html">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <label for="first-name">First Name</label>
+                    <input type="text" id="first-name" placeholder="Enter your first name" required>
+                </div>
+                <div style="width: 48%;">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="last-name" placeholder="Enter your last name" required>
+                </div>
+            </div>
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Create a password" required>
+                </div>
+                <div style="width: 48%;">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                </div>
+            </div>
+            <label>
+                <input type="checkbox"> I agree to the Terms and Conditions
+            </label>
+            @* <a asp-controller="Login" asp-action="Login"> *@
+            <button type="submit" class="signup-btn">Sign Up with Email</button>
+
+            <!-- <p>Or register with:</p>
+             <div class="social-container">
+                 <a href="ttps://web.telegram.org/" class="social-icons">
+                     <img src="ttps://img.icons8.com/color/48/000000/telegram-app--v1.png" alt="Telegram Logo">
+                 </a>
+                 <a href="ttps://www.facebook.com/" class="social-icons">
+                     <img src="ttps://img.icons8.com/fluency/48/000000/facebook-new.png" alt="Facebook Logo">
+                 </a> -->
+            <p>Already a member? <a asp-controller="Login" asp-action="Login">Log In</a></p>
+        </form>
+    </div>
+</body>
+</html>

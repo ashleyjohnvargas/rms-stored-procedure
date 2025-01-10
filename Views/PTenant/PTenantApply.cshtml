@@ -1,0 +1,224 @@
+﻿@{
+    //Layout = null; // Disable the layout for this view
+    ViewData["Title"] = "Cozy Homes - Apply for Leasing";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<style>
+
+    /* Apply for Leasing Page */
+    .apply-leasing {
+        padding: 40px 10px;
+        background-color: #e7e1d3;
+    }
+
+    .form-container {
+        width: 80%;
+        max-width: 800px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    form fieldset {
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    form legend {
+        font-weight: bold;
+        color: #555;
+    }
+
+    form label {
+        display: block;
+        margin-top: 10px;
+        color: #555;
+    }
+
+    form input, form select, form textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    form textarea {
+        resize: none;
+    }
+
+    /* Fix for "I agree to the terms and conditions" alignment */
+    fieldset {
+        display: block;
+    }
+
+    form label {
+        display: block;
+        margin-top: 10px;
+        color: #555;
+    }
+
+    fieldset input[type="checkbox"] {
+        vertical-align: middle;
+        margin-right: 5px; /* Add space between the checkbox and text */
+    }
+
+    fieldset label[for="agree"] {
+        display: inline-flex; /* Keeps the text next to the checkbox */
+        white-space: nowrap; /* Prevents text wrapping to a new line */
+        margin: 0;
+    }
+
+    form button {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-left: 30%;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        width: 40%;
+    }
+
+        form button:hover {
+            background-color: #000;
+        }
+
+    .cancel-button {
+        margin: 10px auto;
+        margin-left: 20px;
+        width: 13%;
+        max-width: 800px;
+        text-align: center; /* Align the button to the left */
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        color: #B0836E;
+        border: none;
+        border-radius: 5px;
+        justify-content: center;
+    }
+
+        .cancel-button:hover {
+            color: #7d5847; /* Optional hover color */
+        }
+
+        .cancel-button i {
+            font-size: 30px;
+            margin-right: 5px; /* Space between the arrow and text */
+        }
+
+</style>
+<!-- Home Details Section -->
+<section class="apply-leasing">
+    <div class="cancel-button">
+        <a asp-controller="PTenant" asp-action="PTenantHomePage">
+            <i class="fa-solid fa-arrow-left-long"></i> Cancel
+        </a>
+    </div>
+    <div class="form-container">
+        <h1>Apply for Leasing</h1>
+        <form action="/submit-leasing-application" method="POST">
+
+            <!-- Personal Information Section -->
+            <fieldset>
+                <legend>Personal Information</legend>
+                <label for="full-name">Full Name:</label>
+                <input type="text" id="full-name" name="full_name" required>
+
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+
+                <label for="contact-number">Contact Number:</label>
+                <input type="tel" id="contact-number" name="contact_number" required>
+
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="current-address">Current Address:</label>
+                <textarea id="current-address" name="current_address" rows="3" required></textarea>
+            </fieldset>
+
+            <!-- Employment Information Section -->
+            <fieldset>
+                <legend>Employment and Income</legend>
+                <label for="employment-status">Employment Status:</label>
+                <select id="employment-status" name="employment_status" required>
+                    <option value="">Select</option>
+                    <option value="employed">Employed</option>
+                    <option value="self-employed">Self-employed</option>
+                    <option value="student">Student</option>
+                    <option value="unemployed">Unemployed</option>
+                    <option value="retired">Retired</option>
+                </select>
+
+                <label for="employer-name">Employer Name:</label>
+                <input type="text" id="employer-name" name="employer_name">
+
+                <label for="monthly-income">Monthly Income:</label>
+                <input type="number" id="monthly-income" name="monthly_income" step="0.01">
+            </fieldset>
+
+            <!-- Desired Leasing Details Section -->
+            <fieldset>
+                <legend>Leasing Details</legend>
+                <label for="preferred-property">Preferred Property:</label>
+                <select id="preferred-property" name="preferred_property" required>
+                    <option value="">Select</option>
+                    <option value="property1">Property 1</option>
+                    <option value="property2">Property 2</option>
+                </select>
+
+                <label for="lease-duration">Lease Duration:</label>
+                <select id="lease-duration" name="lease_duration" required>
+                    <option value="6_months">6 Months</option>
+                    <option value="12_months">12 Months</option>
+                </select>
+
+                <label for="move-in-date">Move-in Date:</label>
+                <input type="date" id="move-in-date" name="move_in_date" required>
+            </fieldset>
+
+            <!-- References Section -->
+            <fieldset>
+                <legend>References</legend>
+                <label for="reference-name">Reference Name:</label>
+                <input type="text" id="reference-name" name="reference_name" required>
+
+                <label for="reference-contact">Reference Contact:</label>
+                <input type="tel" id="reference-contact" name="reference_contact" required>
+            </fieldset>
+
+            <!-- Terms and Agreement -->
+            <fieldset>
+                <legend>Terms and Agreement</legend>
+                <label for="agree">
+                    <input type="checkbox" id="agree" name="agree" required>
+                    I agree to the terms and conditions.
+                </label>
+            </fieldset>
+
+            <!-- Submit -->
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+</section>
+
+

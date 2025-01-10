@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - RMS</title>
+
+    <meta name="theme-color" content="#000000" />
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/homepage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+    <!-- <link rel="stylesheet" href="~/RMS.styles.css" asp-append-version="true" /> -->
+</head>
+
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <!-- Optional: Add top header content here -->
+    </div>
+
+    <!-- Main Header -->
+    <header>
+        <div class="main-header">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="~/images/cozy-logo.png" alt="logo" style="height: 20px; width: 50px;">
+                <h1>Cozy Homes</h1>
+            </div>
+
+            <!-- Navigation -->
+            <nav>
+                <ul>
+                    <li><a asp-controller="PTenant" asp-action="PTenantHomePage">Home</a></li>
+                    <li><a asp-controller="PTenant" asp-action="PTenantUnits">Units</a></li>
+                    <li><a asp-controller="PTenant" asp-action="PTenantDetails">About</a></li>
+                    <li><a asp-controller="Login" asp-action="Register">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Cozy Homes. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

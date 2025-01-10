@@ -1,0 +1,47 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Homes Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <!-- Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/pm.css" asp-append-version="true" />
+    <script src="/js/pm.js" defer></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Cozy Homes</h2>
+        <ul>
+            <li><a asp-controller="PropertyManager" asp-action="PMDashboard">Dashboard</a></li>
+            <li><a asp-controller="PropertyManager" asp-action="PMmanageUnits">Units</a></li>
+            <li><a asp-controller="PropertyManager" asp-action="PMTenants">Tenants</a></li>
+            <li><a asp-controller="PropertyManager" asp-action="PMManageLease">Lease</a></li>
+            <li><a asp-controller="PropertyManager" asp-action="PMPayments">Payments</a></li>
+            <li><a asp-controller="PropertyManager" asp-action="PMRequest">Request</a></li>
+            <li><a asp-controller="PropertyManager" asp-action="PMAssignMaintenance">Staff</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+
+    <footer class="footer">
+        <p>&copy; 2025 Cozy Homes. All Rights Reserved.</p>
+        <p>
+            <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+        </p>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/pm.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,50 +1,148 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cozy Homes Dashboard</title>
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <title>@ViewData["Title"] - RMS</title>
+
+    <meta name="theme-color" content="#000000" />
     <!-- Font Awesome CDN -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/pm.css" asp-append-version="true" />
-    <script src="/js/pm.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/pm.css"/>
 </head>
-<body style="display: flex; flex-direction: column; min-height: 100vh; min-width: 100vh;">
-    <div class="parent-container">
+
+
+<body>
+
+    <!-- Top Header -->
+    <div class="top-header">
+        <!-- Optional: Add top header content here -->
+    </div>
+
+    <!-- Main Header -->
+    <header>
+        <div class="main-header" style="position: sticky; ">
+            <!-- Sidebar Header: Logo and Brand -->
+            <div class="sidebar-header">
+                <img src="cozy-logo.png" alt="logo">
+                <h1>Cozy Homes</h1>
+                <div class="hamburger-icon" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </div>
+
+            </div>
+
+            <!-- Navigation and Profile -->
+            <nav>
+                <ul>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn" aria-label="User Profile">
+                            <img src="user-pic.png" alt="logo">
+                            Profile
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="#">Edit Profile</a>
+                            <a href="#">Log Out</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="sidebar-content-container" style="display: grid; grid-template-columns: auto 1fr; column-gap: 25px; min-height: 100vh; min-width: 100vh;">
         <div class="sidebar">
-            <h2>Cozy Homes</h2>
             <ul>
-                <li><a asp-controller="PropertyManager" asp-action="PMDashboard">Dashboard</a></li>
-                <li><a asp-controller="PropertyManager" asp-action="PMmanageUnits">Units</a></li>
-                <li><a asp-controller="PropertyManager" asp-action="PMTenants">Tenants</a></li>
-                <li><a asp-controller="PropertyManager" asp-action="PMManageLease">Lease</a></li>
-                <li><a asp-controller="PropertyManager" asp-action="PMPayments">Payments</a></li>
-                <li><a asp-controller="PropertyManager" asp-action="PMRequest">Request</a></li>
-                <li><a asp-controller="PropertyManager" asp-action="PMAssignMaintenance">Staff</a></li>
+                <li>
+                    <a asp-controller="PropertyManager" asp-action="PMDashboard" class="nav-link active">
+                        <i class="fas fa-dashboard"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="PropertyManager" asp-action="PMmanageUnits" class="nav-link">
+                        <i class="fas fa-house"></i>
+                        Units
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="PropertyManager" asp-action="PMTenants" class="nav-link">
+                        <i class="fas fa-people-roof"></i>
+                        Tenants
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="PropertyManager" asp-action="PMManageLease" class="nav-link">
+                        <i class="fas fa-clipboard"></i>
+                        Lease
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="PropertyManager" asp-action="PMPayments" class="nav-link">
+                        <i class="fas fa-receipt"></i>
+                        Payments
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="PropertyManager" asp-action="PMRequest" class="nav-link">
+                        <i class="fas fa-hammer"></i>
+                        Request
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="PropertyManager" asp-action="PMAssignMaintenance" class="nav-link">
+                        <i class="fas fa-wrench"></i>
+                        Staff
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-person"></i>
+                        Users
+                    </a>
+                </li>
             </ul>
         </div>
 
-        <div class="container">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
-        </div>
+        <section>
+            <div class="container">
+                <main role="main" class="pb-3">
+
+                    <!-- NOTE: put the body/content here -->
+                    @RenderBody()
+
+                </main>
+            </div>
+        </section>
     </div>
-   
 
+
+    
     <!-- Footer -->
-
-    <footer class="footer">
-        <p>&copy; 2025 Cozy Homes. All Rights Reserved.</p>
-        <p>
-            <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
-        </p>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Cozy Homes. All rights reserved.</p>
+        </div>
     </footer>
+
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const hamburger = document.getElementById("hamburger");
+            const mainContent = document.querySelector(".main-content");
+
+            hamburger.addEventListener("click", function () {
+                sidebar.classList.toggle("hidden");
+
+                if (sidebar.classList.contains("hidden")) {
+                    mainContent.style.marginLeft = "0";
+                } else {
+                    mainContent.style.marginLeft = "250px";
+                }
+            });
+        });
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/pm.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

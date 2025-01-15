@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using PMS.Models;
 
-namespace RMS.Controllers
+namespace PMS.Controllers
 {
     public class HomeController : Controller
     {

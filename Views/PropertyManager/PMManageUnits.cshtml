@@ -123,12 +123,16 @@
         .action-icons i.delete {
             color: #dc3545;
         }
+
+        #manage-units-body {
+            margin-right: 15px;
+        }
     </style>
 </head>
-<body>
-    <div class="header">
-        <h1>Units</h1>
-        <a asp-action="AddUnitPage">Add Unit</a>
+<body id="manage-units-body">
+    <div class="header" style="margin-top: 50px; padding: 10px 0;">
+        <h1 style="color: #B0836E;">Units</h1>
+        <a asp-action="AddUnitPage" style="text-decoration: none;background-color: #B0836E;color: white;padding: 10px 20px;border-radius: 10px;">Add Unit</a>
 @*         <button asp-action="AddUnitPage">Add Unit</button> *@
     </div>
 
@@ -136,7 +140,7 @@
         <h2>UNITS LIST</h2>
     </div>
 
-    <div class="search-bar">
+    <div class="search-bar" style="margin: 20px 0;">
         <input type="text" placeholder="Search units...">
         <button>Search</button>
     </div>
@@ -175,9 +179,9 @@
         </tbody>
     </table>
 
-    <div class="pagination">
+    <div class="pagination" style="margin: 20px 0 200px;">
         <button>Previous</button>
-        <button>Next</button>
+        <button style="margin: 0 0 0 5px;">Next</button>
     </div>
 </body>
 </html>

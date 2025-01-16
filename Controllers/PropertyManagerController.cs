@@ -80,6 +80,57 @@ namespace PMS.Controllers
             return View();
         }
 
+        public async Task<IActionResult> EditUnitPage(int id)
+        {
+            try
+            {
+                // Fetch the unit details by UnitId
+                var unit = await _context.Units.FirstOrDefaultAsync(u => u.UnitID == id && u.UnitStatus == "Active");
+
+                if (unit == null)
+                {
+                    TempData["ErrorMessage"] = "Unit not found.";
+                    return RedirectToAction("PMManageUnits");
+                }
+
+                //// Map the entity to the ViewModel
+                //var viewModel = new EditUnitViewModel
+                //{
+                //    UnitID = unit.UnitID,
+                //    UnitName = unit.UnitName,
+                //    UnitType = unit.UnitType,
+                //    UnitStatus = unit.UnitStatus,
+                //    PricePerMonth = unit.PricePerMonth,
+                //    SecurityDeposit = unit.SecurityDeposit,
+                //    UnitOwner = unit.UnitOwner,
+                //    Description = unit.Description,
+                //    Town = unit.Town,
+                //    Location = unit.Location,
+                //    Country = unit.Country,
+                //    State = unit.State,
+                //    City = unit.City,
+                //    ZipCode = unit.ZipCode,
+                //    NumberOfUnits = unit.NumberOfUnits,
+                //    NumberOfBedrooms = unit.NumberOfBedrooms,
+                //    NumberOfBathrooms = unit.NumberOfBathrooms,
+                //    NumberOfGarages = unit.NumberOfGarages,
+                //    NumberOfFloors = unit.NumberOfFloors,
+                //    Images = unit.Images
+                //};
+
+                ////// Passing the viewModel to ViewBag
+                //ViewBag.UnitModel = viewModel;
+
+                //return View(viewModel);
+                return View(unit);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error loading unit: {ex.Message}";
+                return RedirectToAction("PMManageUnits");
+            }
+        }
+
 
         // Action for adding units
         [HttpPost]
@@ -159,7 +210,8 @@ namespace PMS.Controllers
                     }
 
                     await transaction.CommitAsync();
-                    TempData["SuccessMessage"] = "Unit added successfully!";
+                    TempData["ShowPopup"] = true; // Indicate that the popup shou
+                    TempData["PopupMessage"] = "Unit added successfully!";
                 }
 
                 return RedirectToAction("PMManageUnits"); // Redirect to the list of units
@@ -171,6 +223,108 @@ namespace PMS.Controllers
                 return RedirectToAction("AddUnitPage");
             }
         }
+
+
+        // POST: EditUnit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUnit(Unit unit)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Return to the same page with validation errors
+                return View("EditUnitPage", unit);
+            }
+
+            // Retrieve the unit from the database using the UnitID
+            var existingUnit = await _context.Units.FindAsync(unit.UnitID);
+            if (existingUnit == null)
+            {
+                return NotFound();
+            }
+
+            // Update the properties of the unit
+            existingUnit.UnitName = unit.UnitName;
+            existingUnit.UnitType = unit.UnitType;
+            existingUnit.UnitOwner = unit.UnitOwner;
+            existingUnit.Description = unit.Description;
+            existingUnit.PricePerMonth = unit.PricePerMonth;
+            existingUnit.SecurityDeposit = unit.SecurityDeposit;
+            existingUnit.Town = unit.Town;
+            existingUnit.Location = unit.Location;
+            existingUnit.Country = unit.Country;
+            existingUnit.State = unit.State;
+            existingUnit.City = unit.City;
+            existingUnit.ZipCode = unit.ZipCode;
+            existingUnit.NumberOfUnits = unit.NumberOfUnits;
+            existingUnit.NumberOfBedrooms = unit.NumberOfBedrooms;
+            existingUnit.NumberOfBathrooms = unit.NumberOfBathrooms;
+            existingUnit.NumberOfGarages = unit.NumberOfGarages;
+            existingUnit.NumberOfFloors = unit.NumberOfFloors;
+            existingUnit.UnitStatus = unit.UnitStatus;
+
+            // Update Images if provided (assuming Images is managed properly elsewhere)
+            if (unit.Images != null && unit.Images.Count > 0)
+            {
+                existingUnit.Images = unit.Images;
+            }
+
+            try
+            {
+                // Save changes to the database
+                _context.Update(existingUnit);
+                await _context.SaveChangesAsync();
+                TempData["ShowPopup"] = true; // Indicate that the popup shou
+                TempData["PopupMessage"] = "Unit updated successfully!";
+                //TempData.Keep("ShowPopup");
+                //TempData.Keep("PopupMessage");
+
+            }
+            catch (Exception ex)
+            {
+
+                // Log the error and display an error message
+                TempData["ErrorMessage"] = $"An error occurred while updating the unit: {ex.Message}";
+            }
+            // Redirect to the Units page or any other desired page
+            return RedirectToAction("PMManageUnits");
+        }
+
+
+        // Soft delete unit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUnit(int id)
+        {
+            // Retrieve the unit from the database using the UnitID
+            var unit = await _context.Units.FindAsync(id);
+            if (unit == null)
+            {
+                return NotFound();
+            }
+
+            // Set the UnitStatus to "Inactive" for soft deletion
+            unit.UnitStatus = "Inactive";
+
+            try
+            {
+                // Update the unit status and save changes to the database
+                _context.Update(unit);
+                await _context.SaveChangesAsync();
+
+                TempData["ShowPopup"] = true; // Indicate that the popup shou
+                TempData["PopupMessage"] = "Unit deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                // Log the error and show an error message
+                TempData["ErrorMessage"] = $"An error occurred while deactivating the unit: {ex.Message}";
+            }
+
+            // Redirect to the Units page after the action
+            return RedirectToAction("PMManageUnits");
+        }
+
 
     }
 }

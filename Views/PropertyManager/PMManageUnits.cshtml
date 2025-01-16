@@ -133,7 +133,21 @@
     </style>
 </head>
 <body id="manage-units-body">
+    @if (TempData["ShowPopup"] != null && (bool)TempData["ShowPopup"])
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '@TempData["PopupMessage"]',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    }
     <div class="header" style="margin-top: 50px; padding: 10px 0;">
+
         <h1 style="color: #B0836E;">Units</h1>
         <a asp-action="AddUnitPage" style="text-decoration: none;background-color: #B0836E;color: white;padding: 10px 20px;border-radius: 10px;">Add Unit</a>
 @*         <button asp-action="AddUnitPage">Add Unit</button> *@
@@ -170,7 +184,7 @@
                         <td>@Convert.ToDecimal(unit.PricePerMonth).ToString("C")</td>
                         <td>@unit.UnitStatus</td>
                         <td class="action-icons">
-                            <a asp-action="EditUnit" asp-route-id="@unit.UnitId" title="Edit"><i class="fas fa-edit edit"></i></a>
+                            <a asp-action="EditUnitPage" asp-route-id="@unit.UnitId" title="Edit"><i class="fas fa-edit edit"></i></a>
                             <a asp-action="DeleteUnit" asp-route-id="@unit.UnitId" title="Delete"><i class="fas fa-trash delete"></i></a>
                         </td>
                     </tr>

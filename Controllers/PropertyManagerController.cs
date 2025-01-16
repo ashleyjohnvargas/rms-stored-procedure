@@ -344,16 +344,21 @@ namespace PMS.Controllers
         [HttpGet]
         public IActionResult SearchUnits(string query)
         {
+            // Filter out units with "Inactive" UnitStatus
+            var activeUnits = _context.Units
+                .Where(u => u.UnitStatus == "Active"); // Only include units with UnitStatus as "Active"
+
             // If query is null or empty, return all units
             if (string.IsNullOrEmpty(query))
             {
-                var allUnits = _context.Units.ToList();
-                return Json(allUnits); // Return all units as JSON
+                var allActiveUnits = activeUnits.ToList();
+                return Json(allActiveUnits); // Return all active units as JSON
             }
 
             // Filter by UnitName or UnitType (case-insensitive)
-            var filteredUnits = _context.Units
-                .Where(u => u.UnitName.ToLower().Contains(query.ToLower()) || u.UnitType.ToLower().Contains(query.ToLower()))
+            var filteredUnits = activeUnits
+                .Where(u => u.UnitName.ToLower().Contains(query.ToLower()) ||
+                            u.UnitType.ToLower().Contains(query.ToLower())) // Match query with UnitName or UnitType
                 .ToList();
 
             return Json(filteredUnits); // Return filtered units as JSON

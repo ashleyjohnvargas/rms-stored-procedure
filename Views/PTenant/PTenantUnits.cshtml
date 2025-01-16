@@ -2,145 +2,39 @@
     //Layout = null; // Disable the layout for this view
     ViewData["Title"] = "Cozy Homes - Units";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
+    int descriptionLength = 180; // Set the desired length for the description
 }
+
+@model List<PTenantUnitViewModel>
 
 
 <!-- Homes List -->
 <section class="select-home" style="min-width: 100%;min-height: 100%;">
     <div class="tenant-units-container" style="margin: 0;min-width: 100%;min-height: 100%; padding: 0; display: flex; flex-wrap: wrap; justify-content: center;">
 
-        <div class="card">
-            <img src="~/images/flat.png" alt="House 1">
-            <div class="content">
-                <a asp-controller="PTenant" asp-action="PTenantDetails">
+        @foreach (var unit in Model)
+        {
+            var shortDescription = unit.Description?.Length > descriptionLength
+            ? unit.Description.Substring(0, descriptionLength) + "..."
+            : unit.Description;
 
-                    <h2>Oceanview Retreat</h2>
-                    <div class="details">
-
-                        <i class="fas fa-bed"></i> <span>4 Units</span>
-                        <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
+            <div class="card">
+                <a asp-controller="PTenant" asp-action="PTenantDetails" asp-route-id="@unit.UnitId" style="text-decoration: none;">
+                    <img src="@unit.FirstImagePath" alt="@unit.UnitName">
+                    <div class="content" style="color: black;">       
+                            <h2>@unit.UnitName</h2>
+                            <div class="details" style="justify-content: center;">
+                                <i class="fas fa-bed"></i> <span>@unit.NumberOfUnits Units</span>
+                                <i class="fa-solid fa-building"></i> <span>@unit.NumberOfRooms Rooms</span>
+                            </div>
+                            <p>
+                                @shortDescription
+                            </p>             
                     </div>
-                    <p>
-                        Welcome to Oceanview Retreat, an exquisite beachfront
-                        property located in the vibrant city of Miami, Florida.
-                        Situated along the pristine shores of the Atlantic Ocean...
-                    </p>
                 </a>
             </div>
-        </div>
+        }
 
-        <div class="card">
-            <img src="~/images/poolhouse.png" alt="House 2">
-            <div class="content">
-                <h2>Oceanview Retreat</h2>
-                <div class="details">
-                    <i class="fas fa-bed"></i> <span>4 Units</span>
-                    <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
-                </div>
-                <p>
-                    Welcome to Oceanview Retreat, an exquisite beachfront
-                    property located in the vibrant city of Miami, Florida.
-                    Situated along the pristine shores of the Atlantic Ocean...
-                </p>
-            </div>
-        </div>
-
-        <div class="card">
-            <img src="~/images/treehouse.png" alt="House 3">
-            <div class="content">
-                <h2>Oceanview Retreat</h2>
-                <div class="details">
-                    <i class="fas fa-bed"></i> <span>4 Units</span>
-                    <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
-                </div>
-                <p>
-                    Welcome to Oceanview Retreat, an exquisite beachfront
-                    property located in the vibrant city of Miami, Florida.
-                    Situated along the pristine shores of the Atlantic Ocean...
-                </p>
-            </div>
-        </div>
-
-        <div class="card">
-            <img src="~/images/bungalow.png" alt="House 4">
-            <div class="content">
-                <h2>Oceanview Retreat</h2>
-                <div class="details">
-                    <i class="fas fa-bed"></i> <span>4 Units</span>
-                    <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
-                </div>
-                <p>
-                    Welcome to Oceanview Retreat, an exquisite beachfront
-                    property located in the vibrant city of Miami, Florida.
-                    Situated along the pristine shores of the Atlantic Ocean...
-                </p>
-            </div>
-        </div>
-
-        <div class="card">
-            <img src="~/images/flat.png" alt="House 1">
-            <div class="content">
-                <h2>Oceanview Retreat</h2>
-                <div class="details">
-                    <i class="fas fa-bed"></i> <span>4 Units</span>
-                    <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
-                </div>
-                <p>
-                    Welcome to Oceanview Retreat, an exquisite beachfront
-                    property located in the vibrant city of Miami, Florida.
-                    Situated along the pristine shores of the Atlantic Ocean...
-                </p>
-            </div>
-        </div>
-
-        <div class="card">
-            <img src="~/images/poolhouse.png" alt="House 2">
-            <div class="content">
-                <h2>Oceanview Retreat</h2>
-                <div class="details">
-                    <i class="fas fa-bed"></i> <span>4 Units</span>
-                    <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
-                </div>
-                <p>
-                    Welcome to Oceanview Retreat, an exquisite beachfront
-                    property located in the vibrant city of Miami, Florida.
-                    Situated along the pristine shores of the Atlantic Ocean...
-                </p>
-            </div>
-        </div>
-
-        <div class="card">
-            <img src="~/images/treehouse.png" alt="House 3">
-            <div class="content">
-                <h2>Oceanview Retreat</h2>
-                <div class="details">
-                    <i class="fas fa-bed"></i> <span>4 Units</span>
-                    <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
-                </div>
-                <p>
-                    Welcome to Oceanview Retreat, an exquisite beachfront
-                    property located in the vibrant city of Miami, Florida.
-                    Situated along the pristine shores of the Atlantic Ocean...
-                </p>
-            </div>
-        </div>
-
-        <div class="card">
-            <img src="~/images/bungalow.png" alt="House 4">
-            <div class="content">
-                <h2>Oceanview Retreat</h2>
-                <div class="details">
-                    <i class="fas fa-bed"></i> <span>4 Units</span>
-                    <i class="fa-solid fa-building"></i> <span>20 Rooms</span>
-                </div>
-                <p>
-                    Welcome to Oceanview Retreat, an exquisite beachfront
-                    property located in the vibrant city of Miami, Florida.
-                    Situated along the pristine shores of the Atlantic Ocean...
-                </p>
-            </div>
-        </div>
     </div>
 </section>
 

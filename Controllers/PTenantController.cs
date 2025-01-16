@@ -37,10 +37,40 @@ namespace PMS.Controllers
             return View(unitViewModels); // Return the view with the unit list
         }
 
-        public IActionResult PTenantDetails()
+
+        [HttpGet]
+        public IActionResult PTenantDetails(int id)
         {
-            return View();
+            // Fetch the unit details based on the provided ID
+            var unit = _context.Units
+                .Include(u => u.Images) // Include associated images
+                .FirstOrDefault(u => u.UnitID == id);
+
+            // Check if the unit exists
+            if (unit == null)
+            {
+                return NotFound(); // Return a 404 error if the unit is not found
+            }
+
+            // Prepare the model for the view
+            var model = new
+            {
+                UnitId = unit.UnitID,
+                UnitNAME = unit.UnitName,
+                Desc = unit.Description,
+                NumberOfBedrooms = unit.NumberOfBedrooms ?? 0,
+                NumberOfBathrooms = unit.NumberOfBathrooms ?? 0,
+                MonthlyRent = unit.PricePerMonth.HasValue ? unit.PricePerMonth.Value : 0,
+                PropertyAddress = $"{unit.Location} {unit.Town} {unit.City} {unit.State} {unit.Country} {unit.ZipCode}",
+                MainImage = unit.Images?.FirstOrDefault()?.FilePath, // First image for main display
+                GalleryImages = unit.Images?.Skip(1).Select(i => i.FilePath).ToList() // Other images for the gallery
+            };
+
+            return View(model); // Render the PTenantDetails view with the model
         }
+
+
+
         public IActionResult PTenantApply()
         {
             return View();

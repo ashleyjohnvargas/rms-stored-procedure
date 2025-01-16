@@ -2,7 +2,7 @@
     //Layout = null; // Disable the layout for this view
     ViewData["Title"] = "Cozy Homes - Units";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    int descriptionLength = 180; // Set the desired length for the description
+    int descriptionLength = 210; // Set the desired length for the description
 }
 
 @model List<PTenantUnitViewModel>
@@ -20,7 +20,7 @@
 
             <div class="card">
                 <a asp-controller="PTenant" asp-action="PTenantDetails" asp-route-id="@unit.UnitId" style="text-decoration: none;">
-                    <img src="@unit.FirstImagePath" alt="@unit.UnitName">
+                    <img src="@unit.FirstImagePath" alt="@unit.UnitName" style="max-height: 143.475px;">
                     <div class="content" style="color: black;">       
                             <h2>@unit.UnitName</h2>
                             <div class="details" style="justify-content: center;">

@@ -209,7 +209,7 @@
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 10px 40px;
             background-color: #B0836E;
             color: white;
             border: none;
@@ -218,10 +218,6 @@
             font-family: 'Poppins';
             font-size: 16px;
             font-weight: 500;
-            margin-top: 50px;
-            margin-bottom: 10px;
-            margin-left: 150px;
-            width: 50%;
             transition: color 0.5s ease;
         }
 
@@ -253,50 +249,70 @@
 <body>
 
     <!-- Home Details Section -->
-    <section class="home-details">
-        <div class="det-container">
+    <section class="home-details" style="min-width: 100vh; min-height: 100%; padding: 50px 40px;">
+        <div class="det-container" style="min-width: 100vh; min-height: 100%; padding: 20px 15px;">
             <div class="col-1">
-                <img src="~/images/house.png" alt="houseimage" class="main-img">
-                <div class="gallery">
-                    <img src="treehouse.png" alt="smallimage" class="small-img">
-                    <img src="treehouse.png" alt="smallimage" class="small-img">
-                    <img src="treehouse.png" alt="smallimage" class="small-img">
+                <!-- Main image -->
+                <img src="@Model.MainImage" alt="@Model.UnitNAME" class="main-img">
+
+                <!-- Image gallery -->
+                <div class="gallery" style="height: fit-content;display: flex; justify-content: space-between; gap: 15px;">
+                    @if (Model.GalleryImages != null && ((IEnumerable<string>)Model.GalleryImages).Any())
+                    {
+                        foreach (var image in (IEnumerable<string>)Model.GalleryImages)
+                        {
+                            <img src="@image" alt="Gallery Image" class="small-img" style="height: 140px; object-fit: cover; border-radius: 4px; padding: 0; width: calc(100% / 3);">
+                        }
+                    }
+                    else
+                    {
+                        <p>No additional images available.</p>
+                    }
+
                 </div>
             </div>
+
             <div class="details">
-                <div class="details-col-1">
-                    <h2 class="title">Oceanview Retreat</h2>
-                    <p class="text">
-                        Welcome to Oceanview Retreat, an exquisite beachfront property located in the vibrant city of Miami, Florida. Situated along the pristine shores of the Atlantic Ocean, this luxurious estate offers a truly unparalleled coastal living experience. With breathtaking panoramic views of the ocean and direct access to a private white sandy beach, Oceanview Retreat is a haven for relaxation and rejuvenation. Immerse yourself in the soothing sounds of the waves and indulge in the serenity of the surroundings.
-                    </p>
-                    <h3 class="property-det">Property Information</h3>
-                    <div class="header-row">
-                        <div class="info-col">
-                            <div class="bed-row">
-                                <p class="bed-label">Bedrooms:</p>
-                                <p class="bed-value">4</p>
-                            </div>
-                            <div class="bath-row">
-                                <p class="bed-label">Bathrooms:</p>
-                                <p class="bed-value">4</p>
-                            </div>
-                            <div class="rent-row">
-                                <p class="bed-label">Monthly Rent:</p>
-                                <p class="bed-value">$2000</p>
-                            </div>
-                            <div class="add-info">
-                                <span class="address-1"> Property Address:</span>
-                                <span class="address-2"> 123 Oceanview Drive, Miami, FL 12345</span>
+                <div class="details-col-1" style="display: flex;flex-direction: column;align-items: flex-start;text-align: left;justify-content: space-between;">
+                    <div>
+                        <h2 class="title" style="padding: 0;">@Model.UnitNAME</h2>
+                        <p class="text">
+                            @Model.Desc
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="property-det">Property Information</h3>
+                        <div class="header-row">
+                            <div class="info-col">
+                                <div class="bed-row">
+                                    <p class="bed-label">Bedrooms:</p>
+                                    <p class="bed-value">@Model.NumberOfBedrooms</p>
+                                </div>
+                                <div class="bath-row">
+                                    <p class="bed-label">Bathrooms:</p>
+                                    <p class="bed-value">@Model.NumberOfBathrooms</p>
+                                </div>
+                                <div class="rent-row">
+                                    <p class="bed-label">Monthly Rent:</p>
+                                    <p class="bed-value">₱@Model.MonthlyRent</p>
+                                </div>
+                                <div class="add-info" style="gap: 96px;align-self: stretch;display: flex;">
+                                    <span class="address-1">Address:</span>
+                                    <span class="address-2">@Model.PropertyAddress</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <a asp-asp-controller="PTenant" asp-action="PTenantApply">
+                    
+                    <a asp-controller="PTenant" asp-action="PTenantApply">
                         <button class="btn">Book This Unit Now</button>
                     </a>
                 </div>
             </div>
         </div>
     </section>
+
 
 
 </body>

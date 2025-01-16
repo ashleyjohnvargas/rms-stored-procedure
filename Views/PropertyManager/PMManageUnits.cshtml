@@ -185,7 +185,12 @@
                         <td>@unit.UnitStatus</td>
                         <td class="action-icons">
                             <a asp-action="EditUnitPage" asp-route-id="@unit.UnitId" title="Edit"><i class="fas fa-edit edit"></i></a>
-                            <a asp-action="DeleteUnit" asp-route-id="@unit.UnitId" title="Delete"><i class="fas fa-trash delete"></i></a>
+                            <!-- Form for deleting the unit -->
+                            <form asp-action="DeleteUnit" asp-route-id="@unit.UnitId" method="post" style="display:inline;">
+                                <button type="submit" title="Delete" style="background: none; border: none;">
+                                    <i class="fas fa-trash delete"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     index++;

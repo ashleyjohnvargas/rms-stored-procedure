@@ -61,7 +61,7 @@ namespace PMS.Controllers
             }
             else if (user.Role == "Tenant")
             {
-                return RedirectToAction("PTenantHomePage", "PTenant");
+                return RedirectToAction("ATenantHome", "ATenant");
             }
 
             // Fallback redirect
@@ -147,7 +147,7 @@ namespace PMS.Controllers
             }
             else if (user.Role == "Tenant")
             {
-                return RedirectToAction("PTenantHomePage", "PTenant");
+                return RedirectToAction("ATenantHome", "ATenant");
             }
 
             // If none of the conditions match, return to the Register action (or another appropriate action)

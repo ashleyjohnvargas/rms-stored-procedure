@@ -8,9 +8,9 @@
     <meta name="theme-color" content="#000000" />
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" asp-append-version="true">
-    <link rel="stylesheet" href="homepage.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="homepage.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/styles.css" />
 
     <!-- <link rel="stylesheet" href="~/RMS.styles.css" asp-append-version="true" /> -->
 </head>
@@ -35,6 +35,16 @@
                 <ul>
                     <li><a asp-controller="Staff" asp-action="SMaintenanceAssignment">Maintenance Assignment</a></li>
                     <li><a asp-controller="Staff" asp-action="SMaintenanceHistory">Maintenance History</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">
+                            <img src="~/images/user-pic.png" alt="logo" style="height: 35px; width: 35px;">
+                            Profile
+                        </a>
+                        <div class="dropdown-content">
+                            <a asp-controller="Staff" asp-action="SEditProfile">Edit Profile</a>
+                            <a asp-controller="Login" asp-action="Logout">Log Out</a>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         </div>

@@ -7,15 +7,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
-    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" asp-append-version="true">
+
     @* <link rel="stylesheet" href="~/RMS.auth.css" asp-append-version="true" /> *@
     <style>
 
         /*CSS for Login, Register, Forgot Password*/
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', Arial, sans-serif;
             background-color: #f4f4f4;
             display: flex;
             justify-content: center;
@@ -79,23 +81,7 @@
             color: #CBAD8D;
         }
 
-        .google-btn {
-            background-color: #fff;
-            color: #4285f4;
-            padding: 12px 20px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
 
-            .google-btn:hover {
-                background-color: #f1f1f1;
-                align-items: center;
-            }
 
         .forgot-password {
             display: block;
@@ -109,16 +95,20 @@
                 text-decoration: underline;
             }
 
-
+        .container .logo {
+            font-size: 25px;
+            font-family: 'Poppins';
+            margin: 0;
+            font-weight: bold;
+            color: #B0836E;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">
             <img src="~/images/cozy-logo.png" alt="Cozy Homes Logo">
-            <span>Cozy Homes</span>
-
-            @* <img src="logo.png" alt="Cozy Homes Logo"> *@
+            <span class="logo">Cozy Homes</span>
         </div>
         <h1>Welcome to</h1>
         <h2>Cozy Homes Rental Management System</h2>
@@ -133,24 +123,20 @@
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
             @* <div class="form-group">
-                <label>
-                    <input type="checkbox"> Remember Me
-                </label>
+            <label>
+            <input type="checkbox"> Remember Me
+            </label>
             </div> *@
             <a asp-controller="Login" asp-action="ForgotPass" class="forgot-password">Forgot Password?</a>
             <!-- <a asp-controller="Home" asp-action="Index" class="login-btn">  </a>-->
             <button type="submit" class="login-btn">Log In</button>
 
 
-
-            @* <p>Or Continue With</p> *@
-            @* <button type="button" class="google-btn"> *@
-            @*     <img src="~/images/google-logo.png" alt="Google Logo"> Google *@
-            @* </button> *@
             <p>
                 New member here? <a asp-controller="Login" asp-action="Register" class="register">Register Now</a>
             </p>
         </form>
     </div>
+
 </body>
 </html>

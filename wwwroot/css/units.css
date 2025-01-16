@@ -1,0 +1,107 @@
+﻿/*<style >*/
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f5f1;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+    .table th, .table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .table th {
+        background-color: #c4a68a;
+        color: white;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .table .status {
+        font-weight: bold;
+    }
+
+.status.occupied {
+    color: red;
+}
+
+.status.available {
+    color: green;
+}
+
+.status.maintenance {
+    color: orange;
+}
+
+.button {
+    background-color: #c4a68a;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+    .button:hover {
+        background-color: #a3836d;
+    }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+    .pagination li {
+        margin: 0 5px;
+    }
+
+    .pagination a {
+        color: #c4a68a;
+        text-decoration: none;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+        .pagination a.active {
+            background-color: #c4a68a;
+            color: white;
+        }
+
+        .pagination a:hover {
+            background-color: #a3836d;
+            color: white;
+        }
+
+.footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #c4a68a;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/*</style >*/

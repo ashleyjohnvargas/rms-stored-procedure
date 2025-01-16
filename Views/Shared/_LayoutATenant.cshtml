@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Homes - Lease</title>
+    <meta name="theme-color" content="#000000" />
+    <!-- Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/styles.css">
+
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+    </div>
+
+    <!-- Main Header -->
+    <header>
+        <div class="main-header">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="~/images/cozy-logo.png" alt="logo" style="height: 20px; width: 50px;">
+                <h1>Cozy Homes</h1>
+            </div>
+
+            <!-- Navigation -->
+            <nav>
+                <ul>
+                    <li><a asp-controller="ATenant" asp-action="ATenantHome">Home</a></li>
+                    <li><a asp-controller="ATenant" asp-action="ATenantLease">Lease</a></li>
+                    <li><a asp-controller="ATenant" asp-action="ATenantPayment">Payment History</a></li>
+                    <li><a asp-controller="ATenant" asp-action="ATenantMaintenance">Maintenance Request</a></li>
+                    <!-- <li><a href="#">About</a></li> -->
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">
+                            <img src="~/images/user-pic.png" alt="logo" style="height: 35px; width: 35px;">
+                            Profile
+                        </a>
+                        <div class="dropdown-content">
+                            <a asp-controller="ATenant" asp-action="ATenantEditProfile">Edit Profile</a>
+                            <a asp-controller="Login" asp-action="Logout">Log Out</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Cozy Homes. All rights reserved.</p>
+
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        // Function to open a specific pop-up
+        function openPopup(popupId) {
+            document.getElementById(popupId).style.display = 'block';
+        }
+
+        // Function to close a specific pop-up
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+
+
+        // Function to display a success message
+        function showMessage(message) {
+            // Set the message text
+            document.getElementById('message-text').textContent = message;
+
+            // Display the message box
+            document.getElementById('message-box').style.display = 'block';
+        }
+
+        // Function to close the message box
+        function closeMessageBox() {
+            document.getElementById('message-box').style.display = 'none';
+        }
+
+        // Example usage: Call this function after submitting the form
+        function handlePayRent() {
+            // Simulate a successful payment action
+            closePopup('pay-rent-popup'); // Close the Pay Rent popup
+            showMessage('You have successfully paid your rent.');
+        }
+
+        function handleTerminateLease() {
+            // Simulate a successful lease termination action
+            closePopup('terminate-lease-popup'); // Close the Terminate Lease popup
+            showMessage('Your lease has been successfully terminated.');
+        }
+    </script>
+</body>
+</html>

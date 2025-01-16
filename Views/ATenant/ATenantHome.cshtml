@@ -1,0 +1,306 @@
+﻿@{
+    ViewData["Title"] = "Cozy Homes - Home";
+    Layout = "~/Views/Shared/_LayoutATenant.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Homes - Home</title>
+    <meta name="theme-color" content="#000000" />
+    <!-- Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        /* General reset */
+        body, ul {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+        }
+
+        /* Top Bar Header */
+        .top-header {
+            background-color: #B0836E;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Main Header Container */
+        .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background-color: whitesmoke;
+            color: #B0836E;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0;
+        }
+
+            /* Logo */
+            .main-header h1 {
+                font-size: 25px;
+                margin: 0;
+                font-weight: bold;
+                color: #B0836E;
+            }
+
+        .logo {
+            display: flex; /* Use flexbox */
+            align-items: center; /* Center items vertically */
+        }
+
+            .logo img {
+                height: 20px; /* Ensure the height is set */
+                width: 50px; /* Ensure the width is set */
+                margin-right: 10px; /* Add some space between the image and the text */
+            }
+
+        /* Navigation Menu */
+        .main-header nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+            .main-header nav ul li {
+                margin: 0 15px;
+            }
+
+                .main-header nav ul li a {
+                    color: #B0836E;
+                    text-decoration: none;
+                    font-size: 18px;
+                    position: relative;
+                    font-weight: 500;
+                }
+
+
+                    .main-header nav ul li a::after {
+                        content: '';
+                        width: 0%;
+                        height: 3px;
+                        background: #B0836E;
+                        position: absolute;
+                        left: 0;
+                        bottom: -6px;
+                        transition: 0.5s;
+                    }
+
+                    .main-header nav ul li a:hover::after {
+                        width: 100%;
+                    }
+
+        /* DROP-DOWN --------------------- */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Style the button that opens the dropdown */
+        .dropbtn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            /* Links inside the dropdown */
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+                /* Change color of dropdown links on hover */
+                .dropdown-content a:hover {
+                    background-color: #f1f1f1;
+                }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Banner Image */
+        .banner {
+            margin-top: 0;
+            width: 100%;
+            height: 200px;
+            text-align: center;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Centered text */
+        .centered {
+            position: absolute;
+            color: whitesmoke;
+            font-size: 35px;
+            font-weight: 500;
+            top: 25%;
+            left: 35%;
+            transform: translate(-20%, -35%);
+        }
+
+        /* Home Page Section -------------*/
+        .home {
+            padding: 40px 10px;
+            background-color: #e7e1d3;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: auto;
+            padding: 5px;
+        }
+
+        .welcome-message {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+            .welcome-message h2 {
+                font-size: 1.5rem;
+                margin-bottom: 50px;
+                color: #333;
+                font-weight: 500;
+                position: relative;
+            }
+
+                .welcome-message h2::after {
+                    content: '';
+                    width: 10%;
+                    height: 5px;
+                    background: #333;
+                    position: absolute;
+                    left: 50%; /* Center it horizontally */
+                    bottom: -7px;
+                    transform: translateX(-50%);
+                }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+            .card h3 {
+                color: #B0836E;
+                margin-bottom: 15px;
+            }
+
+            .card p {
+                margin: 10px 0;
+            }
+
+            .card a {
+                display: inline-block;
+                background-color: #B0836E;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 4px;
+                text-decoration: none;
+                font-size: 0.9rem;
+                margin-top: 10px;
+            }
+
+                .card a:hover {
+                    background-color: #8b6c56;
+                }
+
+        /* Footer */
+        footer {
+            background-color: #B0836E;
+            color: #ffd8bd;
+            padding: 20px 0;
+        }
+
+            footer p {
+                text-align: center;
+            }
+
+            footer a {
+                color: whitesmoke;
+                text-decoration: none;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                }
+
+    </style>
+</head>
+<body>
+
+    <!-- Banner Section -->
+    <section class="banner">
+        <img src="~/images/bg.png" alt="Banner Image" class="banner-image">
+        <div class="centered"> <span>Welcome back, MikMik Alexander! </span></div>
+    </section>
+
+    <!-- Dashboard -->
+    <section class="home">
+        <div class="dashboard">
+            <div class="welcome-message">
+                <h2>Here's an overview of your rental information.</h2>
+            </div>
+            <!-- Cards Section -->
+            <div class="cards">
+                <div class="card">
+                    <h3>Your Unit</h3>
+                    <p>Unit: 3B, Cozy Apartment</p>
+                    <p>Lease: Jan 1, 2025 - Dec 31, 2025</p>
+                    <a href="#">View Details</a>
+                </div>
+                <div class="card">
+                    <h3>Payments</h3>
+                    <p>Next Due: $1,200 on Feb 1, 2025</p>
+                    <a href="#">Pay Rent</a>
+                </div>
+                <div class="card">
+                    <h3>Maintenance Requests</h3>
+                    <p>1 request pending</p>
+                    <a href="#">View Requests</a>
+                </div>
+                <div class="card">
+                    <h3>Notifications</h3>
+                    <p>No new messages</p>
+                    <a href="#">View Notifications</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</body>
+</html>

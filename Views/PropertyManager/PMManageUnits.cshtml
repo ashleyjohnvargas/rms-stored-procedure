@@ -3,6 +3,9 @@
     Layout = "~/Views/Shared/_LayoutPM.cshtml";
 }
 
+@model List<UnitViewModel>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -156,26 +159,30 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>Unit A</td>
-                <td>$1000</td>
-                <td>Available</td>
-                <td class="action-icons">
-                    <i class="fas fa-edit edit" title="Edit"></i>
-                    <i class="fas fa-trash delete" title="Delete"></i>
-                </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Unit B</td>
-                <td>$1200</td>
-                <td>Occupied</td>
-                <td class="action-icons">
-                    <i class="fas fa-edit edit" title="Edit"></i>
-                    <i class="fas fa-trash delete" title="Delete"></i>
-                </td>
-            </tr>
+            @if (Model != null && Model.Any())
+            {
+                int index = 1;
+                foreach (var unit in Model)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@unit.UnitName</td>
+                        <td>@Convert.ToDecimal(unit.PricePerMonth).ToString("C")</td>
+                        <td>@unit.UnitStatus</td>
+                        <td class="action-icons">
+                            <a asp-action="EditUnit" asp-route-id="@unit.UnitId" title="Edit"><i class="fas fa-edit edit"></i></a>
+                            <a asp-action="DeleteUnit" asp-route-id="@unit.UnitId" title="Delete"><i class="fas fa-trash delete"></i></a>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" style="text-align:center;">No units found.</td>
+                </tr>
+            }
         </tbody>
     </table>
 

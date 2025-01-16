@@ -12,5 +12,11 @@ namespace PMS.Controllers
         {
             return View();
         }
+
+        public IActionResult SEditProfile()
+        {
+            return View();
+        }
+
     }
 }

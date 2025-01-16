@@ -18,6 +18,11 @@ namespace RMS.Controllers
             return View();
         }
 
+        public IActionResult ATenantLease()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

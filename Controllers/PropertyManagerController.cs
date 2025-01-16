@@ -26,9 +26,30 @@ namespace PMS.Controllers
             return View();
         }
 
-        public IActionResult PMManageUnits()
+        public async Task<IActionResult> PMManageUnits()
         {
-            return View();
+            try
+            {
+                // Fetch data from the Units table
+                var units = await _context.Units
+                    .Where(u => u.UnitStatus == "Active") // Filter for active units
+                    .Select(u => new UnitViewModel
+                    {
+                        UnitId = u.UnitID,
+                        UnitName = u.UnitName,
+                        PricePerMonth = u.PricePerMonth,
+                        UnitStatus = u.UnitStatus
+                    })
+                    .ToListAsync();
+
+                // Pass the list of units to the view
+                return View(units);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error loading units: {ex.Message}";
+                return View(new List<UnitViewModel>()); // Return an empty list in case of error
+            }
         }
         public IActionResult PMPayments()
         {
@@ -40,6 +61,16 @@ namespace PMS.Controllers
             return View();
         }
         public IActionResult PMTenants()
+        {
+            return View();
+        }
+
+        public IActionResult PMManageUsers()
+        {
+            return View();
+        }
+
+        public IActionResult PMEditProfile()
         {
             return View();
         }

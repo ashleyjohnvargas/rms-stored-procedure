@@ -93,35 +93,10 @@ namespace PMS.Controllers
                     return RedirectToAction("PMManageUnits");
                 }
 
-                //// Map the entity to the ViewModel
-                //var viewModel = new EditUnitViewModel
-                //{
-                //    UnitID = unit.UnitID,
-                //    UnitName = unit.UnitName,
-                //    UnitType = unit.UnitType,
-                //    UnitStatus = unit.UnitStatus,
-                //    PricePerMonth = unit.PricePerMonth,
-                //    SecurityDeposit = unit.SecurityDeposit,
-                //    UnitOwner = unit.UnitOwner,
-                //    Description = unit.Description,
-                //    Town = unit.Town,
-                //    Location = unit.Location,
-                //    Country = unit.Country,
-                //    State = unit.State,
-                //    City = unit.City,
-                //    ZipCode = unit.ZipCode,
-                //    NumberOfUnits = unit.NumberOfUnits,
-                //    NumberOfBedrooms = unit.NumberOfBedrooms,
-                //    NumberOfBathrooms = unit.NumberOfBathrooms,
-                //    NumberOfGarages = unit.NumberOfGarages,
-                //    NumberOfFloors = unit.NumberOfFloors,
-                //    Images = unit.Images
-                //};
+                // Fetch images
+                var images = _context.UnitImages.Where(i => i.UnitId == id).ToList();
+                unit.Images = images; 
 
-                ////// Passing the viewModel to ViewBag
-                //ViewBag.UnitModel = viewModel;
-
-                //return View(viewModel);
                 return View(unit);
             }
             catch (Exception ex)
@@ -228,7 +203,7 @@ namespace PMS.Controllers
         // POST: EditUnit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditUnit(Unit unit)
+        public async Task<IActionResult> EditUnit(Unit unit, IFormFileCollection Images)
         {
             if (!ModelState.IsValid)
             {
@@ -263,11 +238,49 @@ namespace PMS.Controllers
             existingUnit.NumberOfFloors = unit.NumberOfFloors;
             existingUnit.UnitStatus = unit.UnitStatus;
 
-            // Update Images if provided (assuming Images is managed properly elsewhere)
-            if (unit.Images != null && unit.Images.Count > 0)
+
+            // Handle image upload if provided
+            if (Images != null && Images.Any())
             {
-                existingUnit.Images = unit.Images;
+                // Define the folder path where images will be stored
+                var imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "units");
+
+                // Ensure the directory exists
+                if (!Directory.Exists(imagesFolderPath))
+                {
+                    Directory.CreateDirectory(imagesFolderPath);
+                }
+
+                // Remove existing images from the database (optional)
+                // _context.UnitImages.RemoveRange(existingUnit.Images);
+                // await _context.SaveChangesAsync();
+
+                foreach (var image in Images)
+                {
+                    if (image.Length > 0)
+                    {
+                        // Define the file path to save the image
+                        var filePath = Path.Combine(imagesFolderPath, image.FileName);
+
+                        // Save the image to the server
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+
+                        // Save the image metadata to the UnitImages table
+                        var unitImage = new UnitImage
+                        {
+                            UnitId = existingUnit.UnitID, // Link to the existing unit
+                            FilePath = $"/images/units/{image.FileName}" // Relative path for access in views
+                        };
+
+                        _context.UnitImages.Add(unitImage);
+                    }
+                }
             }
+
+
 
             try
             {
@@ -326,6 +339,25 @@ namespace PMS.Controllers
             return RedirectToAction("PMManageUnits");
         }
 
+
+        // Action method to search units by name or type
+        [HttpGet]
+        public IActionResult SearchUnits(string query)
+        {
+            // If query is null or empty, return all units
+            if (string.IsNullOrEmpty(query))
+            {
+                var allUnits = _context.Units.ToList();
+                return Json(allUnits); // Return all units as JSON
+            }
+
+            // Filter by UnitName or UnitType (case-insensitive)
+            var filteredUnits = _context.Units
+                .Where(u => u.UnitName.ToLower().Contains(query.ToLower()) || u.UnitType.ToLower().Contains(query.ToLower()))
+                .ToList();
+
+            return Json(filteredUnits); // Return filtered units as JSON
+        }
 
 
     }

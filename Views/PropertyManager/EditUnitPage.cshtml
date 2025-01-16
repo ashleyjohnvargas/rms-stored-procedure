@@ -176,6 +176,18 @@
                                 <input type="file" asp-for="Images" name="Images" class="form-control" style="font-size: inherit;" accept="image/*" multiple onchange="previewImages(event)" />
                             </div>
                         </div>
+
+                        <!-- Display Current Images -->
+                        <div id="current-images" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+                            @foreach (var image in Model.Images)
+                            {
+                                <div class="image-item" style="position: relative; display: inline-block;">
+                                    <img src="@Url.Content(@image.FilePath)" alt="Unit Image" style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px; border: 1px solid #ccc;" />
+                                    <!-- You can add delete button here -->
+                                </div>
+                            }
+                        </div>
+
                         <!-- Preview Section -->
                         <div id="image-preview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;"></div>
                     </div>

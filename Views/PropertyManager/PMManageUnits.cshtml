@@ -132,82 +132,147 @@
         }
     </style>
 </head>
-<body id="manage-units-body">
-    @if (TempData["ShowPopup"] != null && (bool)TempData["ShowPopup"])
-    {
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                Swal.fire({
-                    title: 'Success!',
-                    text: '@TempData["PopupMessage"]',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
+    <body id="manage-units-body">
+        @if (TempData["ShowPopup"] != null && (bool)TempData["ShowPopup"])
+        {
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: '@TempData["PopupMessage"]',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
                 });
-            });
-        </script>
-    }
-    <div class="header" style="margin-top: 50px; padding: 10px 0;">
+            </script>
+        }
+        <div class="header" style="margin-top: 50px; padding: 10px 0;">
 
-        <h1 style="color: #B0836E;">Units</h1>
-        <a asp-action="AddUnitPage" style="text-decoration: none;background-color: #B0836E;color: white;padding: 10px 20px;border-radius: 10px;">Add Unit</a>
-@*         <button asp-action="AddUnitPage">Add Unit</button> *@
-    </div>
+            <h1 style="color: #B0836E;">Units</h1>
+            <a asp-action="AddUnitPage" style="text-decoration: none;background-color: #B0836E;color: white;padding: 10px 20px;border-radius: 10px;">Add Unit</a>
+    @*         <button asp-action="AddUnitPage">Add Unit</button> *@
+        </div>
 
-    <div class="units-list-header">
-        <h2>UNITS LIST</h2>
-    </div>
+        <div class="units-list-header">
+            <h2>UNITS LIST</h2>
+        </div>
 
-    <div class="search-bar" style="margin: 20px 0;">
-        <input type="text" placeholder="Search units...">
-        <button>Search</button>
-    </div>
+        <div class="search-bar" style="margin: 20px 0;">
+            <input type="text" placeholder="Search units..." id="searchInput">
+            <button class="search-unit-button">Search</button>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Unit Name</th>
-                <th>Price/Month</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                int index = 1;
-                foreach (var unit in Model)
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Unit Name</th>
+                    <th>Price/Month</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int index = 1;
+                    foreach (var unit in Model)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@unit.UnitName</td>
+                            <td>@Convert.ToDecimal(unit.PricePerMonth).ToString("C")</td>
+                            <td>@unit.UnitStatus</td>
+                            <td class="action-icons">
+                                <a asp-action="EditUnitPage" asp-route-id="@unit.UnitId" title="Edit"><i class="fas fa-edit edit"></i></a>
+                                <!-- Form for deleting the unit -->
+                                <form asp-action="DeleteUnit" asp-route-id="@unit.UnitId" method="post" style="display:inline;">
+                                    <button type="submit" title="Delete" style="background: none; border: none;">
+                                        <i class="fas fa-trash delete"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>@index</td>
-                        <td>@unit.UnitName</td>
-                        <td>@Convert.ToDecimal(unit.PricePerMonth).ToString("C")</td>
-                        <td>@unit.UnitStatus</td>
-                        <td class="action-icons">
-                            <a asp-action="EditUnitPage" asp-route-id="@unit.UnitId" title="Edit"><i class="fas fa-edit edit"></i></a>
-                            <!-- Form for deleting the unit -->
-                            <form asp-action="DeleteUnit" asp-route-id="@unit.UnitId" method="post" style="display:inline;">
-                                <button type="submit" title="Delete" style="background: none; border: none;">
-                                    <i class="fas fa-trash delete"></i>
-                                </button>
-                            </form>
-                        </td>
+                        <td colspan="5" style="text-align:center;">No units found.</td>
                     </tr>
-                    index++;
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination" style="margin: 20px 0 200px;">
+            <button>Previous</button>
+            <button style="margin: 0 0 0 5px;">Next</button>
+        </div>
+
+
+
+        <script>
+            document.querySelector(".search-unit-button").addEventListener("click", function () {
+                var searchQuery = document.querySelector("input[type='text']").value;
+
+                // Make an AJAX request to search for units based on the input
+                fetch(`/PropertyManager/SearchUnits?query=${searchQuery}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        updateUnitsTable(data);
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+
+
+            // Function to handle input field changes
+            document.querySelector("#searchInput").addEventListener("input", function () {
+                var searchQuery = this.value;
+
+                // If the search input is empty, fetch all units
+                if (searchQuery === "") {
+                    fetch(`/PropertyManager/SearchUnits?query=`)
+                        .then(response => response.json())
+                        .then(data => {
+                            updateUnitsTable(data);
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+
+
+            // Update the table with the search results
+            function updateUnitsTable(units) {
+                const tbody = document.querySelector("table tbody");
+                tbody.innerHTML = ''; // Clear the existing rows
+
+                if (units.length > 0) {
+                    units.forEach((unit, index) => {
+                        let row = document.createElement('tr');
+                        row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${unit.unitName}</td>
+                                <td>${unit.pricePerMonth}</td>
+                                <td>${unit.unitStatus}</td>
+                                <td class="action-icons">
+                                    <a href="/Units/EditUnitPage/${unit.unitId}" title="Edit"><i class="fas fa-edit edit"></i></a>
+                                    <form action="/Units/DeleteUnit/${unit.unitId}" method="post" style="display:inline;">
+                                        <button type="submit" title="Delete" style="background: none; border: none;">
+                                            <i class="fas fa-trash delete"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            `;
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No units found.</td></tr>';
                 }
             }
-            else
-            {
-                <tr>
-                    <td colspan="5" style="text-align:center;">No units found.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        </script>
 
-    <div class="pagination" style="margin: 20px 0 200px;">
-        <button>Previous</button>
-        <button style="margin: 0 0 0 5px;">Next</button>
-    </div>
-</body>
+    </body>
 </html>
+
+

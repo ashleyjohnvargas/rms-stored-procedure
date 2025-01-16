@@ -11,14 +11,15 @@
     .apply-leasing {
         padding: 40px 10px;
         background-color: #e7e1d3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .form-container {
-        width: 80%;
+        margin: 0;
         max-width: 800px;
-        margin: 20px auto;
         background: #ffffff;
-        padding: 20px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
     }
@@ -33,6 +34,9 @@
         margin-bottom: 15px;
         padding: 15px;
         border-radius: 5px;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
     }
 
     form legend {
@@ -47,7 +51,7 @@
     }
 
     form input, form select, form textarea {
-        width: 100%;
+        width: -webkit-fill-available;
         padding: 8px;
         margin-top: 5px;
         border: 1px solid #ccc;
@@ -100,15 +104,10 @@
         }
 
     .cancel-button {
-        margin: 10px auto;
-        margin-left: 20px;
-        width: 13%;
-        max-width: 800px;
         text-align: center; /* Align the button to the left */
         text-decoration: none;
         font-size: 20px;
         font-weight: bold;
-        display: inline-flex;
         align-items: center;
         color: #B0836E;
         border: none;
@@ -129,13 +128,13 @@
 <!-- Home Details Section -->
 <section class="apply-leasing">
     <div class="cancel-button">
-        <a asp-controller="PTenant" asp-action="PTenantHomePage">
+        <a asp-controller="PTenant" asp-action="PTenantHomePage" style="text-decoration: none; display: flex; gap:5px; font-size:25px; align-items: center; color: #333;">
             <i class="fa-solid fa-arrow-left-long"></i> Cancel
         </a>
     </div>
     <div class="form-container">
         <h1>Apply for Leasing</h1>
-        <form action="/submit-leasing-application" method="POST">
+        <form action="/submit-leasing-application" method="POST" style="display: flex;flex-direction: column;gap: 40px;">
 
             <!-- Personal Information Section -->
             <fieldset>
@@ -209,10 +208,12 @@
             <!-- Terms and Agreement -->
             <fieldset>
                 <legend>Terms and Agreement</legend>
-                <label for="agree">
-                    <input type="checkbox" id="agree" name="agree" required>
-                    I agree to the terms and conditions.
-                </label>
+                <div style="display: flex;">
+                    <input type="checkbox" id="agree" name="agree" style="width: auto;" required>
+                    <label for="agree">
+                        I agree to the terms and conditions.
+                    </label>
+                </div>    
             </fieldset>
 
             <!-- Submit -->

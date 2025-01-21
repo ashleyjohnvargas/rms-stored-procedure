@@ -1,0 +1,334 @@
+﻿@* @using Microsoft.AspNetCore.Http
+ *@
+@{
+    //Layout = null; // Disable the layout for this view
+    ViewData["Title"] = "Cozy Homes - Unit Details";
+    Layout = "~/Views/Shared/_LayoutATenant.cshtml";
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Homes - Unit Details</title>
+    <meta name="theme-color" content="#000000" />
+    <!-- Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* General reset */
+        body, ul {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+        }
+
+        /* Top Bar Header */
+        .top-header {
+            background-color: #B0836E;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Main Header Container */
+        .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background-color: whitesmoke;
+            color: #B0836E;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0;
+        }
+
+            /* Logo */
+            .main-header h1 {
+                font-size: 25px;
+                margin: 0;
+                font-weight: bold;
+                color: #B0836E;
+            }
+
+        .logo {
+            display: flex; /* Use flexbox */
+            align-items: center; /* Center items vertically */
+        }
+
+            .logo img {
+                height: 20px; /* Ensure the height is set */
+                width: 50px; /* Ensure the width is set */
+                margin-right: 10px; /* Add some space between the image and the text */
+            }
+
+        /* Navigation Menu */
+        .main-header nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+            .main-header nav ul li {
+                margin: 0 15px;
+            }
+
+                .main-header nav ul li a {
+                    color: #B0836E;
+                    text-decoration: none;
+                    font-size: 18px;
+                    position: relative;
+                    font-weight: 500;
+                }
+
+
+                    .main-header nav ul li a::after {
+                        content: '';
+                        width: 0%;
+                        height: 3px;
+                        background: #B0836E;
+                        position: absolute;
+                        left: 0;
+                        bottom: -6px;
+                        transition: 0.5s;
+                    }
+
+                    .main-header nav ul li a:hover::after {
+                        width: 100%;
+                    }
+
+        /* Home Details Page */
+        .home-details {
+            /* margin-left: auto;
+                margin-right: auto;
+                gap: 16px;
+                display: flex;
+                align-self: stretch;
+                max-width: 15254px;
+                width: 100%; */
+            padding: 40px 10px;
+            background-color: #e7e1d3;
+        }
+
+        .det-container {
+            display: flex;
+            gap: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .col-1 {
+            gap: 30px;
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .main-img {
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .gallery {
+            height: 28px;
+            display: flex;
+        }
+
+        .small-img {
+            height: 140px;
+            width: 32%;
+            object-fit: contain;
+            border-radius: 4px;
+            padding: 0 4px;
+        }
+
+        .title {
+            font-size: 27px;
+            font-weight: 600;
+        }
+
+        .details {
+            width: 100%;
+        }
+
+        .property-det {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .header-row {
+            align-self: stretch;
+        }
+
+        .info-col {
+            gap: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .bed-row {
+            gap: 84px;
+            align-self: stretch;
+            display: flex;
+        }
+
+        .bath-row {
+            gap: 78px;
+            align-self: stretch;
+            display: flex;
+        }
+
+        .rent-row {
+            gap: 58px;
+            align-self: stretch;
+            display: flex;
+        }
+
+        .bed-label {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .bed-value {
+            color: #000;
+            font-size: 16px;
+        }
+
+        .address-1 {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .address-2 {
+            color: #000;
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 10px 40px;
+            background-color: #B0836E;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Poppins';
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.5s ease;
+        }
+
+            .btn:hover {
+                background-color: #7d5847;
+            }
+
+        /* Footer */
+        footer {
+            background-color: #B0836E;
+            color: #ffd8bd;
+            padding: 20px 0;
+        }
+
+            footer p {
+                text-align: center;
+            }
+
+            footer a {
+                color: whitesmoke;
+                text-decoration: none;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+
+    <!-- Home Details Section -->
+    <section class="home-details" style="min-width: 100vh; min-height: 100vh; padding: 50px 40px;">
+        <div class="det-container" style="min-width: 100vh; min-height: 100%; padding: 20px 15px;">
+            <div class="col-1">
+                <!-- Main image -->
+                <img src="@Model.MainImage" alt="@Model.UnitNAME" class="main-img">
+
+                <!-- Image gallery -->
+                <div class="gallery" style="height: fit-content;display: flex; justify-content: space-between; gap: 15px;">
+                    @if (Model.GalleryImages != null && ((IEnumerable<string>)Model.GalleryImages).Any())
+                    {
+                        foreach (var image in (IEnumerable<string>)Model.GalleryImages)
+                        {
+                            <img src="@image" alt="Gallery Image" class="small-img" style="height: 140px; object-fit: cover; border-radius: 4px; padding: 0; width: calc(100% / 3);">
+                        }
+                    }
+                    else
+                    {
+                        <p>No additional images available.</p>
+                    }
+
+                </div>
+            </div>
+
+            <div class="details">
+                <div class="details-col-1" style="display: flex;flex-direction: column;align-items: flex-start;text-align: left;justify-content: space-between;">
+                    <div>
+                        <h2 class="title" style="padding: 0;">@Model.UnitNAME</h2>
+                        <p class="text">
+                            @Model.Desc
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="property-det">Property Information</h3>
+                        <div class="header-row">
+                            <div class="info-col">
+                                <div class="bed-row">
+                                    <p class="bed-label">Bedrooms:</p>
+                                    <p class="bed-value">@Model.NumberOfBedrooms</p>
+                                </div>
+                                <div class="bath-row">
+                                    <p class="bed-label">Bathrooms:</p>
+                                    <p class="bed-value">@Model.NumberOfBathrooms</p>
+                                </div>
+                                <div class="rent-row">
+                                    <p class="bed-label">Monthly Rent:</p>
+                                    <p class="bed-value">₱@Model.MonthlyRent</p>
+                                </div>
+                                <div class="add-info" style="gap: 96px;align-self: stretch;display: flex;">
+                                    <span class="address-1">Address:</span>
+                                    <span class="address-2">@Model.PropertyAddress</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a asp-controller="PTenant" asp-action="PTenantApply">
+                        <button class="btn">Book This Unit Now</button>
+                    </a>
+
+                    @*  @if (Context.Session.GetInt32("UserId") == null)
+                    {
+                    <a asp-controller="Login" asp-action="Login">
+                    <button class="btn">Book This Unit Now</button>
+                    </a>
+                    }
+                    else
+                    {
+                    <a asp-controller="PTenant" asp-action="PTenantApply">
+                    <button class="btn">Book This Unit Now</button>
+                    </a>
+                    } *@
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+</body>
+</html>

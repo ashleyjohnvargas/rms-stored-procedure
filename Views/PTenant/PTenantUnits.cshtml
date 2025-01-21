@@ -30,7 +30,7 @@
             ? unit.Description.Substring(0, descriptionLength) + "..."
             : unit.Description;
 
-            <div class="card">
+            <div class="card" style="min-width: 300px;">
                 <a asp-controller="PTenant" asp-action="PTenantDetails" asp-route-id="@unit.UnitId" style="text-decoration: none;">
                     <img src="@unit.FirstImagePath" alt="@unit.UnitName" style="max-height: 143.475px;">
                     <div class="content" style="color: black;">       

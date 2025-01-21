@@ -30,7 +30,7 @@
             <nav>
                 <ul>
                     <li><a asp-controller="ATenant" asp-action="ATenantHome">Home</a></li>
-                    <li><a asp-controller="PTenant" asp-action="PTenantUnits">Units</a></li>
+                    <li><a asp-controller="ATenant" asp-action="ATenantUnits">Units</a></li>
                     <li><a asp-controller="ATenant" asp-action="ATenantLease">Lease</a></li>
                     <li><a asp-controller="ATenant" asp-action="ATenantPayment">Payment History</a></li>
                     <li><a asp-controller="ATenant" asp-action="ATenantMaintenance">Maintenance Request</a></li>
@@ -45,12 +45,12 @@
                             <a asp-controller="Login" asp-action="Logout">Log Out</a>
                         </div>
                     </li>
-                </ul>
+                </ul>   
             </nav>
         </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="container" style="min-width: 100vh; min-height: 100vh;">
+        <main role="main" class="pb-3" style="min-width: 100vh; min-height: 100vh;">
             @RenderBody()
         </main>
     </div>

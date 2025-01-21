@@ -69,6 +69,11 @@ namespace PMS.Controllers
             return View(model); // Render the PTenantDetails view with the model
         }
 
+        public IActionResult ATenantApply()
+        {
+            return View();
+        }
+
 
         public IActionResult ATenantLease()
         {

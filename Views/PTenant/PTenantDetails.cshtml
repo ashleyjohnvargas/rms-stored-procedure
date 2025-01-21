@@ -7,6 +7,8 @@
 
 }
 
+@using Microsoft.AspNetCore.Http
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -306,10 +308,19 @@
                             </div>
                         </div>
                     </div>
+                    @if (Context.Session.GetInt32("UserId") == null)
+                    {
+                        <a asp-controller="Login" asp-action="Login">
+                            <button class="btn">Book This Unit Now</button>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="PTenant" asp-action="PTenantApply">
+                            <button class="btn">Book This Unit Now</button>
+                        </a>
+                    }
 
-                    <a asp-controller="PTenant" asp-action="PTenantApply">
-                        <button class="btn">Book This Unit Now</button>
-                    </a>
 
                    @*  @if (Context.Session.GetInt32("UserId") == null)
                     {

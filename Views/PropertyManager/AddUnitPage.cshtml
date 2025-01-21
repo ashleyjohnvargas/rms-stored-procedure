@@ -60,7 +60,7 @@
                                 <!-- Unit Owner -->
                                 <div class="col-md-6 mb-3">
                                     <label for="UnitOwner" class="form-label">Unit Owner</label>
-                                    <input asp-for="UnitOwner" class="form-control" placeholder="Enter unit owner" />
+                                    <input asp-for="UnitOwner" class="form-control" placeholder="Enter unit owner" required/>
                                 </div>
                                 <!-- Description -->
                                 <div class="col-md-6 mb-3">
@@ -186,6 +186,7 @@
                 <!-- Hidden Properties -->
                 <input type="hidden" name="UnitID" asp-for="UnitID" />
                 <input type="hidden" name="Images" asp-for="Images" />
+                <input type="hidden" name="AvailabilityStatus" asp-for="AvailabilityStatus" />
 
 
                 <div class="text-end" style="background-color: #B0836E; padding: 10px; cursor: pointer;">

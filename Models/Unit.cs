@@ -24,6 +24,7 @@ namespace PMS.Models
         public int? NumberOfGarages { get; set; }
         public int? NumberOfFloors { get; set; }
         public string UnitStatus { get; set; } = "Active";
+        public string AvailabilityStatus { get; set; }
         public virtual ICollection<UnitImage>? Images { get; set; }
     }
 }

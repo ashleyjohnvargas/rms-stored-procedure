@@ -1,7 +1,19 @@
-﻿@{
+﻿@* @using Microsoft.AspNetCore.Http
+ *@
+
+@{
     //Layout = null; // Disable the layout for this view
     ViewData["Title"] = "Cozy Homes - Units";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // @if (Context.Session.GetInt32("UserId") == null)
+    // {
+    //     Layout = "~/Views/Shared/_Layout.cshtml";
+    // }
+    // else
+    // {
+    //     Layout = "~/Views/Shared/_LayoutATenant.cshtml";
+    // }
     int descriptionLength = 210; // Set the desired length for the description
 }
 

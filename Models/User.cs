@@ -13,6 +13,7 @@ namespace PMS.Models
         public string? ConfirmPassword { get; set; }
         public bool? TermsAndConditions { get; set; } // This will capture the checkbox value
         public string? Role { get; set; } // Role (Property Manager, Staff, Tenant)
+        public string? PhoneNumber { get; set; }
         // Set default value for IsActive in the constructor
         public bool IsActive { get; set; } = true; // Default value is true
     }

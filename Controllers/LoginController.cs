@@ -50,6 +50,9 @@ namespace PMS.Controllers
             HttpContext.Session.SetString("LastName", user.LastName);
             HttpContext.Session.SetString("UserRole", user.Role);
 
+            // Find the tenant through the UserID
+            var tenant = _context.Tenants.FirstOrDefault(t => t.UserId == user.UserID);
+
             // Redirect to the appropriate dashboard based on the user's role
             if (user.Role == "Property Manager")
             {
@@ -59,13 +62,18 @@ namespace PMS.Controllers
             {
                 return RedirectToAction("SMaintenanceAssignment", "Staff");
             }
-            else if (user.Role == "Tenant")
+            // If the user is an actual tenant with a value of true for "IsActualTenant" field, redirect to actual tenant site
+            else if (user.Role == "Tenant" && tenant.IsActualTenant)
             {
                 return RedirectToAction("ATenantHome", "ATenant");
             }
+            else
+            {
+                return RedirectToAction("PTenantHomePage", "PTenant");
+            }
 
-            // Fallback redirect
-            return RedirectToAction("Login");
+            //// Fallback redirect
+            //return RedirectToAction("Login");
         }
 
 
@@ -113,14 +121,6 @@ namespace PMS.Controllers
             }
 
 
-            // Store user information in the session
-            HttpContext.Session.SetInt32("UserId", user.UserID);
-            HttpContext.Session.SetString("FirstName", user.FirstName);
-            HttpContext.Session.SetString("LastName", user.LastName);
-            HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetString("UserRole", user.Role);
-
-
             // Create a new User object and populate it with data
             var newUser = new User
             {
@@ -136,17 +136,39 @@ namespace PMS.Controllers
             _context.Users.Add(newUser);
             _context.SaveChanges();
 
+            // Store user information in the session
+            HttpContext.Session.SetInt32("UserId", newUser.UserID);
+            HttpContext.Session.SetString("FirstName", newUser.FirstName);
+            HttpContext.Session.SetString("LastName", newUser.LastName);
+            HttpContext.Session.SetString("UserEmail", newUser.Email);
+            HttpContext.Session.SetString("UserRole", newUser.Role);
+
             // Redirect based on the user's role
-            if (user.Role == "Property Manager")
+            if (newUser.Role == "Property Manager")
             {
+                // if the user is a property manager based on domain of email, create a PropertyManager object
+                var propertyManager = new PropertyManager
+                {
+                    UserId = newUser.UserID,
+                };
                 return RedirectToAction("PMDashboard", "PropertyManager");
             }
-            else if (user.Role == "Staff")
+            else if (newUser.Role == "Staff")
             {
+                // if the user is a staff based on domain of email, create a Staff object
+                var staff = new Staff
+                {
+                    UserId = newUser.UserID,
+                };
                 return RedirectToAction("SMaintenanceAssignment", "Staff");
             }
-            else if (user.Role == "Tenant")
+            else if (newUser.Role == "Tenant")
             {
+                // If the user is a tenant based on domain of email, create a Tenant object
+                var tenant = new Tenant
+                {
+                    UserId = newUser.UserID,
+                };
                 return RedirectToAction("ATenantHome", "ATenant");
             }
 

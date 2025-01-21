@@ -37,9 +37,17 @@ namespace PMS.Models
                 .Property(u => u.UnitStatus)
                 .HasDefaultValue("Active");
 
+            modelBuilder.Entity<Unit>()
+                .Property(u => u.AvailabilityStatus)
+                .HasDefaultValue("Available");
+
             modelBuilder.Entity<User>()
                 .Property(u => u.IsActive)
                 .HasDefaultValue(true);
+
+            modelBuilder.Entity<Tenant>()
+                .Property(t => t.IsActualTenant)
+                .HasDefaultValue(false);
         }
     }
 }

@@ -1,6 +1,5 @@
-﻿/* Consolidated CSS */
+﻿﻿ /* Consolidated CSS */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
 /* General reset */
 body, ul {
     margin: 0;
@@ -405,3 +404,29 @@ footer {
     align-items: center;
     justify-content: center;
 }
+
+.sub-tabs {
+    margin-left: 20px; /* Indent sub-tabs */
+    list-style-type: none; /* Remove bullets */
+    display: none; /* Hide by default */
+}
+
+    .sub-tabs li a {
+        font-size: 12px; /* Adjust font size for sub-tabs */
+    }
+
+li:hover > .sub-tabs {
+    display: block; /* Show sub-tabs on hover */
+}
+
+.sidebar .sub-tabs {
+    margin-left: 15px; /* Adjust left indentation for sub-tabs */
+    padding: 0; /* Ensure no extra padding */
+    list-style-type: none; /* Remove bullet points for sub-tabs */
+}
+
+    .sidebar .sub-tabs li {
+        font-size: 13px; /* Smaller font size for sub-tabs */
+        margin: 0; /* Ensure no extra margin between sub-tab items */
+        padding: 5px 0; /* Add some spacing for better readability */
+    }

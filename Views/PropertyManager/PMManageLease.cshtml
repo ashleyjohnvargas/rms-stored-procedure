@@ -224,67 +224,63 @@
         <button style="margin: 0 0 0 5px;">Next</button>
     </div>
 
+    <!-- Popup Modal -->
+    <div id="editLeaseModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Lease</h5>
+                    <button type="button" class="close" onclick="closeModal()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editLeaseForm" method="post" action="@Url.Action("UpdateLeaseStatus", "Lease")">
+                        <input type="hidden" id="leaseId" name="LeaseID">
+                        <div class="form-group">
+                            <label for="leaseStatus">Lease Status</label>
+                            <select id="leaseStatus" name="LeaseStatus" class="form-control">
+                                <option value="Pending">Pending</option>
+                                <option value="Active">Active</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-@* 
     <script>
-        document.querySelector(".search-unit-button").addEventListener("click", function () {
-            var searchQuery = document.querySelector("input[type='text']").value;
+        // Show modal when "Edit" is clicked
+        document.addEventListener("DOMContentLoaded", function () {
+            const editButtons = document.querySelectorAll('.edit-lease');
+            const modal = document.getElementById('editLeaseModal');
+            const leaseIdInput = document.getElementById('leaseId');
+            const leaseStatusInput = document.getElementById('leaseStatus');
 
-            // Make an AJAX request to search for units based on the input
-            fetch(`/PropertyManager/SearchUnits?query=${searchQuery}`)
-                .then(response => response.json())
-                .then(data => {
-                    updateUnitsTable(data);
-                })
-                .catch(error => console.error('Error:', error));
-        });
+            editButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const leaseId = this.dataset.id;
+                    const leaseStatus = this.dataset.status;
 
+                    leaseIdInput.value = leaseId;
+                    leaseStatusInput.value = leaseStatus;
 
-        // Function to handle input field changes
-        document.querySelector("#searchInput").addEventListener("input", function () {
-            var searchQuery = this.value;
-
-            // If the search input is empty, fetch all units
-            if (searchQuery === "") {
-                fetch(`/PropertyManager/SearchUnits?query=`)
-                    .then(response => response.json())
-                    .then(data => {
-                        updateUnitsTable(data);
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-        });
-
-
-        // Update the table with the search results
-        function updateUnitsTable(units) {
-            const tbody = document.querySelector("table tbody");
-            tbody.innerHTML = ''; // Clear the existing rows
-
-            if (units.length > 0) {
-                units.forEach((unit, index) => {
-                    let row = document.createElement('tr');
-                    row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${unit.unitName}</td>
-                            <td>${unit.pricePerMonth}</td>
-                            <td>${unit.unitStatus}</td>
-                            <td class="action-icons">
-                                <a href="/Units/EditUnitPage/${unit.unitId}" title="Edit"><i class="fas fa-edit edit"></i></a>
-                                <form action="/Units/DeleteUnit/${unit.unitId}" method="post" style="display:inline;">
-                                    <button type="submit" title="Delete" style="background: none; border: none;">
-                                        <i class="fas fa-trash delete"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        `;
-                    tbody.appendChild(row);
+                    modal.style.display = 'block';
                 });
-            } else {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No units found.</td></tr>';
-            }
+            });
+        });
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('editLeaseModal');
+            modal.style.display = 'none';
         }
-    </script> *@
+    </script>
+
 
 </body>
 </html>

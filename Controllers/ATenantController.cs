@@ -170,6 +170,8 @@ namespace PMS.Controllers
             {
                 TempData["ShowPopup"] = true; // Indicate that the popup should be shown
                 TempData["PopupMessage"] = "Your application has been sent successfully!";
+                TempData["PopupTitle"] = "Success!";  // Set the custom title
+                TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
                 return RedirectToAction("ATenantHome"); // Redirect to a success page or confirmation
             }
             catch (Exception ex)
@@ -222,7 +224,7 @@ namespace PMS.Controllers
                 Address = $"{lease.Unit.Location} {lease.Unit.City} {lease.Unit.Town} {lease.Unit.State},{lease.Unit.ZipCode} {lease.Unit.Country}",
                 StartDate = lease.LeaseStartDate?.ToString("MMMM d, yyyy") ?? "N/A",
                 EndDate = lease.LeaseEndDate?.ToString("MMMM d, yyyy") ?? "N/A",
-                MonthlyRent = string.Format(System.Globalization.CultureInfo.GetCultureInfo("en-PH"), "{0:C}", lease.Unit.PricePerMonth),
+                MonthlyRent = lease.Unit.PricePerMonth, // Keep as numeric value (decimal, double)
                 SecurityDeposit = string.Format(System.Globalization.CultureInfo.GetCultureInfo("en-PH"), "{0:C}", lease.Unit.SecurityDeposit),
                 Status = lease.LeaseStatus,
                 TenantName = lease.LeaseDetails.FullName,
@@ -241,6 +243,15 @@ namespace PMS.Controllers
             //{
             //    return View(model);  // Return the same view with validation errors
             //}
+
+            if (model.Amount != model.MonthlyRent)
+            {
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Please pay the exact amount due.";
+                TempData["PopupTitle"] = "Invalid Amount!";
+                TempData["PopupIcon"] = "warning";  // Set the icon dynamically (can be success, error, info, warning)
+                return RedirectToAction("ATenantLease");
+            }
 
             // Fetch the lease details based on LeaseId
             var lease = _context.Leases.FirstOrDefault(l => l.LeaseID == model.LeaseId);
@@ -265,6 +276,8 @@ namespace PMS.Controllers
 
             TempData["ShowPopup"] = true; // Indicate that the popup should be shown
             TempData["PopupMessage"] = "Your payment has been sent successfully!";
+            TempData["PopupTitle"] = "Success!";
+            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
 
             // Redirect to the appropriate page after successful payment
             return RedirectToAction("ATenantLease");

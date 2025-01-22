@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_LayoutATenant.cshtml";
 }
 
+
 @model TenantLeaseViewModel
 
 <head>
@@ -371,18 +372,20 @@
 </head>
 
 @if (TempData["ShowPopup"] != null && (bool)TempData["ShowPopup"])
-    {
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                Swal.fire({
-                    title: 'Success!',
-                    text: '@TempData["PopupMessage"]',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                title: '@TempData["PopupTitle"]',  // Set the title dynamically
+                text: '@TempData["PopupMessage"]', // Set the message dynamically
+                icon: '@TempData["PopupIcon"]',    // Set the icon dynamically (success, error, warning, info)
+                confirmButtonText: 'OK'
             });
-        </script>
-    }
+        });
+    </script>
+}
+
+
 
 <!-- Home Details Section -->
 <section class="lease">
@@ -400,7 +403,7 @@
             <h2>Lease Details</h2>
             <p><strong>Start Date:</strong> @Model.StartDate</p>
             <p><strong>End Date:</strong> @Model.EndDate</p>
-            <p><strong>Monthly Rent:</strong> @Model.MonthlyRent</p>
+            <p><strong>Monthly Rent:</strong>@String.Format("{0:C}", Model.MonthlyRent).Replace("$", "₱")</p>
             <p><strong>Security Deposit:</strong> @Model.SecurityDeposit</p>
             <p><strong>Renewal Terms:</strong> Automatically renews month-to-month</p>
             <p><strong>Payment Due Date:</strong> 1st of every month</p>
@@ -439,10 +442,11 @@
         <h2>Pay Rent</h2>
         <p>Please enter your payment details to complete the transaction.</p>
         <h4>Property Name: @Model.PropertyName</h4>
-        <h4>Amount Due: @Model.MonthlyRent</h4>
+        <h4>Amount Due: @String.Format("{0:C}", Model.MonthlyRent).Replace("$", "₱")</h4>
         <h4>Due Date: @Model.DueDate</h4>
         <form asp-action="PayLease" method="post">
             <input type="hidden" name="LeaseId" value="@Model.LeaseID"/>
+            <input type="hidden" name="MonthlyRent" value="@Model.MonthlyRent" />
             <label for="Amount">Amount:</label>
             <input type="number" id="Amount" name="Amount" required>
 

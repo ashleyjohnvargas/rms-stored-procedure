@@ -7,7 +7,7 @@
 
 
 <!-- Home Details Section -->
-<section class="payment">
+<section class="payment" style="min-height: 100vh;">
     <div class="pay-container">
         <h2>Payment History</h2>
         <table>
@@ -27,8 +27,8 @@
                         <td>@String.Format("{0:C}", payment.Amount).Replace("$", "₱")</td>                      
                         <td>@payment.PaymentStatus</td>
                         <td>
-                            <a href="@Url.Action("ViewInvoice", "Payment", new { id = payment.PaymentID })">
-                                <i class="fas fa-receipt"></i>Receipt
+                            <a asp-action="PreviewInvoice" asp-route-id="@payment.PaymentID">
+                                <i class="fas fa-receipt" style="margin-right: 5px;"></i>Receipt
                             </a>
                         </td>
                     </tr>

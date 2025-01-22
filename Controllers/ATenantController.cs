@@ -284,9 +284,22 @@ namespace PMS.Controllers
         }
 
 
+
         public IActionResult ATenantPayment()
         {
-            return View();
+            // Fetch all payment records from the database
+            var payments = _context.Payments
+                .Select(p => new PaymentsDisplayModel
+                {
+                    PaymentID = p.PaymentID,
+                    PaymentDate = p.PaymentDate,
+                    Amount = p.Amount,
+                    PaymentMethod = p.PaymentMethod,
+                    PaymentStatus = p.PaymentStatus
+                })
+                .ToList();
+
+            return View(payments);
         }
         public IActionResult ATenantMaintenance()
         {

@@ -1,5 +1,5 @@
-﻿@* @using Microsoft.AspNetCore.Http
- *@
+﻿@using Microsoft.AspNetCore.Http
+
 @{
     //Layout = null; // Disable the layout for this view
     ViewData["Title"] = "Cozy Homes - Unit Details";
@@ -308,10 +308,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Button to trigger AJAX request -->
-                    <button id="bookUnitBtn" class="btn" data-unit-id="@Model.UnitId">Book This Unit Now</button>
+                    
 
-                   @*  @if (Context.Session.GetInt32("UserId") == null)
+                    @if (Context.Session.GetInt32("UserId") == null)
                     {
                         <a asp-controller="Login" asp-action="Login">
                             <button class="btn">Book This Unit Now</button>
@@ -319,10 +318,9 @@
                     }
                     else
                     {
-                        <a asp-controller="PTenant" asp-action="PTenantApply">
-                            <button class="btn">Book This Unit Now</button>
-                        </a>
-                    } *@
+                        <!-- Button to trigger AJAX request -->
+                        <button id="bookUnitBtn" class="btn" data-unit-id="@Model.UnitId">Book This Unit Now</button>
+                    }
                 </div>
             </div>
         </div>

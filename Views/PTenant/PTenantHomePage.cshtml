@@ -13,7 +13,19 @@
 
     <!-- <link rel="stylesheet" href="~/RMS.styles.css" asp-append-version="true" /> -->
 </head>
-
+@if (TempData["ShowPopup"] != null && (bool)TempData["ShowPopup"])
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                title: 'Success!',
+                text: '@TempData["PopupMessage"]',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+}
 
 <!-- Banner Section -->
 <section class="banner">

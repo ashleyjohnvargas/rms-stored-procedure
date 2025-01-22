@@ -9,8 +9,13 @@
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" asp-append-version="true">
     <link rel="stylesheet" href="~/css/pm.css"/>
+
      <!-- Add SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    <style>
+
+    </style>
+
 </head>
 
 
@@ -73,10 +78,16 @@
                         Tenants
                     </a>
                 </li>
-                <li>
-                    <a asp-controller="PropertyManager" asp-action="PMManageLease" class="nav-link">
+                <li id="pending-lease">
+                    <a asp-controller="PropertyManager" asp-action="PMManageLease" class="nav-link" > 
                         <i class="fas fa-clipboard"></i>
                         Lease
+                    </a>
+                </li>
+                <li id="active-lease">
+                    <a asp-controller="PropertyManager" asp-action="PMActiveLease" class="nav-link" >
+                        <i class="fas fa-clipboard"></i>
+                        Active Lease
                     </a>
                 </li>
                 <li>
@@ -143,6 +154,8 @@
                 }
             });
         });
+
+
     </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

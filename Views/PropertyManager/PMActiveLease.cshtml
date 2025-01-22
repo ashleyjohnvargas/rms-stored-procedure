@@ -56,7 +56,7 @@
             padding: 10px 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 10px;
         }
 
         .search-bar {
@@ -151,12 +151,16 @@
     <div class="header" style="margin-top: 50px; padding: 10px 0;">
 
         @* <h1 style="color: #B0836E;">Leases</h1> *@
-@*         <a asp-action="AddUnitPage" style="text-decoration: none;background-color: #B0836E;color: white;padding: 10px 20px;border-radius: 10px;">Add Lease</a>
- *@    </div>
+        @*         <a asp-action="AddUnitPage" style="text-decoration: none;background-color: #B0836E;color: white;padding: 10px 20px;border-radius: 10px;">Add Lease</a>
+        *@
+    </div>
 
-    <div class="units-list-header" >
-        <h2>LEASES</h2>
-        <a asp-action="AddUnitPage" style="text-decoration: none;background-color: white;color: #B0836E;padding: 10px 20px;border-radius: 10px;">Add Lease</a>
+    <div class="units-list-header">
+        <a asp-action="PMManageLease">
+            <i class="fas fa-arrow-left" style="font-size: 24px; color: white;"></i>
+        </a>
+        
+        <h2>Active Leases</h2>
     </div>
 
     <div class="search-bar" style="margin: 20px 0;">
@@ -189,7 +193,7 @@
                         <td>@lease.TenantName</td>
                         <td>@lease.UnitName</td>
                         <td>@String.Format("{0:C}", lease.MonthlyRent).Replace("$", "₱")</td>
-                        
+
                         <td>@(lease.LeaseStartDate.HasValue ? lease.LeaseStartDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
                         <td>@(lease.LeaseEndDate.HasValue ? lease.LeaseEndDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
                         <td>@lease.LeaseStatus</td>
@@ -225,65 +229,65 @@
     </div>
 
 
-@* 
+    @*
     <script>
-        document.querySelector(".search-unit-button").addEventListener("click", function () {
-            var searchQuery = document.querySelector("input[type='text']").value;
+    document.querySelector(".search-unit-button").addEventListener("click", function () {
+    var searchQuery = document.querySelector("input[type='text']").value;
 
-            // Make an AJAX request to search for units based on the input
-            fetch(`/PropertyManager/SearchUnits?query=${searchQuery}`)
-                .then(response => response.json())
-                .then(data => {
-                    updateUnitsTable(data);
-                })
-                .catch(error => console.error('Error:', error));
-        });
-
-
-        // Function to handle input field changes
-        document.querySelector("#searchInput").addEventListener("input", function () {
-            var searchQuery = this.value;
-
-            // If the search input is empty, fetch all units
-            if (searchQuery === "") {
-                fetch(`/PropertyManager/SearchUnits?query=`)
-                    .then(response => response.json())
-                    .then(data => {
-                        updateUnitsTable(data);
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-        });
+    // Make an AJAX request to search for units based on the input
+    fetch(`/PropertyManager/SearchUnits?query=${searchQuery}`)
+    .then(response => response.json())
+    .then(data => {
+    updateUnitsTable(data);
+    })
+    .catch(error => console.error('Error:', error));
+    });
 
 
-        // Update the table with the search results
-        function updateUnitsTable(units) {
-            const tbody = document.querySelector("table tbody");
-            tbody.innerHTML = ''; // Clear the existing rows
+    // Function to handle input field changes
+    document.querySelector("#searchInput").addEventListener("input", function () {
+    var searchQuery = this.value;
 
-            if (units.length > 0) {
-                units.forEach((unit, index) => {
-                    let row = document.createElement('tr');
-                    row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${unit.unitName}</td>
-                            <td>${unit.pricePerMonth}</td>
-                            <td>${unit.unitStatus}</td>
-                            <td class="action-icons">
-                                <a href="/Units/EditUnitPage/${unit.unitId}" title="Edit"><i class="fas fa-edit edit"></i></a>
-                                <form action="/Units/DeleteUnit/${unit.unitId}" method="post" style="display:inline;">
-                                    <button type="submit" title="Delete" style="background: none; border: none;">
-                                        <i class="fas fa-trash delete"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        `;
-                    tbody.appendChild(row);
-                });
-            } else {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No units found.</td></tr>';
-            }
-        }
+    // If the search input is empty, fetch all units
+    if (searchQuery === "") {
+    fetch(`/PropertyManager/SearchUnits?query=`)
+    .then(response => response.json())
+    .then(data => {
+    updateUnitsTable(data);
+    })
+    .catch(error => console.error('Error:', error));
+    }
+    });
+
+
+    // Update the table with the search results
+    function updateUnitsTable(units) {
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = ''; // Clear the existing rows
+
+    if (units.length > 0) {
+    units.forEach((unit, index) => {
+    let row = document.createElement('tr');
+    row.innerHTML = `
+    <td>${index + 1}</td>
+    <td>${unit.unitName}</td>
+    <td>${unit.pricePerMonth}</td>
+    <td>${unit.unitStatus}</td>
+    <td class="action-icons">
+    <a href="/Units/EditUnitPage/${unit.unitId}" title="Edit"><i class="fas fa-edit edit"></i></a>
+    <form action="/Units/DeleteUnit/${unit.unitId}" method="post" style="display:inline;">
+    <button type="submit" title="Delete" style="background: none; border: none;">
+    <i class="fas fa-trash delete"></i>
+    </button>
+    </form>
+    </td>
+    `;
+    tbody.appendChild(row);
+    });
+    } else {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No units found.</td></tr>';
+    }
+    }
     </script> *@
 
 </body>

@@ -183,8 +183,50 @@ namespace PMS.Controllers
 
         public IActionResult ATenantLease()
         {
-            return View();
+            // Fetch the logged-in user's ID from the session
+            var userId = HttpContext.Session.GetInt32("UserId");
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    return RedirectToAction("Login", "Account"); // Redirect to login if no user is logged in
+            //}
+
+            // Get the tenant's details based on the UserId
+            var tenant = _context.Tenants.FirstOrDefault(t => t.UserId == userId);
+            if (tenant == null)
+            {
+                return NotFound("Tenant not found.");
+            }
+
+            // Get the lease details for the tenant
+            var lease = _context.Leases
+                .Include(l => l.Unit) // Include Unit details for property information
+                .Include(l => l.LeaseDetails) // Include LeaseDetails for tenant info
+                .FirstOrDefault(l => l.TenantID == tenant.TenantID);
+
+            if (lease == null)
+            {
+                return NotFound("Lease not found.");
+            }
+
+            // Construct the model for the view
+            var model = new TenantLeaseViewModel
+            {
+                LeaseID = lease.LeaseID,
+                PropertyName = lease.Unit.UnitName, // Assuming UnitName contains the property name
+                Address = $"{lease.Unit.Location} {lease.Unit.City} {lease.Unit.Town} {lease.Unit.State},{lease.Unit.ZipCode} {lease.Unit.Country}",
+                StartDate = lease.LeaseStartDate?.ToString("MMMM d, yyyy") ?? "N/A",
+                EndDate = lease.LeaseEndDate?.ToString("MMMM d, yyyy") ?? "N/A",
+                MonthlyRent = string.Format(System.Globalization.CultureInfo.GetCultureInfo("en-PH"), "{0:C}", lease.Unit.PricePerMonth),
+                SecurityDeposit = string.Format(System.Globalization.CultureInfo.GetCultureInfo("en-PH"), "{0:C}", lease.Unit.SecurityDeposit),
+                Status = lease.LeaseStatus,
+                TenantName = lease.LeaseDetails.FullName,
+                Contact = lease.LeaseDetails.Email,
+                Phone = lease.LeaseDetails.ContactNumber
+            };
+
+            return View(model);
         }
+
         public IActionResult ATenantPayment()
         {
             return View();

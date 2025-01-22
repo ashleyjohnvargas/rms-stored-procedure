@@ -2,6 +2,9 @@
     ViewData["Title"] = "Cozy Homes - Lease";
     Layout = "~/Views/Shared/_LayoutATenant.cshtml";
 }
+
+@model TenantLeaseViewModel
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -375,29 +378,26 @@
         <!-- Lease Information Section -->
         <div class="lease-info">
             <h2>Property Information</h2>
-            <p><strong>Property Name:</strong> Sunset Villas Apartment</p>
-            <p><strong>Address:</strong> 123 Main Street, Springfield</p>
-            <p><strong>Unit:</strong> 2B</p>
-            <p><strong>ID:</strong> L12345</p>
+            <p><strong>Property Name:</strong> @Model.PropertyName</p>
+            <p><strong>Address:</strong> @Model.Address</p>
         </div>
 
         <div class="lease-info">
             <h2>Lease Details</h2>
-            <p><strong>Lease Type:</strong> Fixed-TermStart</p>
-            <p><strong>Start Date:</strong> January 1, 2025</p>
-            <p><strong>End Date:</strong> December 31, 2025</p>
-            <p><strong>Monthly Rent:</strong> $12,200</p>
-            <p><strong>Security Deposit:</strong> $11,200</p>
+            <p><strong>Start Date:</strong> @Model.StartDate</p>
+            <p><strong>End Date:</strong> @Model.EndDate</p>
+            <p><strong>Monthly Rent:</strong> @Model.MonthlyRent</p>
+            <p><strong>Security Deposit:</strong> @Model.SecurityDeposit</p>
             <p><strong>Renewal Terms:</strong> Automatically renews month-to-month</p>
             <p><strong>Payment Due Date:</strong> 1st of every month</p>
-            <p><strong>Status:</strong> Active</p>
+            <p><strong>Status:</strong> @Model.Status</p>
         </div>
 
         <div class="lease-info">
             <h2>Tenant Information</h2>
-            <p><strong>Tenant Name:</strong> John Doe</p>
-            <p><strong>Contact:</strong> john.doe@example.com</p>
-            <p><strong>Phone:</strong> +1 234 567 890</p>
+            <p><strong>Tenant Name:</strong> @Model.TenantName</p>
+            <p><strong>Contact:</strong> @Model.Contact</p>
+            <p><strong>Phone:</strong> @Model.Phone</p>
         </div>
 
         <div class="lease-info">

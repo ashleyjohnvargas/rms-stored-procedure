@@ -370,6 +370,20 @@
     </style>
 </head>
 
+@if (TempData["ShowPopup"] != null && (bool)TempData["ShowPopup"])
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '@TempData["PopupMessage"]',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    }
+
 <!-- Home Details Section -->
 <section class="lease">
     <div class="lease-container">
@@ -424,15 +438,19 @@
     <div class="popup-content">
         <h2>Pay Rent</h2>
         <p>Please enter your payment details to complete the transaction.</p>
-        <form onsubmit="event.preventDefault(); handlePayRent();">
-            <label for="amount">Amount:</label>
-            <input type="number" id="amount" name="amount" required>
+        <h4>Property Name: @Model.PropertyName</h4>
+        <h4>Amount Due: @Model.MonthlyRent</h4>
+        <h4>Due Date: @Model.DueDate</h4>
+        <form asp-action="PayLease" method="post">
+            <input type="hidden" name="LeaseId" value="@Model.LeaseID"/>
+            <label for="Amount">Amount:</label>
+            <input type="number" id="Amount" name="Amount" required>
 
-            <label for="payment-method">Payment Method:</label>
-            <select id="payment-method" name="payment-method" required>
-                <option value="credit-card">Credit Card</option>
-                <option value="paypal">PayPal</option>
-                <option value="bank-transfer">Bank Transfer</option>
+            <label for="PaymentMethod">Payment Method:</label>
+            <select id="PaymentMethod" name="PaymentMethod" required>
+                <option value="Card">Card</option>
+                <option value="EWallet">E-Wallet</option>
+                <option value="OverTheCounter">Over-the-Counter</option>
             </select>
 
             <button type="submit" class="button">Submit Payment</button>

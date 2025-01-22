@@ -13,6 +13,7 @@
         public string? MonthlyRent { get; set; }
         public string? SecurityDeposit { get; set; }
         public string? Status { get; set; }
+        public string? DueDate { get; set; } // New Property for Due Date
 
         // Tenant Information
         public string? TenantName { get; set; }

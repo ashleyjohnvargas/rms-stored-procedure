@@ -190,7 +190,7 @@
                         <td>@(lease.LeaseEndDate.HasValue ? lease.LeaseEndDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
                         <td>@lease.LeaseStatus</td>
                         <td>
-                            <a href="@Url.Action("ViewContract", "Lease", new { id = lease.LeaseID })">View Contract</a>
+                            <a href="/contract/Lease_Contract.pdf" download>View Contract</a>
                         </td>
                         <td class="action-icons">
                             <a title="Edit" href="@Url.Action("EditLease", "Lease", new { id = lease.LeaseID })" style="font-size: 20px;">

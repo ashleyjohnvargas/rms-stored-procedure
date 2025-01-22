@@ -208,6 +208,12 @@ namespace PMS.Controllers
                 return NotFound("Lease not found.");
             }
 
+            // Get the current date
+            var currentDate = DateTime.Now;
+
+            // Calculate the first day of the next month
+            var firstDayNextMonth = new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(1);
+
             // Construct the model for the view
             var model = new TenantLeaseViewModel
             {
@@ -221,11 +227,49 @@ namespace PMS.Controllers
                 Status = lease.LeaseStatus,
                 TenantName = lease.LeaseDetails.FullName,
                 Contact = lease.LeaseDetails.Email,
-                Phone = lease.LeaseDetails.ContactNumber
+                Phone = lease.LeaseDetails.ContactNumber,
+                DueDate = firstDayNextMonth.ToString("MMMM d, yyyy") 
             };
 
             return View(model);
         }
+
+        [HttpPost]
+        public IActionResult PayLease(PaymentViewModel model)
+        {
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(model);  // Return the same view with validation errors
+            //}
+
+            // Fetch the lease details based on LeaseId
+            var lease = _context.Leases.FirstOrDefault(l => l.LeaseID == model.LeaseId);
+            if (lease == null)
+            {
+                return NotFound("Lease not found.");
+            }
+
+            // Create a new instance of the Payments table
+            var payment = new Payment
+            {
+                LeaseID = lease.LeaseID,                // LeaseId from the form
+                PaymentDate = DateTime.Now,              // Current date and time for PaymentDate
+                Amount = model.Amount,                   // Amount from the form
+                PaymentMethod = model.PaymentMethod,     // Selected PaymentMethod from the form
+                PaymentStatus = "Paid"                   // Default PaymentStatus as "Paid"
+            };
+
+            // Save the new payment record to the database
+            _context.Payments.Add(payment);
+            _context.SaveChanges();
+
+            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+            TempData["PopupMessage"] = "Your payment has been sent successfully!";
+
+            // Redirect to the appropriate page after successful payment
+            return RedirectToAction("ATenantLease");
+        }
+
 
         public IActionResult ATenantPayment()
         {

@@ -20,8 +20,9 @@
 @model List<PTenantUnitViewModel>
 
 
+<link rel="stylesheet" href="~/css/atenant.css" />
 <!-- Homes List -->
-<section class="select-home" style="min-width: 100%;min-height: 100%;">
+<section class="select-home" style="min-width: 100vh;min-height: 100vh; padding: 50px 0; background-color: #e7e1d3;">
     <div class="tenant-units-container" style="margin: 0;min-width: 100%;min-height: 100%; padding: 0; display: flex; flex-wrap: wrap; justify-content: center;">
 
         @foreach (var unit in Model)
@@ -30,23 +31,52 @@
             ? unit.Description.Substring(0, descriptionLength) + "..."
             : unit.Description;
 
-            <div class="card" style="min-width: 300px;">
-                <a asp-controller="PTenant" asp-action="PTenantDetails" asp-route-id="@unit.UnitId" style="text-decoration: none;">
-                    <img src="@unit.FirstImagePath" alt="@unit.UnitName" style="max-height: 143.475px;">
-                    <div class="content" style="color: black;">       
-                            <h2>@unit.UnitName</h2>
-                            <div class="details" style="justify-content: center;">
-                                <i class="fas fa-bed"></i> <span>@unit.NumberOfUnits Units</span>
-                                <i class="fa-solid fa-building"></i> <span>@unit.NumberOfRooms Rooms</span>
-                            </div>
-                            <p>
-                                @shortDescription
-                            </p>             
+            <div class="card" id="unit-card" style="min-width: 300px; max-width: 300px;background-color: #fff;border-radius: 10px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);margin: 15px;width: 300px;overflow: hidden;transition: transform 0.2s;">
+                <a href="javascript:void(0);" class="unit-link" data-id="@unit.UnitId" style="text-decoration: none;">
+                    <img src="@unit.FirstImagePath" alt="@unit.UnitName" style="max-height: 143.475px; width: 100%;">
+                    <div class="content" style="color: black; text-align: center; padding:15px;">
+                        <h2 style="font-weight: 500; font-size:25px; margin: 0 0 10px;">@unit.UnitName</h2>
+                        <div class="details" style="justify-content: center;">
+                            <i class="fas fa-bed"></i> <span>@unit.NumberOfUnits Units</span>
+                            <i class="fa-solid fa-building"></i> <span>@unit.NumberOfRooms Rooms</span>
+                        </div>
+                        <p style="font-size: 14px;">
+                            @shortDescription
+                        </p>
                     </div>
                 </a>
             </div>
         }
 
+
     </div>
 </section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Handle click event on anchor links
+        $('.unit-link').on('click', function () {
+            var unitId = $(this).data('id'); // Get the unit ID from the data-id attribute
+
+            // Perform an AJAX GET request to the ATenantDetails action
+            $.ajax({
+                url: '/PTenant/PTenantDetails',  // Your controller and action
+                type: 'GET',
+                data: { id: unitId },  // Send the unit ID as a query parameter
+                success: function (response) {
+                    // Optionally, you can update the page with the response data here
+                    // For example, navigate to a new page with the received data or update the view dynamically
+                    window.location.href = '/PTenant/PTenantDetails?id=' + unitId; // Redirect to the ATenantDetails page
+                },
+                error: function () {
+                    alert('An error occurred while processing the request.');
+                }
+            });
+        });
+    });
+</script>
+
+
 

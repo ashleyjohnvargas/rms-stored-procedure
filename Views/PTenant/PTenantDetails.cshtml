@@ -308,19 +308,8 @@
                             </div>
                         </div>
                     </div>
-                    @if (Context.Session.GetInt32("UserId") == null)
-                    {
-                        <a asp-controller="Login" asp-action="Login">
-                            <button class="btn">Book This Unit Now</button>
-                        </a>
-                    }
-                    else
-                    {
-                        <a asp-controller="PTenant" asp-action="PTenantApply">
-                            <button class="btn">Book This Unit Now</button>
-                        </a>
-                    }
-
+                    <!-- Button to trigger AJAX request -->
+                    <button id="bookUnitBtn" class="btn" data-unit-id="@Model.UnitId">Book This Unit Now</button>
 
                    @*  @if (Context.Session.GetInt32("UserId") == null)
                     {
@@ -338,6 +327,40 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.getElementById("bookUnitBtn").addEventListener("click", function (event) {
+            // Prevent the default behavior (if any)
+            event.preventDefault();
+
+            // Get the unit ID from the button's data attribute
+            var unitId = event.target.getAttribute("data-unit-id");
+
+            // Use AJAX to send the unit ID to the ATenantApply action
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/PTenant/PTenantApply?unitId=" + unitId, true); // URL of the ATenantApply action
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // Handle the success response (you can update the page or navigate to another page if needed)
+                    console.log("Unit applied successfully: " + xhr.responseText);
+                    // Optionally redirect or display a success message
+                    window.location.href = "/PTenant/PTenantApply?unitId=" + unitId; // Redirect to the apply page with unitId
+                } else {
+                    console.error("Error applying for unit: " + xhr.statusText);
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error("Request failed");
+            };
+
+            // Send the request
+            xhr.send();
+        });
+    </script>
+
 
 
 

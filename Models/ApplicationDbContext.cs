@@ -10,6 +10,7 @@ namespace PMS.Models
         public DbSet<PropertyManager> PropertyManagers { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Lease> Leases { get; set; }
+        public DbSet<LeaseDetails> LeaseDetails { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<UnitImage> UnitImages { get; set; }
         public DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
@@ -23,7 +24,7 @@ namespace PMS.Models
             // Set default values
             modelBuilder.Entity<Lease>()
                 .Property(l => l.LeaseStatus)
-                .HasDefaultValue("Active");
+                .HasDefaultValue("Pending");
 
             modelBuilder.Entity<MaintenanceRequest>()
                 .Property(mr => mr.RequestStatus)

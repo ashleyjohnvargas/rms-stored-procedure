@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PMS.Models;
 
@@ -11,9 +12,11 @@ using PMS.Models;
 namespace PMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250121224621_AddLeaseDetailsTableInDatabase")]
+    partial class AddLeaseDetailsTableInDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,9 +83,6 @@ namespace PMS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CurrentAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployerName")
@@ -201,9 +201,7 @@ namespace PMS.Migrations
 
                     b.HasKey("ManagerID");
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("UserId");
 
                     b.ToTable("PropertyManagers");
                 });
@@ -224,9 +222,7 @@ namespace PMS.Migrations
 
                     b.HasKey("StaffID");
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Staffs");
                 });
@@ -252,9 +248,7 @@ namespace PMS.Migrations
 
                     b.HasKey("TenantID");
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tenants");
                 });
@@ -453,8 +447,8 @@ namespace PMS.Migrations
             modelBuilder.Entity("PMS.Models.PropertyManager", b =>
                 {
                     b.HasOne("PMS.Models.User", "User")
-                        .WithOne("PropertyManager")
-                        .HasForeignKey("PMS.Models.PropertyManager", "UserId");
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -462,8 +456,8 @@ namespace PMS.Migrations
             modelBuilder.Entity("PMS.Models.Staff", b =>
                 {
                     b.HasOne("PMS.Models.User", "User")
-                        .WithOne("Staff")
-                        .HasForeignKey("PMS.Models.Staff", "UserId");
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -471,8 +465,8 @@ namespace PMS.Migrations
             modelBuilder.Entity("PMS.Models.Tenant", b =>
                 {
                     b.HasOne("PMS.Models.User", "User")
-                        .WithOne("Tenant")
-                        .HasForeignKey("PMS.Models.Tenant", "UserId");
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -499,15 +493,6 @@ namespace PMS.Migrations
             modelBuilder.Entity("PMS.Models.Unit", b =>
                 {
                     b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("PMS.Models.User", b =>
-                {
-                    b.Navigation("PropertyManager");
-
-                    b.Navigation("Staff");
-
-                    b.Navigation("Tenant");
                 });
 #pragma warning restore 612, 618
         }

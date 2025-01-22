@@ -16,5 +16,8 @@ namespace PMS.Models
         public string? PhoneNumber { get; set; }
         // Set default value for IsActive in the constructor
         public bool IsActive { get; set; } = true; // Default value is true
+        public virtual Tenant? Tenant { get; set; } // Navigation property
+        public virtual PropertyManager? PropertyManager { get; set; }
+        public virtual Staff? Staff { get; set; }
     }
 }

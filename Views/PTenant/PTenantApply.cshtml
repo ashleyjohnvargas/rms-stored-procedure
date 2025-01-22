@@ -12,8 +12,8 @@
         padding: 40px 10px;
         background-color: #e7e1d3;
         display: flex;
-        flex-direction: column;
         align-items: center;
+        justify-content: center;
     }
 
     .form-container {
@@ -22,6 +22,7 @@
         background: #ffffff;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
+        width: -webkit-fill-available;
     }
 
     h1 {
@@ -127,39 +128,43 @@
 </style>
 <!-- Home Details Section -->
 <section class="apply-leasing">
-    <div class="cancel-button">
-        <a asp-controller="PTenant" asp-action="PTenantHomePage" style="text-decoration: none; display: flex; gap:5px; font-size:25px; align-items: center; color: #333;">
-            <i class="fa-solid fa-arrow-left-long"></i> Cancel
-        </a>
-    </div>
+    @* <div class="cancel-button">
+    <a asp-controller="PTenant" asp-action="PTenantHomePage" style="text-decoration: none; display: flex; gap:5px; font-size:25px; align-items: center; color: #333;">
+    <i class="fa-solid fa-arrow-left-long"></i> Cancel
+    </a>
+    </div> *@
     <div class="form-container">
         <h1>Apply for Leasing</h1>
-        <form action="/submit-leasing-application" method="POST" style="display: flex;flex-direction: column;gap: 40px;">
+        <form asp-action="ApplyForLease" method="post" style="display: flex;flex-direction: column;gap: 40px;">
+
 
             <!-- Personal Information Section -->
             <fieldset>
+                <p>UnitId passed to the view: @Model</p>
+
+                <input type="hidden" name="UnitId" value="@Model" required />
                 <legend>Personal Information</legend>
-                <label for="full-name">Full Name:</label>
-                <input type="text" id="full-name" name="full_name" required>
+                <label for="FullName">Full Name:</label>
+                <input type="text" id="FullName" name="FullName" required>
 
-                <label for="dob">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" required>
+                <label for="BirthDate">Date of Birth:</label>
+                <input type="date" id="BirthDate" name="BirthDate">
 
-                <label for="contact-number">Contact Number:</label>
-                <input type="tel" id="contact-number" name="contact_number" required>
+                <label for="ContactNumber">Contact Number:</label>
+                <input type="text" id="ContactNumber" name="ContactNumber" required>
 
-                <label for="email">Email Address:</label>
-                <input type="email" id="email" name="email" required>
+                <label for="Email">Email Address:</label>
+                <input type="email" id="Email" name="Email" required>
 
-                <label for="current-address">Current Address:</label>
-                <textarea id="current-address" name="current_address" rows="3" required></textarea>
+                <label for="CurrentAddress">Current Address:</label>
+                <textarea id="CurrentAddress" name="CurrentAddress" rows="3"></textarea>
             </fieldset>
 
             <!-- Employment Information Section -->
             <fieldset>
                 <legend>Employment and Income</legend>
-                <label for="employment-status">Employment Status:</label>
-                <select id="employment-status" name="employment_status" required>
+                <label for="EmploymentStatus">Employment Status:</label>
+                <select id="EmploymentStatus" name="EmploymentStatus" required>
                     <option value="">Select</option>
                     <option value="employed">Employed</option>
                     <option value="self-employed">Self-employed</option>
@@ -168,11 +173,11 @@
                     <option value="retired">Retired</option>
                 </select>
 
-                <label for="employer-name">Employer Name:</label>
-                <input type="text" id="employer-name" name="employer_name">
+                <label for="EmployerName">Employer Name:</label>
+                <input type="text" id="EmployerName" name="EmployerName">
 
-                <label for="monthly-income">Monthly Income:</label>
-                <input type="number" id="monthly-income" name="monthly_income" step="0.01">
+                <label for="MonthlyIncome">Monthly Income:</label>
+                <input type="number" id="MonthlyIncome" name="MonthlyIncome" step="0.01">
             </fieldset>
 
             <!-- Desired Leasing Details Section -->
@@ -180,42 +185,48 @@
                 <legend>Leasing Details</legend>
                 @* <label for="preferred-property">Preferred Property:</label>
                 <select id="preferred-property" name="preferred_property" required>
-                    <option value="">Select</option>
-                    <option value="property1">Property 1</option>
-                    <option value="property2">Property 2</option>
+                <option value="">Select</option>
+                <option value="property1">Property 1</option>
+                <option value="property2">Property 2</option>
                 </select> *@
 
-                <label for="lease-duration">Lease Duration:</label>
-                <select id="lease-duration" name="lease_duration" required>
-                    <option value="6_months">6 Months</option>
-                    <option value="12_months">12 Months</option>
+                <label for="LeaseDuration">Lease Duration:</label>
+                <select id="LeaseDuration" name="LeaseDuration" required>
+                    <option value="6">6 Months</option>
+                    <option value="7">7 Months</option>
+                    <option value="8">8 Months</option>
+                    <option value="9">9 Months</option>
+                    <option value="10">10 Months</option>
+                    <option value="11">11 Months</option>
+                    <option value="12">12 Months</option>
                 </select>
 
-                <label for="move-in-date">Move-in Date:</label>
-                <input type="date" id="move-in-date" name="move_in_date" required>
+                <label for="LeaseStartDate">Move-in Date:</label>
+                <input type="date" id="LeaseStartDate" name="LeaseStartDate" required>
             </fieldset>
 
             @* <!-- References Section -->
             <fieldset>
-                <legend>References</legend>
-                <label for="reference-name">Reference Name:</label>
-                <input type="text" id="reference-name" name="reference_name" required>
+            <legend>References</legend>
+            <label for="reference-name">Reference Name:</label>
+            <input type="text" id="reference-name" name="reference_name" required>
 
-                <label for="reference-contact">Reference Contact:</label>
-                <input type="tel" id="reference-contact" name="reference_contact" required>
+            <label for="reference-contact">Reference Contact:</label>
+            <input type="tel" id="reference-contact" name="reference_contact" required>
             </fieldset> *@
 
             <!-- Terms and Agreement -->
             <fieldset>
                 <legend>Terms and Agreement</legend>
                 <div style="display: flex;">
-                    <input type="checkbox" id="agree" name="agree" style="width: auto;" required>
-                    <label for="agree">
+                    <!-- The hidden field will send false when checkbox is unchecked -->
+                    @* <input type="hidden" name="TermsAndConditions" value="false" /> *@
+                    <input type="checkbox" id="TermsAndConditions" name="TermsAndConditions" value="true" style="width: auto;" required>
+                    <label for="TermsAndConditions">
                         I agree to the terms and conditions.
                     </label>
-                </div>    
+                </div>
             </fieldset>
-
             <!-- Submit -->
             <button type="submit">Submit Application</button>
         </form>

@@ -1,10 +1,10 @@
-﻿@* @using Microsoft.AspNetCore.Http
- *@
+﻿@using Microsoft.AspNetCore.Http
 
 @{
     //Layout = null; // Disable the layout for this view
     ViewData["Title"] = "Cozy Homes - Units";
     Layout = "~/Views/Shared/_LayoutATenant.cshtml";
+    
 
     // @if (Context.Session.GetInt32("UserId") == null)
     // {
@@ -30,8 +30,8 @@
             ? unit.Description.Substring(0, descriptionLength) + "..."
             : unit.Description;
 
-            <div class="card" id="unit-card" style="min-width: 300px; max-width: 300px;background-color: #fff;border-radius: 10px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);margin: 15px;width: 300px;overflow: hidden;transition: transform 0.2s; ">
-                <a asp-controller="ATenant" asp-action="ATenantDetails" asp-route-id="@unit.UnitId" style="text-decoration: none;">
+            <div class="card" id="unit-card" style="min-width: 300px; max-width: 300px;background-color: #fff;border-radius: 10px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);margin: 15px;width: 300px;overflow: hidden;transition: transform 0.2s;">
+                <a href="javascript:void(0);" class="unit-link" data-id="@unit.UnitId" style="text-decoration: none;">
                     <img src="@unit.FirstImagePath" alt="@unit.UnitName" style="max-height: 143.475px; width: 100%;">
                     <div class="content" style="color: black; text-align: center; padding:15px;">
                         <h2 style="font-weight: 500; font-size:25px; margin: 0 0 10px;">@unit.UnitName</h2>
@@ -47,6 +47,34 @@
             </div>
         }
 
+
     </div>
 </section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Handle click event on anchor links
+        $('.unit-link').on('click', function () {
+            var unitId = $(this).data('id'); // Get the unit ID from the data-id attribute
+
+            // Perform an AJAX GET request to the ATenantDetails action
+            $.ajax({
+                url: '/ATenant/ATenantDetails',  // Your controller and action
+                type: 'GET',
+                data: { id: unitId },  // Send the unit ID as a query parameter
+                success: function (response) {
+                    // Optionally, you can update the page with the response data here
+                    // For example, navigate to a new page with the received data or update the view dynamically
+                    window.location.href = '/ATenant/ATenantDetails?id=' + unitId; // Redirect to the ATenantDetails page
+                },
+                error: function () {
+                    alert('An error occurred while processing the request.');
+                }
+            });
+        });
+    });
+</script>
+
 

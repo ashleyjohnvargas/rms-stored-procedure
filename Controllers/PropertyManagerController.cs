@@ -244,6 +244,7 @@ namespace PMS.Controllers
                 .Include(p => p.Lease.Unit) // Include Unit for unit name and monthly rent
                 .Select(p => new ManagerPaymentDisplayModel
                 {
+                    PaymentId = p.PaymentID,
                     TenantFullName = p.Lease.LeaseDetails.FullName, // Tenant full name from LeaseDetails
                     Amount = p.Amount, // Amount from Payments
                     UnitName = p.Lease.Unit.UnitName, // Unit name from Units table
@@ -254,6 +255,47 @@ namespace PMS.Controllers
                 .ToList();
 
             return View(payments); // Pass the list of PaymentDisplayModel to the view
+        }
+
+
+        public IActionResult ManagerPreviewInvoice(int id)
+        {
+            // Retrieve the Payment record based on PaymentID (id)
+            var payment = _context.Payments
+                                  .Include(p => p.Lease)
+                                      .ThenInclude(l => l.Unit)
+                                  .Include(p => p.Lease)
+                                      .ThenInclude(l => l.LeaseDetails)
+                                  .FirstOrDefault(p => p.PaymentID == id);
+
+            if (payment == null)
+            {
+                return NotFound(); // Handle the case where the payment record doesn't exist
+            }
+
+            // Get Lease and Tenant Details
+            var lease = payment.Lease;
+            var tenantName = lease?.LeaseDetails?.FullName;
+
+            // Get Unit Name
+            var unitName = lease?.Unit?.UnitName;
+
+            // Prepare the Invoice Preview Model
+            var invoicePreviewModel = new InvoicePreviewModel
+            {
+                PaymentId = payment.PaymentID,
+                LeaseNumber = lease?.LeaseID.ToString() ?? "N/A",
+                UnitName = unitName ?? "N/A",
+                MonthlyRent = payment.Amount ?? 0,
+                TenantName = tenantName ?? "N/A",
+                PaymentDate = payment.PaymentDate?.Date ?? DateTime.Now.Date,
+                PaymentTime = payment.PaymentDate?.ToString("hh:mm tt") ?? "N/A",
+                PaymentMethod = payment.PaymentMethod ?? "N/A",
+                PaymentStatus = payment.PaymentStatus
+            };
+
+            // Pass the model to the view
+            return View(invoicePreviewModel);
         }
 
 

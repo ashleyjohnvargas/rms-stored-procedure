@@ -197,7 +197,7 @@
                         <td>@payment.PaymentDate</td>
                         <td>@payment.PaymentMethod</td>
                         <td>
-                            <a>
+                            <a asp-action="ManagerPreviewInvoice" asp-route-id="@payment.PaymentId" style="padding: 5px 12px;background-color: #B0836E;color: white;border-radius: 5px; cursor: pointer; text-decoration: none;>
                                 Receipt
                             </a>
                         </td>

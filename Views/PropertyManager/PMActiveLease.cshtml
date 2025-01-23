@@ -156,10 +156,10 @@
     </div>
 
     <div class="units-list-header">
-        <a asp-action="PMManageLease">
+        @* <a asp-action="PMManageLease">
             <i class="fas fa-arrow-left" style="font-size: 24px; color: white;"></i>
         </a>
-        
+         *@
         <h2>Active Leases</h2>
     </div>
 
@@ -198,7 +198,7 @@
                         <td>@(lease.LeaseEndDate.HasValue ? lease.LeaseEndDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
                         <td>@lease.LeaseStatus</td>
                         <td>
-                            <a href="/contract/Lease_Contract.pdf" download>View Contract</a>
+                            <a asp-action="DownloadLeaseAgreement" asp-route-id="@lease.LeaseID">View Full Document</a>
                         </td>
                         <td class="action-icons">
                             <a title="Edit" href="@Url.Action("EditLease", "Lease", new { id = lease.LeaseID })" style="font-size: 20px;">

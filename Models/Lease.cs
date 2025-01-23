@@ -16,6 +16,7 @@ namespace PMS.Models
         public DateTime? LeaseStartDate { get; set; } // Or RentStartDate
         public int? LeaseDuration { get; set; } // Duration of the lease in months
         public DateTime? LeaseEndDate { get; set; } // Or RentEndDate
+        // Add this property to store the file path of the lease agreement
         public string? LeaseAgreementFilePath { get; set; } // File path of the lease agreement PDF
         public string? LeaseStatus { get; set; } = "Pending"; // Default value is Pending
         public bool? TermsAndConditions { get; set; } // This will capture the checkbox value

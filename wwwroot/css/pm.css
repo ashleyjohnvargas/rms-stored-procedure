@@ -404,29 +404,3 @@ footer {
     align-items: center;
     justify-content: center;
 }
-
-.sub-tabs {
-    margin-left: 20px; /* Indent sub-tabs */
-    list-style-type: none; /* Remove bullets */
-    display: none; /* Hide by default */
-}
-
-    .sub-tabs li a {
-        font-size: 12px; /* Adjust font size for sub-tabs */
-    }
-
-li:hover > .sub-tabs {
-    display: block; /* Show sub-tabs on hover */
-}
-
-.sidebar .sub-tabs {
-    margin-left: 15px; /* Adjust left indentation for sub-tabs */
-    padding: 0; /* Ensure no extra padding */
-    list-style-type: none; /* Remove bullet points for sub-tabs */
-}
-
-    .sidebar .sub-tabs li {
-        font-size: 13px; /* Smaller font size for sub-tabs */
-        margin: 0; /* Ensure no extra margin between sub-tab items */
-        padding: 5px 0; /* Add some spacing for better readability */
-    }

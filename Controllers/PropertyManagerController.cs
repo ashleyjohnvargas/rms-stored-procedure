@@ -60,6 +60,39 @@ namespace PMS.Controllers
 
             return View(leases);
         }
+
+
+        public IActionResult DownloadLeaseAgreement(int id)
+        {
+            // Retrieve the lease using the LeaseID
+            var lease = _context.Leases.FirstOrDefault(l => l.LeaseID == id);
+
+            if (lease == null || string.IsNullOrEmpty(lease.LeaseAgreementFilePath))
+            {
+                // If no lease found or file path is missing, return an error message
+                TempData["ErrorMessage"] = "Lease agreement not found.";
+                return RedirectToAction("PMManageLease"); // Redirect to a relevant page
+            }
+
+            // Combine the base path (wwwroot) and the relative file path stored in the database
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", lease.LeaseAgreementFilePath.TrimStart('/'));
+
+            // Check if the file exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                TempData["ErrorMessage"] = "Lease agreement file not found.";
+                return RedirectToAction("PMManageLease"); // Redirect to a relevant page
+            }
+
+            // Get the file content
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+            // Return the file for download with appropriate content type and filename
+            return File(fileBytes, "application/pdf", Path.GetFileName(filePath));
+        }
+
+
+
         public IActionResult PMAssignMaintenance()
         {
             return View();
@@ -90,6 +123,118 @@ namespace PMS.Controllers
                 return View(new List<UnitViewModel>()); // Return an empty list in case of error
             }
         }
+
+
+        [HttpPost]
+        public IActionResult UpdateLeaseStatus(LeaseValidationModel model)
+        {
+            // Check if at least two valid IDs are selected
+            if (model.ValidIDs.Count < 2)
+            {
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Please select at least two valid IDs.";
+                TempData["PopupTitle"] = "Insufficient ID!";  // Set the custom title
+                TempData["PopupIcon"] = "warning";  // Set the icon dynamically (can be success, error, info, warning)
+                ModelState.AddModelError("", "At least two valid IDs must be selected.");
+                return RedirectToAction("PMManageLease"); // Return the view with validation errors
+            }
+
+            // Check if all selected IDs are valid
+            foreach (var id in model.ValidIDs)
+            {
+                if (!model.IDValidationResults.TryGetValue(id, out bool isValid) || !isValid)
+                {
+                    TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                    TempData["PopupMessage"] = "Selected IDs must be valid to proceed.";
+                    TempData["PopupTitle"] = "Invalid requirement!";  // Set the custom title
+                    TempData["PopupIcon"] = "warning";  // Set the icon dynamically (can be success, error, info, warning)
+                    ModelState.AddModelError("", "At least two valid IDs must be selected.");
+                    ModelState.AddModelError("", $"The ID '{id}' is not valid.");
+                    return RedirectToAction("PMManageLease");
+                }
+            }
+
+            // Check if the lease agreement and security deposit are confirmed
+            if (!model.LeaseAgreement || !model.SecurityDeposit)
+            {
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Applicant must have signed the lease and paid the security deposit.";
+                TempData["PopupTitle"] = "Missing requirement!";  // Set the custom title
+                TempData["PopupIcon"] = "warning";  // Set the icon dynamically (can be success, error, info, warning)
+                ModelState.AddModelError("", "At least two valid IDs must be selected.");
+                ModelState.AddModelError("", "Lease agreement and security deposit must be confirmed.");
+                return RedirectToAction("PMManageLease");
+            }
+
+            // Check if a payment method is selected
+            if (string.IsNullOrWhiteSpace(model.PaymentMethod))
+            {
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Please select the payment method used by the applicant.";
+                TempData["PopupTitle"] = "Missing requirement!";  // Set the custom title
+                TempData["PopupIcon"] = "warning";  // Set the icon dynamically (can be success, error, info, warning)
+                ModelState.AddModelError("", "A payment method must be selected.");
+                return RedirectToAction("PMManageLease");
+            }
+
+            if (model.LeaseAgreementFile == null)
+            {
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Please upload the contract.";
+                TempData["PopupTitle"] = "Missing requirement!";  // Set the custom title
+                TempData["PopupIcon"] = "warning";  // Set the icon dynamically (can be success, error, info, warning)
+                return RedirectToAction("PMManageLease");
+            }
+
+
+            // Process the uploaded lease agreement PDF file
+            if (model.LeaseAgreementFile != null && model.LeaseAgreementFile.Length > 0)
+            {
+                // Define the path to save the file in wwwroot/contracts
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "contracts");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath); // Create the directory if it does not exist
+                }
+
+                var filePath = Path.Combine(folderPath, model.LeaseAgreementFile.FileName);
+
+                // Save the file to the defined path
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.LeaseAgreementFile.CopyTo(stream);
+                }
+
+                // Update the LeaseAgreementFilePath in the Lease model
+                var currentLease = _context.Leases.FirstOrDefault(l => l.LeaseID == model.LeaseID);
+                if (currentLease != null)
+                {
+                    currentLease.LeaseAgreementFilePath = "/contracts/" + model.LeaseAgreementFile.FileName; // Store relative file path
+                    _context.SaveChanges();
+                }
+            }
+
+
+
+            // All validations passed, update the lease status
+            // Update the LeaseStatus in the database (pseudo code)
+            var lease = _context.Leases.Find(model.LeaseID);
+            lease.LeaseStatus = "Active";
+
+            var tenant = _context.Tenants.FirstOrDefault(t => t.TenantID == lease.TenantID);    
+            tenant.IsActualTenant = true; // Set the tenant as the actual tenant
+            _context.SaveChanges();
+
+            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+            TempData["PopupMessage"] = "Lease application has been successfully confirmed";
+            TempData["PopupTitle"] = "Tenant Confirmed";  // Set the custom title
+            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+            return RedirectToAction("PMActiveLease"); // Redirect to a relevant page
+        }
+
+
+
+
         public IActionResult PMPayments()
         {
             return View();

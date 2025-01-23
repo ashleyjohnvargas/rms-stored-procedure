@@ -132,6 +132,46 @@
         #manage-units-body {
             margin-right: 15px;
         }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position to stay in view */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust for element's width and height */
+            z-index: 1050; /* Ensure it appears above other elements */
+            background-color: white; /* Modal background */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Add shadow for better visibility */
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .modal-dialog {
+            margin: 0; /* Remove margin to avoid misalignment */
+        }
+
+        .modal-header,
+        .modal-body {
+            padding: 15px; /* Add some padding for better layout */
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-title {
+            margin: 0;
+        }
+
+        .close {
+            cursor: pointer;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+        }
     </style>
 </head>
 <body id="manage-units-body">
@@ -140,9 +180,9 @@
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 Swal.fire({
-                    title: 'Success!',
-                    text: '@TempData["PopupMessage"]',
-                    icon: 'success',
+                    title: '@TempData["PopupTitle"]',  // Set the title dynamically
+                    text: '@TempData["PopupMessage"]', // Set the message dynamically
+                    icon: '@TempData["PopupIcon"]',    // Set the icon dynamically (success, error, warning, info)
                     confirmButtonText: 'OK'
                 });
             });
@@ -197,7 +237,7 @@
                             <a href="/contract/Lease_Contract.pdf" download>View Contract</a>
                         </td>
                         <td class="action-icons">
-                            <a title="Edit" href="@Url.Action("EditLease", "Lease", new { id = lease.LeaseID })" style="font-size: 20px;">
+                            <a title="Edit" href="#" onclick="openEditModal('@lease.LeaseID')" style="font-size: 20px;">
                                 <i class="fas fa-edit edit"></i>
                             </a>
                             <form method="post" action="@Url.Action("DeleteLease", "Lease", new { id = lease.LeaseID })" style="display:inline;">
@@ -229,28 +269,114 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Lease</h5>
+                    <h5 class="modal-title">Confirm Tenant Validation Form</h5>
                     <button type="button" class="close" onclick="closeModal()" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="editLeaseForm" method="post" action="@Url.Action("UpdateLeaseStatus", "Lease")">
-                        <input type="hidden" id="leaseId" name="LeaseID">
-                        <div class="form-group">
-                            <label for="leaseStatus">Lease Status</label>
-                            <select id="leaseStatus" name="LeaseStatus" class="form-control">
-                                <option value="Pending">Pending</option>
-                                <option value="Active">Active</option>
-                                <option value="Completed">Completed</option>
-                            </select>
+                    <form asp-action="UpdateLeaseStatus" id="validationForm" method="post" enctype="multipart/form-data">
+                        <!-- Hidden LeaseID -->
+                        <input type="hidden" id="leaseId" name="LeaseID" />
+
+                        <!-- Row 1: Title -->
+                        <h4>Applicant Requirements Validation</h4>
+
+                        <!-- Row 2: Valid IDs -->
+                        <div id="validIDsSection">
+                            <h5>Select at least two valid IDs submitted by the applicant.</h5>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="StudentID" id="StudentID" onchange="validateIDSelection()" />
+                                <label for="StudentID">Student ID</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="DriverLicense" id="DriverLicense" onchange="validateIDSelection()" />
+                                <label for="DriverLicense">Driver's License</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="Passport" id="Passport" onchange="validateIDSelection()" />
+                                <label for="Passport">Passport</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="VoterID" id="VoterID" onchange="validateIDSelection()" />
+                                <label for="VoterID">Voter's ID</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="PhilHealthID" id="PhilHealthID" onchange="validateIDSelection()" />
+                                <label for="PhilHealthID">PhilHealth ID</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="TinID" id="TinID" onchange="validateIDSelection()" />
+                                <label for="TinID">TIN ID</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="PostalID" id="PostalID" onchange="validateIDSelection()" />
+                                <label for="PostalID">Postal ID</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="PoliceClearance" id="PoliceClearance" onchange="validateIDSelection()" />
+                                <label for="PoliceClearance">Police Clearance</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="NbiClearance" id="NbiClearance" onchange="validateIDSelection()" />
+                                <label for="NbiClearance">NBI Clearance</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="ValidIDs" value="NationalID" id="NationalID" onchange="validateIDSelection()" />
+                                <label for="NationalID">National ID</label>
+                            </div>
+                            <div id="idSelectionError" style="color: red; display: none;">Please select at least two valid IDs.</div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+
+                        <!-- Row 3: Questions for each selected ID -->
+                        <div id="idValidationQuestions" style="display: none;">
+                            <h5>Validate Selected IDs</h5>
+                            <!-- Questions will be dynamically added here -->
+                        </div>
+
+                        <!-- Row 4: Lease agreement and security deposit -->
+                        <div id="agreementSection" style="display: none;">
+                            <h5>Validation</h5>
+                            <div>
+                                <input type="checkbox" id="leaseAgreement" name="LeaseAgreement" value="true"/>
+                                <label for="leaseAgreement">Tenant has signed the lease agreement</label>
+                                <!-- Hidden input for unchecked checkbox -->
+                                <input type="hidden" name="LeaseAgreement" value="false" />
+                            </div>
+                            <!-- Add PDF File Input -->
+                            <div>
+                                <label for="LeaseAgreementFile">Upload Lease Agreement:</label>
+                                <input type="file" name="LeaseAgreementFile" id="LeaseAgreementFile" accept="application/pdf" required/>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="securityDeposit" name="SecurityDeposit" onchange="togglePaymentMethod()" value="true"/>
+                                <label for="securityDeposit">Tenant has paid the security deposit</label>
+                                <!-- Hidden input for unchecked checkbox -->
+                                <input type="hidden" name="SecurityDeposit" value="false" />
+
+                            </div>
+                            <div id="paymentMethod" style="display: none;">
+                                <label for="paymentOption">Payment Method:</label>
+                                <select id="paymentOption" name="PaymentMethod">
+                                    <option value="Card">Card</option>
+                                    <option value="EWallet">E-Wallet</option>
+                                    <option value="OverTheCounter">Over The Counter</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Confirm Tenant Section -->
+                        <div id="confirmSection">
+                            <button id="confirmTenantButton" type="button" class="btn btn-primary" onclick="confirmTenant()" disabled>
+                                Confirm Tenant
+                            </button>
+                        </div>
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 
     <script>
         // Show modal when "Edit" is clicked
@@ -274,11 +400,98 @@
             });
         });
 
-        // Close modal
-        function closeModal() {
-            const modal = document.getElementById('editLeaseModal');
-            modal.style.display = 'none';
+        function validateIDSelection() {
+            const checkboxes = document.querySelectorAll("#validIDsSection input[type='checkbox']");
+            const selectedIDs = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+            const idValidationQuestions = document.getElementById("idValidationQuestions");
+            const idSelectionError = document.getElementById("idSelectionError");
+
+            if (selectedIDs.length >= 2) {
+                idSelectionError.style.display = "none";
+                idValidationQuestions.style.display = "block";
+
+                // Clear existing questions
+                idValidationQuestions.innerHTML = "<h5>Validate Selected IDs</h5>";
+
+                // Add questions dynamically for selected IDs
+                selectedIDs.forEach(id => {
+                    const question = document.createElement("div");
+                    question.innerHTML = `
+                        <label>Is the ${id.value} valid?</label>
+                                <input type="radio" name="IDValidationResults[${id.value}]" value="true" onclick="checkAllQuestionsAnswered()" /> Yes
+                                <input type="radio" name="IDValidationResults[${id.value}]" value="false" onclick="checkAllQuestionsAnswered()" /> No
+                    `;
+                    idValidationQuestions.appendChild(question);
+                });
+            } else {
+                idValidationQuestions.style.display = "none";
+                idSelectionError.style.display = "block";
+            }
+
+            checkAllQuestionsAnswered();
         }
+
+        function checkAllQuestionsAnswered() {
+            const idValidationQuestions = document.getElementById("idValidationQuestions");
+            const questions = idValidationQuestions.querySelectorAll("div");
+            const allAnswered = Array.from(questions).every(question =>
+                question.querySelector("input[type='radio']:checked")
+            );
+
+            const agreementSection = document.getElementById("agreementSection");
+            agreementSection.style.display = allAnswered ? "block" : "none";
+
+            checkConfirmButton();
+        }
+
+        function togglePaymentMethod() {
+            const paymentMethod = document.getElementById("paymentMethod");
+            const securityDepositChecked = document.getElementById("securityDeposit").checked;
+            paymentMethod.style.display = securityDepositChecked ? "block" : "none";
+            checkConfirmButton();
+        }
+
+        function checkConfirmButton() {
+            const leaseAgreementChecked = document.getElementById("leaseAgreement").checked;
+            const securityDepositChecked = document.getElementById("securityDeposit").checked;
+            const paymentMethodVisible = document.getElementById("paymentMethod").style.display === "block";
+            const paymentOptionSelected = paymentMethodVisible
+                ? document.getElementById("paymentOption").value !== ""
+                : true;
+
+            const idValidationQuestions = document.getElementById("idValidationQuestions");
+            const allIDQuestionsAnswered = Array.from(
+                idValidationQuestions.querySelectorAll("div")
+            ).every(div => div.querySelector("input[type='radio']:checked"));
+
+            const confirmButton = document.getElementById("confirmTenantButton");
+
+            confirmButton.disabled = !(
+                leaseAgreementChecked &&
+                securityDepositChecked &&
+                paymentOptionSelected &&
+                allIDQuestionsAnswered
+            );
+        }
+
+
+        function confirmTenant() {
+            const confirmation = confirm("Are you sure you want to confirm this application?");
+            if (confirmation) {
+                document.getElementById("validationForm").submit();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById("editLeaseModal").style.display = "none";
+        }
+
+        function openEditModal(leaseId) {
+            document.getElementById("editLeaseModal").style.display = "block";
+            document.getElementById("leaseId").value = leaseId;
+        }
+
+
     </script>
 
 

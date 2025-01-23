@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PMS.Models;
 
@@ -11,9 +12,11 @@ using PMS.Models;
 namespace PMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250123152434_RequestStatusNotNullable")]
+    partial class RequestStatusNotNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,11 +265,11 @@ namespace PMS.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<TimeOnly?>("ShiftEndTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime?>("ShiftEndTime")
+                        .HasColumnType("datetime2");
 
-                    b.Property<TimeOnly?>("ShiftStartTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime?>("ShiftStartTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("StaffRole")
                         .HasColumnType("nvarchar(max)");

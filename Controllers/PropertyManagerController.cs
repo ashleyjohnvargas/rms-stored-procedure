@@ -235,7 +235,7 @@ namespace PMS.Controllers
 
 
 
-        public IActionResult PMPayments()
+        public IActionResult PMPaymentsOrig()
         {
             // Fetch payments and related data from the database
             var payments = _context.Payments
@@ -605,6 +605,37 @@ namespace PMS.Controllers
                 .ToList();
 
             return Json(filteredUnits); // Return filtered units as JSON
+        }
+
+        public IActionResult PMStaff()
+        {
+            // Retrieve all staff from the database, including related User information
+            var staffList = _context.Staffs
+                .Select(staff => new
+                {
+                    StaffID = staff.StaffID,
+                    StaffName = staff.UserId != null ? staff.User.FirstName + " " + staff.User.LastName : "Unknown",
+                    StaffRole = staff.StaffRole,
+                    Shift = (staff.ShiftStartTime.HasValue && staff.ShiftEndTime.HasValue)
+                        ? (staff.ShiftStartTime.Value.Hour == 6 && staff.ShiftEndTime.Value.Hour == 14 ? "First"
+                        : staff.ShiftStartTime.Value.Hour == 14 && staff.ShiftEndTime.Value.Hour == 22 ? "Second"
+                        : staff.ShiftStartTime.Value.Hour == 22 || staff.ShiftStartTime.Value.Hour == 0 ? "Third"
+                        : "Unknown")
+                        : "Unknown",
+                    Availability = staff.IsVacant ? "Vacant" : "Occupied"
+                })
+                .ToList()
+                .Select(staff => new StaffViewModel
+                {
+                    StaffID = staff.StaffID,
+                    StaffName = staff.StaffName,
+                    StaffRole = staff.StaffRole,
+                    Shift = staff.Shift,
+                    Availability = staff.Availability
+                })
+                .ToList();
+
+            return View(staffList);
         }
 
 

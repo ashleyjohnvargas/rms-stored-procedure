@@ -13,9 +13,9 @@ namespace PMS.Models
         public DbSet<LeaseDetails> LeaseDetails { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<UnitImage> UnitImages { get; set; }
-        public DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Request> Requests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +49,14 @@ namespace PMS.Models
             modelBuilder.Entity<Tenant>()
                 .Property(t => t.IsActualTenant)
                 .HasDefaultValue(false);
+
+            modelBuilder.Entity<Staff>()
+                .Property(s => s.IsVacant)
+                .HasDefaultValue(true);
+
+            modelBuilder.Entity<Request>()
+                .Property(r => r.RequestStatus)
+                .HasDefaultValue("Pending");
         }
     }
 }

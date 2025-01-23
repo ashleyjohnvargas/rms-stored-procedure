@@ -2,7 +2,7 @@
     ViewData["Title"] = "Cozy Homes - Units";
     Layout = "~/Views/Shared/_LayoutPM.cshtml";
 }
-@model IEnumerable<LeaseViewModel>
+@model List<PMS.Models.StaffViewModel>
 
 
 <!DOCTYPE html>
@@ -56,7 +56,7 @@
             padding: 10px 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
         }
 
         .search-bar {
@@ -157,11 +157,12 @@
     </div>
 
     <div class="units-list-header">
-        <h2>Requests</h2>
+        <h2>Staff</h2>
+        <a style="text-decoration: none;background-color: white;color: #B0836E;padding: 10px 20px;border-radius: 10px; font-weight: 600;">Add Staff</a>
     </div>
 
     <div class="search-bar" style="margin: 20px 0;">
-        <input type="text" placeholder="Search requests..." id="searchInput">
+        <input type="text" placeholder="Search staff..." id="searchInput">
         <button class="search-unit-button">Search</button>
     </div>
 
@@ -169,28 +170,30 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Tenant Name</th>
-                <th>Unit</th>
-                <th>Request Date</th>
-                <th>Issue</th>
-                <th>Assigned Staff</th>
-                <th>Status</th>
+                <th>Staff</th>
+                <th>Role</th>
+                <th>Shift</th>
+                <th>Availability</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @if (Model != null && Model.Any())
             {
                 int index = 1;
-                foreach (var request in Model)
+                foreach (var staff in Model)
                 {
                     <tr>
                         <td>@index</td>
-                        <td>John Doe</td>
-                        <td>Unit 101</td>
-                        <td>2024-01-05</td>
-                        <td>Electrical</td>
-                        <td>Michael James</td>
-                        <td>Pending</td>
+                        <td>@staff.StaffName</td>
+                        <td>@staff.StaffRole</td>
+                        <td>@staff.Shift</td>
+                        <td>@staff.Availability</td>
+                        <td>
+                            <a asp-route-id="@staff.StaffID">
+                                <i class="fas fa-trash delete"></i>
+                            </a>
+                        </td>
                     </tr>
                     index++;
                 }
@@ -198,7 +201,7 @@
             else
             {
                 <tr>
-                    <td colspan="9" style="text-align:center;">No requests found.</td>
+                    <td colspan="9" style="text-align:center;">No staff found.</td>
                 </tr>
             }
         </tbody>

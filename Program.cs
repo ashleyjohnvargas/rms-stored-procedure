@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using PMS.Models;
 
@@ -41,11 +42,11 @@ app.UseAuthorization();
 
 //app.MapStaticAssets();
 
-//PTenant
+//PTenant: THIS IS THE ORIGINAL... BRING BACK TO THIS...
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=PTenant}/{action=PTenantHomePage}/{id?}");
-//   .WithStaticAssets();
+   //.WithStaticAssets();
 
 ////Staff
 //app.MapControllerRoute(
@@ -61,5 +62,9 @@ app.MapControllerRoute(
 //app.MapControllerRoute(
 //    name: "default",
 //    pattern: "{controller=Login}/{action=Login}/{id?}");
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=ATenant}/{action=ATenantHome}/{id?}");
 
 app.Run();

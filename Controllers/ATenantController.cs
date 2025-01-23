@@ -373,6 +373,12 @@ namespace PMS.Controllers
         }
 
 
+        public IActionResult MakeRequest()
+        {
+            return View();
+        }
+
+
 
         public IActionResult ATenantMaintenance()
         {

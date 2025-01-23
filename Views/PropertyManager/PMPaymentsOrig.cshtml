@@ -1,8 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Cozy Homes - Units";
+    ViewData["Title"] = "Cozy Homes - Payments";
     Layout = "~/Views/Shared/_LayoutPM.cshtml";
 }
-@model IEnumerable<LeaseViewModel>
+@model List<ManagerPaymentDisplayModel> 
+<!-- Replace with actual namespace -->
 
 
 <!DOCTYPE html>
@@ -35,19 +36,19 @@
             padding: 10px 20px;
         }
 
-            .header h1 {
-                color: black;
-                margin: 0;
-            }
+        .header h1 {
+            color: black;
+            margin: 0;
+        }
 
-            .header .add-unit {
-                background-color: #B0836E;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 5px;
-                cursor: pointer;
-            }
+        .header .add-unit {
+            background-color: #B0836E;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
         .units-list-header {
             background-color: #B0836E;
@@ -64,21 +65,21 @@
             text-align: right;
         }
 
-            .search-bar input[type="text"] {
-                padding: 10px;
-                width: 200px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-            }
+        .search-bar input[type="text"] {
+            padding: 10px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-            .search-bar button {
-                padding: 10px 15px;
-                background-color: #B0836E;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-            }
+        .search-bar button {
+            padding: 10px 15px;
+            background-color: #B0836E;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
         table {
             width: 100%;
@@ -86,48 +87,48 @@
             margin: 20px 0;
         }
 
-            table th, table td {
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: center;
-            }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
 
-            table th {
-                background-color: #B0836E;
-                color: white;
-            }
+        table th {
+            background-color: #B0836E;
+            color: white;
+        }
 
-            table tr:nth-child(even) {
-                background-color: #f9f9f9;
-            }
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
 
         .pagination {
             text-align: right;
             margin: 20px 0;
         }
 
-            .pagination button {
-                background-color: #B0836E;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                margin: 0 5px;
-                border-radius: 5px;
-                cursor: pointer;
-            }
+        .pagination button {
+            background-color: #B0836E;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
         .action-icons i {
             cursor: pointer;
             margin: 0 5px;
         }
 
-            .action-icons i.edit {
-                color: #007bff;
-            }
+        .action-icons i.edit {
+            color: #007bff;
+        }
 
-            .action-icons i.delete {
-                color: #dc3545;
-            }
+        .action-icons i.delete {
+            color: #dc3545;
+        }
 
         #manage-units-body {
             margin-right: 15px;
@@ -148,7 +149,6 @@
             });
         </script>
     }
-
     <div class="header" style="margin-top: 50px; padding: 10px 0;">
 
         @* <h1 style="color: #B0836E;">Leases</h1> *@
@@ -157,11 +157,15 @@
     </div>
 
     <div class="units-list-header">
-        <h2>Requests</h2>
+        @* <a asp-action="PMManageLease">
+        <i class="fas fa-arrow-left" style="font-size: 24px; color: white;"></i>
+        </a>
+        *@
+        <h2>Payments</h2>
     </div>
 
     <div class="search-bar" style="margin: 20px 0;">
-        <input type="text" placeholder="Search requests..." id="searchInput">
+        <input type="text" placeholder="Search payments..." id="searchInput">
         <button class="search-unit-button">Search</button>
     </div>
 
@@ -169,28 +173,34 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Tenant Name</th>
+                <th>Tenant</th>
+                <th>Amount</th>
                 <th>Unit</th>
-                <th>Request Date</th>
-                <th>Issue</th>
-                <th>Assigned Staff</th>
-                <th>Status</th>
+                <th>Monthly Rent</th>
+                <th>Date</th>
+                <th>Payment Method</th>
+                <th>View Invoice</th>
             </tr>
         </thead>
         <tbody>
             @if (Model != null && Model.Any())
             {
                 int index = 1;
-                foreach (var request in Model)
+                foreach (var payment in Model)
                 {
                     <tr>
                         <td>@index</td>
-                        <td>John Doe</td>
-                        <td>Unit 101</td>
-                        <td>2024-01-05</td>
-                        <td>Electrical</td>
-                        <td>Michael James</td>
-                        <td>Pending</td>
+                        <td>@payment.TenantFullName</td>
+                        <td>@String.Format("{0:C}", payment.Amount).Replace("$", "₱")</td>
+                        <td>@payment.UnitName</td>
+                        <td>@String.Format("{0:C}", payment.MonthlyRent).Replace("$", "₱")</td>
+                        <td>@payment.PaymentDate</td>
+                        <td>@payment.PaymentMethod</td>
+                        <td>
+                            <a asp-action="ManagerPreviewInvoice" asp-route-id="@payment.PaymentId" style="padding: 5px 12px;background-color: #B0836E;color: white;border-radius: 5px; cursor: pointer; text-decoration: none;">
+                                Receipt
+                            </a>
+                        </td>
                     </tr>
                     index++;
                 }
@@ -198,7 +208,7 @@
             else
             {
                 <tr>
-                    <td colspan="9" style="text-align:center;">No requests found.</td>
+                    <td colspan="9" style="text-align:center;">No leases found.</td>
                 </tr>
             }
         </tbody>
@@ -209,8 +219,9 @@
         <button style="margin: 0 0 0 5px;">Next</button>
     </div>
 
+
+
 </body>
 </html>
-
 
 

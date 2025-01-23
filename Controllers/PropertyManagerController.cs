@@ -237,8 +237,25 @@ namespace PMS.Controllers
 
         public IActionResult PMPayments()
         {
-            return View();
+            // Fetch payments and related data from the database
+            var payments = _context.Payments
+                .Include(p => p.Lease) // Include the Lease navigation property
+                .ThenInclude(l => l.LeaseDetails) // Include LeaseDetails for tenant's full name
+                .Include(p => p.Lease.Unit) // Include Unit for unit name and monthly rent
+                .Select(p => new ManagerPaymentDisplayModel
+                {
+                    TenantFullName = p.Lease.LeaseDetails.FullName, // Tenant full name from LeaseDetails
+                    Amount = p.Amount, // Amount from Payments
+                    UnitName = p.Lease.Unit.UnitName, // Unit name from Units table
+                    MonthlyRent = p.Lease.Unit.PricePerMonth, // Monthly rent from Units table
+                    PaymentDate = p.PaymentDate.HasValue ? p.PaymentDate.Value.ToString("MM/dd/yyyy") : "N/A",
+                    PaymentMethod = p.PaymentMethod // Payment method from Payments table
+                })
+                .ToList();
+
+            return View(payments); // Pass the list of PaymentDisplayModel to the view
         }
+
 
         public IActionResult PMRequest()
         {

@@ -638,6 +638,82 @@ namespace PMS.Controllers
             return View(staffList);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddStaff(AddStaffViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("All fields are required.");
+            }
+
+            try
+            {
+                // Create instance of the Users table
+                var newUser = new User
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Password = model.Password, // Consider hashing the password
+                    Role = "Staff", // Default role for all staff
+                    TermsAndConditions = true // Default value
+                };
+
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync();
+
+                // Get the generated UserId
+                int userId = newUser.UserID;
+
+                // Set default shift times based on the selected shift
+                TimeOnly? shiftStartTime = null;
+                TimeOnly? shiftEndTime = null;
+
+                switch (model.Shift)
+                {
+                    case "First":
+                        shiftStartTime = TimeOnly.FromTimeSpan(new TimeSpan(6, 0, 0)); // 6 AM
+                        shiftEndTime = TimeOnly.FromTimeSpan(new TimeSpan(14, 0, 0)); // 2 PM
+                        break;
+                    case "Second":
+                        shiftStartTime = TimeOnly.FromTimeSpan(new TimeSpan(14, 0, 0)); // 2 PM
+                        shiftEndTime = TimeOnly.FromTimeSpan(new TimeSpan(22, 0, 0)); // 10 PM
+                        break;
+                    case "Third":
+                        shiftStartTime = TimeOnly.FromTimeSpan(new TimeSpan(22, 0, 0)); // 10 PM
+                        shiftEndTime = TimeOnly.FromTimeSpan(new TimeSpan(6, 0, 0)); // 6 AM
+                        break;
+                    default:
+                        return BadRequest("Invalid shift selected.");
+                }
+
+                // Create instance of the Staffs table
+                var newStaff = new Staff
+                {
+                    UserId = userId,
+                    StaffRole = model.Role,
+                    ShiftStartTime = shiftStartTime,
+                    ShiftEndTime = shiftEndTime,
+                    IsVacant = true
+                };
+
+                _context.Staffs.Add(newStaff);
+                await _context.SaveChangesAsync();
+
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Staff added successfully!";
+                TempData["PopupTitle"] = "Success!";  // Set the custom title
+                TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+
+                return RedirectToAction("PMStaff");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
 
     }
 }

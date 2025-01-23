@@ -190,7 +190,7 @@
                         <td>@staff.Shift</td>
                         <td>@staff.Availability</td>
                         <td>
-                            <a asp-route-id="@staff.StaffID">
+                            <a asp-action="DeleteStaff" asp-route-id="@staff.StaffID">
                                 <i class="fas fa-trash delete"></i>
                             </a>
                         </td>

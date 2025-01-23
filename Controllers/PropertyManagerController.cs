@@ -611,6 +611,7 @@ namespace PMS.Controllers
         {
             // Retrieve all staff from the database, including related User information
             var staffList = _context.Staffs
+                .Where(staff => staff.UserId != null && staff.User.IsActive) // Filter by active users
                 .Select(staff => new
                 {
                     StaffID = staff.StaffID,
@@ -711,6 +712,37 @@ namespace PMS.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+
+        //[HttpPost]
+        public IActionResult DeleteStaff(int id)
+        {
+            // Find the staff record using the provided staff ID
+            var staff = _context.Staffs.FirstOrDefault(s => s.StaffID == id);
+            if (staff == null)
+            {
+                return NotFound("Staff not found.");
+            }
+
+            // Find the associated user using the UserId from the staff record
+            var user = _context.Users.FirstOrDefault(u => u.UserID == staff.UserId);
+            if (user == null)
+            {
+                return NotFound("Associated user not found.");
+            }
+
+            // Set the IsActive field to false (soft delete)
+            user.IsActive = false;
+
+            // Save changes to the database
+            _context.SaveChanges();
+
+            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+            TempData["PopupMessage"] = "Staff deleted successfully!";
+            TempData["PopupTitle"] = "Success!";  // Set the custom title
+            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+
+            return RedirectToAction("PMStaff");
         }
 
 

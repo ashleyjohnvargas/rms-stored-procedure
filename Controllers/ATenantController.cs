@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PMS.Models;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 
 namespace PMS.Controllers
@@ -288,8 +289,35 @@ namespace PMS.Controllers
 
         public IActionResult ATenantPayment()
         {
-            // Fetch all payment records from the database
+            // Get the UserId from the session
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                // Handle the case where the user is not logged in or session is missing
+                TempData["ErrorMessage"] = "You must be logged in to view your payments.";
+                return RedirectToAction("Login", "Account"); // Redirect to the login page or appropriate action
+            }
+
+            // Retrieve the Tenant associated with the UserId
+            var tenant = _context.Tenants.FirstOrDefault(t => t.UserId == userId);
+
+            if (tenant == null)
+            {
+                // Handle the case where no tenant is found for the UserId
+                TempData["ErrorMessage"] = "No tenant found for this user.";
+                return RedirectToAction("Index", "Home"); // Redirect to a general home page or appropriate action
+            }
+
+            // Retrieve all the LeaseIDs associated with the tenant
+            var leaseIds = _context.Leases
+                .Where(l => l.TenantID == tenant.TenantID)
+                .Select(l => l.LeaseID)
+                .ToList();
+
+            // Retrieve all the payments associated with the LeaseIDs for the current user
             var payments = _context.Payments
+                .Where(p => leaseIds.Contains((int)p.LeaseID))
                 .Select(p => new PaymentsDisplayModel
                 {
                     PaymentID = p.PaymentID,
@@ -302,6 +330,7 @@ namespace PMS.Controllers
 
             return View(payments);
         }
+
 
         public IActionResult PreviewInvoice(int id)
         {

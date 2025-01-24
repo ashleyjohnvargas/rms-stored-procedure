@@ -753,6 +753,25 @@ namespace PMS.Controllers
             return RedirectToAction("PMStaff");
         }
 
+        public IActionResult CancelPendingLease(int id)
+        {
+            var lease = _context.Leases.FirstOrDefault(l => l.LeaseID == id);
+            if (lease == null)
+            {
+                return NotFound("Lease not found.");
+            }
+
+            lease.LeaseStatus = "Cancelled";
+            _context.Leases.Update(lease);
+            _context.SaveChanges();
+
+            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+            TempData["PopupMessage"] = "Lease has been cancelled successfully!";
+            TempData["PopupTitle"] = "Lease Cancelled!";  // Set the custom title
+            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+            return RedirectToAction("PMManageLease");
+        }
+
 
 
     }

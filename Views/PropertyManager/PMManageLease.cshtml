@@ -233,14 +233,12 @@
                         <td>@(lease.LeaseEndDate.HasValue ? lease.LeaseEndDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
                         <td>@lease.LeaseStatus</td>
                         <td class="action-icons">
-                            <a title="Edit" href="#" onclick="openEditModal('@lease.LeaseID')" style="font-size: 20px;">
+                            <a title="Edit" onclick="openEditModal('@lease.LeaseID')" style="font-size: 20px;">
                                 <i class="fas fa-edit edit"></i>
                             </a>
-                            <form method="post" action="@Url.Action("DeleteLease", "Lease", new { id = lease.LeaseID })" style="display:inline;">
-                                <button type="submit" title="Delete" style="background: none; border: none; padding: 0; width: fit-content; height: fit-content;">
-                                    <i class="fas fa-trash delete" style="font-size: 20px;"></i>
-                                </button>
-                            </form>
+                            <a asp-action="CancelPendingLease" asp-route-id="@lease.LeaseID" id="cancel-lease-btn">
+                                <i class="fas fa-trash delete" style="font-size: 20px;"></i>
+                            </a>
                         </td>
                     </tr>
                     index++;
@@ -486,6 +484,11 @@
             document.getElementById("editLeaseModal").style.display = "block";
             document.getElementById("leaseId").value = leaseId;
         }
+
+        const cancelLeaseBtn = document.getElementById('cancel-lease-btn');
+        cancelLeaseBtn.addEventListener('click', () => {
+            alert('Are you sure you want to cancel this lease?');
+        });
 
 
     </script>

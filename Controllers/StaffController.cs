@@ -38,7 +38,7 @@ namespace PMS.Controllers
 
             // Get all requests assigned to this staff with RequestStatus = "Pending"
             var requests = staff.Requests
-                .Where(r => r.RequestStatus == "Pending")
+                .Where(r => r.RequestStatus != "Completed")
                 .ToList();
 
 
@@ -125,6 +125,38 @@ namespace PMS.Controllers
 
             return View(model);
         }
+
+
+        //[HttpPost]
+        public IActionResult StartRequest(int id)
+        {
+            // Retrieve the request by its ID
+            var request = _context.Requests.FirstOrDefault(r => r.RequestID == id);
+
+            if (request == null)
+            {
+                // Handle the case where the request does not exist
+                return NotFound();
+            }
+
+            // Update the RequestStartDateTime to the current date and time
+            request.RequestStartDateTime = DateTime.Now;
+
+            // Update the RequestStatus to "Ongoing"
+            request.RequestStatus = "Ongoing";
+
+            // Save the changes to the database
+            _context.SaveChanges();
+
+            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+            TempData["PopupMessage"] = "Request has been successfully started!";
+            TempData["PopupTitle"] = "Request Started!";  // Set the custom title
+            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+
+            // Redirect to the SMaintenanceAssignment view or wherever is appropriate
+            return RedirectToAction("SMaintenanceAssignment");
+        }
+
 
 
 

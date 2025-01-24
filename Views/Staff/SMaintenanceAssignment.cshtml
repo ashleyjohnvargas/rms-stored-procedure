@@ -122,10 +122,26 @@
     }
 
     .start-btn:hover, .mark-as-done-btn:hover {
-        color; white-space;
+        color: white;
     }
 </style>
 <div class="requests-container-list" style="min-height: 100vh;">
+
+    @if (TempData["ShowPopup"] != null && (bool)TempData["ShowPopup"])
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                Swal.fire({
+                    title: '@TempData["PopupTitle"]',  // Set the title dynamically
+                    text: '@TempData["PopupMessage"]', // Set the message dynamically
+                    icon: '@TempData["PopupIcon"]',    // Set the icon dynamically (success, error, warning, info)
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    }
+
+
     <header>
         <div class="main-header">
             <p><span class="header-title">MAINTENANCE ASSIGNMENT</span></p>
@@ -163,7 +179,7 @@
                                 <td>@item.Category</td>
                                 <td>@item.Status</td>
                                 <td>
-                                    <a class="start-btn" style="text-decoration: none;" href="#">Start</a>
+                                    <a asp-action="StartRequest" asp-route-id="@item.RequestID" class="start-btn" style="text-decoration: none;">Start</a>
                                     <a class="mark-as-done-btn" id="markAsDoneBtn" style="text-decoration: none;" href="#">Mark As Done</a>
                                 </td>
                             </tr>
@@ -213,13 +229,7 @@
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    // Initialize flatpickr for date picker
-    flatpickr("#done-date", {
-      dateFormat: "F j, Y",
-      defaultDate: new Date() // Default to today
-    });
 
     // Modal functionality
     const modal = document.getElementById('markAsDoneModal');

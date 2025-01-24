@@ -811,6 +811,132 @@ namespace PMS.Controllers
             return RedirectToAction("PMActiveLease");
         }
 
+        public IActionResult PMApplyLease()
+        {
+            var units = _context.Units
+                .Where(u => u.UnitStatus == "Active" && u.AvailabilityStatus == "Available")
+                .Select(u => new PMUnitViewModel
+                {
+                    UnitId = u.UnitID, // Adjust property names to match your database
+                    UnitName = u.UnitName
+                })
+                .ToList();
+
+            return View(units);
+        }
+
+
+        [HttpPost]
+        public IActionResult PMApplyForLease(LeaseApplication leaseApplication)
+        {
+            // Log all values of the LeaseApplication object to the console
+            Console.WriteLine("LeaseApplication object values:");
+            Console.WriteLine($"FullName: {leaseApplication.FullName}");
+            Console.WriteLine($"BirthDate: {leaseApplication.BirthDate}");
+            Console.WriteLine($"ContactNumber: {leaseApplication.ContactNumber}");
+            Console.WriteLine($"Email: {leaseApplication.Email}");
+            Console.WriteLine($"CurrentAddress: {leaseApplication.CurrentAddress}");
+            Console.WriteLine($"EmploymentStatus: {leaseApplication.EmploymentStatus}");
+            Console.WriteLine($"EmployerName: {leaseApplication.EmployerName}");
+            Console.WriteLine($"MonthlyIncome: {leaseApplication.MonthlyIncome}");
+            Console.WriteLine($"UnitId: {leaseApplication.UnitId}");
+            Console.WriteLine($"LeaseStartDate: {leaseApplication.LeaseStartDate}");
+            Console.WriteLine($"LeaseDuration: {leaseApplication.LeaseDuration}");
+            Console.WriteLine($"TermsAndConditions: {leaseApplication.TermsAndConditions}");
+
+            if (leaseApplication == null)
+            {
+                return BadRequest("Invalid lease application.");
+            }
+
+            // Validate required fields
+            if (leaseApplication.UnitId == null ||
+                leaseApplication.LeaseStartDate == null || leaseApplication.LeaseDuration == null ||
+                leaseApplication.TermsAndConditions != true)
+            {
+                ModelState.AddModelError("", "All required fields must be filled out.");
+                return RedirectToAction("PMApplyLease", new { unitId = leaseApplication.UnitId });
+            }
+
+            // Extract FirstName and LastName from FullName
+            var fullNameParts = leaseApplication.FullName.Split(' ', 2);
+            var firstName = fullNameParts.Length > 0 ? fullNameParts[0] : string.Empty;
+            var lastName = fullNameParts.Length > 1 ? fullNameParts[1] : string.Empty;
+
+            // Create a new User instance
+            var user = new User
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = leaseApplication.Email,
+                Password = firstName.ToLower(), // Lowercased first name
+                Role = "Tenant",
+                TermsAndConditions = true
+            };
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            // Create a new Tenant instance linked to the User
+            var tenant = new Tenant
+            {
+                UserId = user.UserID
+            };
+
+            _context.Tenants.Add(tenant);
+            _context.SaveChanges();
+
+            // Calculate LeaseEndDate based on LeaseDuration and LeaseStartDate
+            DateTime? leaseEndDate = leaseApplication.LeaseStartDate?.AddMonths(leaseApplication.LeaseDuration.Value);
+
+            // Create a new Lease instance
+            var lease = new Lease
+            {
+                TenantID = tenant.TenantID, // Use the newly created TenantID
+                UnitId = leaseApplication.UnitId,
+                LeaseStartDate = leaseApplication.LeaseStartDate,
+                LeaseDuration = leaseApplication.LeaseDuration,
+                LeaseEndDate = leaseEndDate,
+                LeaseStatus = "Pending", // Default value for LeaseStatus
+                TermsAndConditions = leaseApplication.TermsAndConditions
+            };
+
+            _context.Leases.Add(lease);
+            _context.SaveChanges();
+
+            // Create LeaseDetails instance
+            var leaseDetails = new LeaseDetails
+            {
+                LeaseID = lease.LeaseID,
+                FullName = leaseApplication.FullName,
+                BirthDate = leaseApplication.BirthDate,
+                ContactNumber = leaseApplication.ContactNumber,
+                Email = leaseApplication.Email,
+                CurrentAddress = leaseApplication.CurrentAddress,
+                EmploymentStatus = leaseApplication.EmploymentStatus,
+                EmployerName = leaseApplication.EmployerName,
+                MonthlyIncome = leaseApplication.MonthlyIncome
+            };
+
+            _context.LeaseDetails.Add(leaseDetails);
+            _context.SaveChanges();
+
+            try
+            {
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Lease has been applied successfully for the tenant!";
+                TempData["PopupTitle"] = "Success!";  // Set the custom title
+                TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+                return RedirectToAction("PMManageLease"); // Redirect to a success page or confirmation
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while saving the lease application: " + ex.Message);
+                return RedirectToAction("PMApplyLease", new { unitId = leaseApplication.UnitId });
+            }
+        }
+
+
 
 
     }

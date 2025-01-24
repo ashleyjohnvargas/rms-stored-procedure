@@ -938,6 +938,36 @@ namespace PMS.Controllers
 
 
 
+        public IActionResult EditLease(EditLeaseFormModel editLeaseFormModel)
+        {
+            var lease = _context.Leases.FirstOrDefault(l => l.LeaseID == editLeaseFormModel.LeaseId);
+            if (lease == null)
+            {
+                return NotFound("Lease not found.");
+            }
+
+            if (editLeaseFormModel.StartDate != null)
+            {
+                lease.LeaseStartDate = editLeaseFormModel.StartDate;
+                _context.Leases.Update(lease);
+            }
+
+            if (editLeaseFormModel.EndDate != null)
+            {
+                lease.LeaseEndDate = editLeaseFormModel.EndDate;
+                _context.Leases.Update(lease);
+            }
+
+            _context.SaveChanges();
+
+            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+            TempData["PopupMessage"] = "Lease has been updated successfully!";
+            TempData["PopupTitle"] = "Success!";  // Set the custom title
+            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+
+            return RedirectToAction("PMActiveLease");
+        }
+
 
     }
 }

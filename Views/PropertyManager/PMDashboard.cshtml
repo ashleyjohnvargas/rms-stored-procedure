@@ -1,60 +1,127 @@
-﻿@{
+﻿﻿@{
     ViewData["Title"] = "Cozy Homes - Dashboard";
     Layout = "~/Views/Shared/_LayoutPM.cshtml";
 }
 
-<div class="main-content">
-    <header>
-        <h1>Dashboard</h1>
-        <div class="user-info">
-            <span>cheryl</span>
-            <span>Admin</span>
-        </div>
-    </header>
+@model PMDashboardViewModel
 
-    <div class="stats">
-        <div class="card">
-            <h3>Total Units</h3>
-            <p>100</p>
-        </div>
-        <div class="card">
-            <h3>Total Tenants</h3>
-            <p>65</p>
-        </div>
-        <div class="card">
-            <h3>Occupancy Rate</h3>
-            <p>65%</p>
-        </div>
-        <div class="card">
-            <h3>Total Income of This Month</h3>
-            <p>156,456.00</p>
-        </div>
-        <div class="card">
-            <h3>Total Expense of This Month</h3>
-            <p>26,456.00</p>
-        </div>
-        <div class="card">
-            <h3>Units Available</h3>
-            <p>22</p>
-        </div>
-    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Homes: Dashboard</title>
 
-    <div class="charts">
-        <div class="chart">
-            <h3>Payment Status</h3>
-            <canvas id="paymentStatusChart"></canvas>
+    <meta name="theme-color" content="#000000" />
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" asp-append-version="true">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <link rel="stylesheet" href="~/css/pmanager.css" asp-append-version="true">
+</head>
+
+    <section class="pm-dashboard">
+        <div class="header-container">
+            <h2>DASHBOARD</h2>
+            <button class="report">Generate Reports</button>
         </div>
-        <div class="chart">
-            <h3>Maintenance Status</h3>
-            <canvas id="maintenanceStatusChart"></canvas>
+
+        <div class="dashboard-container">
+            <div class="dashboard-card">
+                <h4>Total Units</h4>
+            <p>@Model.TotalUnits</p>
+            </div>
+            <div class="dashboard-card">
+                <h4>Total Tenants</h4>
+            <p>@Model.TotalTenants</p>
+            </div>
+            <div class="dashboard-card">
+                <h4>Occupancy Rate</h4>
+            <p>@Model.OccupancyRate.ToString("F2")%</p>
+            </div>
+            <div class="dashboard-card">
+                <h4>Units Available</h4>
+            <p>@Model.UnitsAvailable</p>
+            </div>
         </div>
-        <div class="chart">
-            <h3>Top Rented Units</h3>
-            <canvas id="topRentedUnitsChart"></canvas>
+        <div class="total-container">
+            <div class="main-card">
+                <h4>Total Income Today</h4>
+            <p>@Model.TotalIncomeToday.ToString("C")</p>
+            </div>
+            <div class="main-card">
+                <h4>Total Income This Month</h4>
+            <p>@Model.TotalIncomeThisMonth.ToString("C")</p>
+            </div>
         </div>
-        <div class="chart">
-            <h3>Most Picked Unit Type</h3>
-            <canvas id="mostPickedUnitTypeChart"></canvas>
+
+        <div class="charts-container">
+            <div class="chart-card">
+                <h4>Maintenance Status</h4>
+                <canvas id="maintenanceStatusChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h4>Top Rented Units</h4>
+                <canvas id="topRentedChart"></canvas>
+            </div>
         </div>
-    </div>
-</div>
+
+    
+    </section>
+
+
+
+<script>
+    // Maintenance Status (Pie Chart)
+    var maintenanceStatusCtx = document.getElementById('maintenanceStatusChart').getContext('2d');
+    var maintenanceStatusChart = new Chart(maintenanceStatusCtx, {
+        type: 'pie',
+        data: {
+            labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.MaintenanceStatus.Select(ms => ms.Status))),
+            datasets: [{
+                data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.MaintenanceStatus.Select(ms => ms.Percentage))),
+                backgroundColor: ['#caf0f8', '#588157', '#fb6f92', '#43291f', '#ffd6ff'],
+                borderColor: '#14213d',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#faf0ca',
+                        font: { size: 16 }
+                    }
+                }
+            }
+        }
+    });
+
+    // Top Rented Units (Pie Chart)
+    var topRentedCtx = document.getElementById('topRentedChart').getContext('2d');
+    var topRentedChart = new Chart(topRentedCtx, {
+        type: 'pie',
+        data: {
+            labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.TopRentedUnits.Select(u => u.UnitName))),
+            datasets: [{
+                data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.TopRentedUnits.Select(u => u.Percentage))),
+                backgroundColor: ['#caf0f8', '#588157', '#fb6f92', '#43291f', '#ffd6ff'],
+                borderColor: '#14213d',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#faf0ca',
+                        font: { size: 16 }
+                    }
+                }
+            }
+        }
+    });
+</script>

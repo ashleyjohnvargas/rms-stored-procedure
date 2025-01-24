@@ -13,10 +13,83 @@ namespace PMS.Controllers
         }
 
 
-        public IActionResult PMDashboard()
+        public async Task<IActionResult> PMDashboard()
         {
-            return View();
+            // Total Units: Count all active units
+            var totalUnits = await _context.Units
+                .CountAsync(u => u.UnitStatus == "Active");
+
+            // Total Tenants: Count all users with Role "Tenant" and IsActive = true
+            var totalTenants = await _context.Users
+                .CountAsync(u => u.Role == "Tenant" && u.IsActive);
+
+            // Units Available: Count all units with AvailabilityStatus "Available"
+            var unitsAvailable = await _context.Units
+                .CountAsync(u => u.AvailabilityStatus == "Available");
+
+            // Total Income Today: Sum of Amount for today's payments
+            var totalIncomeToday = await _context.Payments
+                .Where(p => p.PaymentDate.HasValue && p.PaymentDate.Value.Date == DateTime.Now.Date)
+                .SumAsync(p => (decimal?)p.Amount) ?? 0;
+
+            // Total Income This Month: Sum of Amount for payments in the current month
+            var currentMonth = DateTime.Now.Month;
+            var currentYear = DateTime.Now.Year;
+            var totalIncomeThisMonth = await _context.Payments
+                .Where(p => p.PaymentDate.HasValue &&
+                            p.PaymentDate.Value.Month == currentMonth &&
+                            p.PaymentDate.Value.Year == currentYear)
+                .SumAsync(p => (decimal?)p.Amount) ?? 0;
+
+            // Occupancy Rate: Percentage of active units that are leased
+            var totalLeasedUnits = await _context.Leases
+                .Select(l => l.UnitId)
+                .Distinct()
+                .CountAsync();
+            var occupancyRate = totalUnits > 0 ? (double)totalLeasedUnits / totalUnits * 100 : 0;
+
+            // Maintenance Status: Calculate the percentage of each request status
+            var totalRequests = await _context.Requests.CountAsync();
+            var maintenanceStatus = await _context.Requests
+                .GroupBy(r => r.RequestStatus)
+                .Select(group => new MaintenanceStatusViewModel
+                {
+                    Status = group.Key,
+                    Percentage = totalRequests > 0 ? (group.Count() * 100.0) / totalRequests : 0
+                })
+                .ToListAsync();
+
+
+            // Top Rented Units: Frequency of each unit in the Leases table (percentage)
+            var topRentedUnits = await _context.Leases
+                .GroupBy(l => l.Unit.UnitName)
+                .Select(group => new TopRentedUnitViewModel
+                {
+                    UnitName = group.Key,
+                    Percentage = totalLeasedUnits > 0 ? (group.Count() * 100.0) / totalLeasedUnits : 0
+                })
+                .OrderByDescending(u => u.Percentage)
+                .Take(5) // Limit to top 5
+                .ToListAsync();
+
+
+            // Prepare the dashboard view model
+            var dashboardModel = new PMDashboardViewModel
+            {
+                TotalUnits = totalUnits,
+                TotalTenants = totalTenants,
+                OccupancyRate = Math.Round(occupancyRate, 2),
+                UnitsAvailable = unitsAvailable,
+                TotalIncomeToday = totalIncomeToday,
+                TotalIncomeThisMonth = totalIncomeThisMonth,
+                MaintenanceStatus = maintenanceStatus,
+                TopRentedUnits = topRentedUnits
+            };
+
+            return View(dashboardModel);
         }
+
+
         public IActionResult PMManageLease()
         {
             // Assuming _context is your DbContext instance

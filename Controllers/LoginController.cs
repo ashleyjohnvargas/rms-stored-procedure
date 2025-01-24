@@ -84,8 +84,7 @@ namespace PMS.Controllers
 
         public IActionResult Register()
         {
-            var user = new User();
-            return View(user);
+            return View();
         }
 
         // RegisterUser action to handle form submission and save user data
@@ -151,6 +150,8 @@ namespace PMS.Controllers
                 {
                     UserId = newUser.UserID,
                 };
+                _context.PropertyManagers.Add(propertyManager);
+                _context.SaveChanges();
                 return RedirectToAction("PMDashboard", "PropertyManager");
             }
             else if (newUser.Role == "Staff")
@@ -160,6 +161,8 @@ namespace PMS.Controllers
                 {
                     UserId = newUser.UserID,
                 };
+                _context.Staffs.Add(staff);
+                _context.SaveChanges();
                 return RedirectToAction("SHomePage", "Staff");
             }
             else if (newUser.Role == "Tenant")
@@ -169,7 +172,9 @@ namespace PMS.Controllers
                 {
                     UserId = newUser.UserID,
                 };
-                return RedirectToAction("ATenantHome", "ATenant");
+                _context.Tenants.Add(tenant);
+                _context.SaveChanges();
+                return RedirectToAction("PTenantHomePage", "PTenant");
             }
 
             // If none of the conditions match, return to the Register action (or another appropriate action)

@@ -18,5 +18,10 @@ namespace PMS.Controllers
             return View();
         }
 
+        public IActionResult SHomePage()
+        {
+            return View();
+        }
+
     }
 }

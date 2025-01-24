@@ -1,0 +1,28 @@
+﻿﻿@{
+    ViewData["Title"] = "Cozy Homes - Staff Home";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+    // Layout = null;
+}
+
+<!-- Banner Section -->
+<section class="s-banner">
+    <img src="~/images/bg.png" alt="Banner Image" class="sbanner-img">
+    <div class="s-centered"> <span>Welcome, @Context.Session.GetString("FirstName") @Context.Session.GetString("LastName")!</span></div>
+</section>
+
+<!-- Dashboard -->
+<section class="s-home">
+    <div class="s-dashboard">
+        <div class="swelcome-message">
+            <h2>Check out the other tabs to get started with your tasks.</h2>
+            <span>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </span>
+        </div>
+    </div>
+</section>

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,23 +10,35 @@
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" asp-append-version="true">
     @* <link rel="stylesheet" href="homepage.css" asp-append-version="true" /> *@
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="~/css/styles.css" />
-    <!-- Add SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    @* <link rel="stylesheet" href="~/css/site.css"  /> *@
+    @* <link rel="stylesheet" href="~/css/styles.css"  /> *@
+    <link rel="stylesheet" href="~/css/staff.css" />
+    <link rel="stylesheet" href="~/css/maintenance.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+
+    <!-- Include Flatpickr Month Select Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+    <!-- Include Flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <!-- <link rel="stylesheet" href="~/RMS.styles.css" asp-append-version="true" /> -->
 </head>
 
 <body>
     <!-- Top Header -->
-    <div class="top-header">
+    <div class="stop-header">
         <!-- Optional: Add top header content here -->
     </div>
 
     <!-- Main Header -->
     <header>
-        <div class="main-header">
+        <div class="smain-header">
             <!-- Logo -->
             <div class="logo">
                 <img src="~/images/cozy-logo.png" alt="logo" style="height: 20px; width: 50px;">
@@ -35,16 +48,49 @@
             <!-- Navigation -->
             <nav>
                 <ul>
-                    <li><a asp-controller="Staff" asp-action="SMaintenanceAssignment">Maintenance Assignment</a></li>
-                    <li><a asp-controller="Staff" asp-action="SMaintenanceHistory">Maintenance History</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropbtn">
-                            <img src="~/images/user-pic.png" alt="logo" style="height: 35px; width: 35px;">
-                            Profile
+                    <li><a asp-controller="Staff" asp-action="SHomePage">Home</a></li>
+                    <li><a asp-controller="Staff" asp-action="SMaintenanceAssignment">Assignment</a></li>
+                    <li><a asp-controller="Staff" asp-action="SMaintenanceHistory">History</a></li>
+                    <li class="s-dropdown">
+                        <a href="#" class="dropbtn" aria-label="Notifications">
+                            <i class="fas fa-bell" style="margin-right: 10px; margin-top:4px; text-decoration: none"></i>
+                            @* Notifications *@
                         </a>
-                        <div class="dropdown-content">
-                            <a asp-controller="Staff" asp-action="SEditProfile">Edit Profile</a>
-                            <a asp-controller="Login" asp-action="Logout">Log Out</a>
+                    </li>
+                    <!-- <li><a href="#">About</a></li> -->
+                    <li class="s-dropdown">
+                        @* <a href="#" class="at-dropbtn" aria-label="User Profile"> *@
+                        @*     <img src="~/images/user-pic.png" alt="logo" style="height: 35px; width: 35px; margin-right: 10px;"> *@
+                        @*         @Context.Session.GetString("FirstName")  *@
+                        @*         @Context.Session.GetString("LastName") *@
+                        @* </a> *@
+
+                        <a href="#" class="s-dropbtn" aria-label="User Profile">
+                            @* @if (Context.Session.GetString("ProfilePicture") != null) *@
+                            @* { *@
+                            @*     <!-- Display Profile Picture --> *@
+                            @*     <img src="@Url.Content($"~/images/{Context.Session.GetString("ProfilePicture")}")" *@
+                            @*          alt="Profile Picture" *@
+                            @*          style="height: 35px; width: 35px; border-radius: 50%; margin-right: 10px;"> *@
+                            @* } *@
+                            @* else *@
+                            @* { *@
+                            <!-- Display Initials if No Profile Picture -->
+                            <div style="height: 35px; width: 35px; border-radius: 50%;
+                                    background-color: darkgrey; display: inline-flex;
+                                    align-items: center; justify-content: center;
+                                    font-weight: bold; color: #fff; margin-right: 10px;">
+                                @($"{Context.Session.GetString("FirstName")?.Substring(0, 1)}{Context.Session.GetString("LastName")?.Substring(0, 1)}")
+                            </div>
+                            @* } *@
+
+                            <!-- Display User Name -->
+                            @* @Context.Session.GetString("FirstName") @Context.Session.GetString("LastName") *@
+                        </a>
+
+                        <div class="sdropdown-content">
+                            <a asp-controller="Staff" asp-action="SProfilePage">Profile</a>
+                            <a asp-controller="Login" asp-action="Logout" class="logout" onclick="return confirmLogout(event);">Log Out</a>
                         </div>
                     </li>
                 </ul>
@@ -52,7 +98,7 @@
         </div>
     </header>
 
-    <div class="container">
+    <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -60,13 +106,76 @@
 
     <!-- Footer -->
     <footer>
-        <div class="container">
+        <div>
             <p>&copy; 2025 Cozy Homes. All rights reserved.</p>
         </div>
     </footer>
+
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);">
+        <div style="margin: 20% auto; padding: 20px; background: white; width: 300px; text-align: center;">
+            <p>Are you sure you want to logout?</p>
+            <button onclick="logoutConfirmed()">Yes</button>
+            <button onclick="closeModal()">No</button>
+        </div>
+    </div>
+    <script>
+        // Logout Confirmation
+        function confirmLogout(event) {
+            const confirmation = confirm("Are you sure you want to log out?");
+            if (!confirmation) {
+                // Prevent the default action if the user cancels
+                event.preventDefault();
+            }
+            return confirmation;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr("#date-picker", {
+                dateFormat: "F j, Y", // Format: January 15, 2025
+                defaultDate: "2025-01-15" // Set a default date
+            });
+        });
+
+        // Initialize Flatpickr with custom date format
+        flatpickr("#date-picker", {
+            dateFormat: "F j, Y", // Format: January 15, 2025
+            defaultDate: new Date(), // Default to today's date
+        });
+
+
+
+
+        // Initialize Flatpickr as a month picker
+        flatpickr("#month-picker", {
+            dateFormat: "F Y", // Display format: January 2025
+            defaultDate: new Date(), // Default to current month/year
+            plugins: [new monthSelectPlugin({ // Use the month select plugin
+                shorthand: false, // Full month names (e.g., January instead of Jan)
+                dateFormat: "F Y", // Display format in the input
+                altFormat: "F Y" // Alternate display format
+            })]
+        });
+
+
+
+        // Get today's date in YYYY-MM-DD format
+        // const today = new Date();
+        // const formattedDate = today.toISOString().split('T')[0]; "2025-01-22"
+
+        // Set the placeholder to today's date
+        // const datePicker = document.getElementById("date-picker");
+        // datePicker.placeholder = formattedDate;
+
+        // Optionally set the default value to today's date as well
+        // datePicker.value = formattedDate;
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/maintenance.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

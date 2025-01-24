@@ -772,6 +772,45 @@ namespace PMS.Controllers
             return RedirectToAction("PMManageLease");
         }
 
+        public IActionResult DeactivateActiveLease(int id)
+        {
+            var lease = _context.Leases.FirstOrDefault(l => l.LeaseID == id);
+            if (lease == null)
+            {
+                return NotFound("Lease not found.");
+            }
+
+            lease.LeaseStatus = "Inactive";
+            _context.Leases.Update(lease);
+
+            var tenant = _context.Tenants.FirstOrDefault(t => t.TenantID == lease.TenantID);
+            if (tenant == null)
+            {
+                return NotFound("Tenant not found.");
+            }
+
+            tenant.IsActualTenant = false;
+            _context.Tenants.Update(tenant);
+
+            var unit = _context.Units.FirstOrDefault(u => u.UnitID == lease.UnitId);
+            if (unit == null)
+            {
+                return NotFound("Unit not found.");
+            }
+
+            unit.AvailabilityStatus = "Available";
+            _context.Units.Update(unit);
+
+            _context.SaveChanges();
+
+
+            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+            TempData["PopupMessage"] = "Lease has been deactivated successfully!";
+            TempData["PopupTitle"] = "Lease Deactivated!";  // Set the custom title
+            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+            return RedirectToAction("PMActiveLease");
+        }
+
 
 
     }

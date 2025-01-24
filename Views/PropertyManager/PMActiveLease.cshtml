@@ -201,14 +201,12 @@
                             <a asp-action="DownloadLeaseAgreement" asp-route-id="@lease.LeaseID">View Full Document</a>
                         </td>
                         <td class="action-icons">
-                            <a title="Edit" href="@Url.Action("EditLease", "Lease", new { id = lease.LeaseID })" style="font-size: 20px;">
+                            <a title="Edit" style="font-size: 20px;">
                                 <i class="fas fa-edit edit"></i>
                             </a>
-                            <form method="post" action="@Url.Action("DeleteLease", "Lease", new { id = lease.LeaseID })" style="display:inline;">
-                                <button type="submit" title="Delete" style="background: none; border: none; padding: 0; width: fit-content; height: fit-content;">
-                                    <i class="fas fa-trash delete" style="font-size: 20px;"></i>
-                                </button>
-                            </form>
+                            <a asp-action="DeactivateActiveLease" asp-route-id="@lease.LeaseID" id="deactivate-lease-btn">
+                                <i class="fas fa-trash delete" style="font-size: 20px;"></i>
+                            </a> 
                         </td>
                     </tr>
                     index++;
@@ -229,66 +227,12 @@
     </div>
 
 
-    @*
-    <script>
-    document.querySelector(".search-unit-button").addEventListener("click", function () {
-    var searchQuery = document.querySelector("input[type='text']").value;
-
-    // Make an AJAX request to search for units based on the input
-    fetch(`/PropertyManager/SearchUnits?query=${searchQuery}`)
-    .then(response => response.json())
-    .then(data => {
-    updateUnitsTable(data);
-    })
-    .catch(error => console.error('Error:', error));
+<script>
+    const deactivateLeaseBtn = document.getElementById('deactivate-lease-btn');
+    deactivateLeaseBtn.addEventListener('click', () => {
+        alert('Are you sure you want to deactivate this lease?');
     });
-
-
-    // Function to handle input field changes
-    document.querySelector("#searchInput").addEventListener("input", function () {
-    var searchQuery = this.value;
-
-    // If the search input is empty, fetch all units
-    if (searchQuery === "") {
-    fetch(`/PropertyManager/SearchUnits?query=`)
-    .then(response => response.json())
-    .then(data => {
-    updateUnitsTable(data);
-    })
-    .catch(error => console.error('Error:', error));
-    }
-    });
-
-
-    // Update the table with the search results
-    function updateUnitsTable(units) {
-    const tbody = document.querySelector("table tbody");
-    tbody.innerHTML = ''; // Clear the existing rows
-
-    if (units.length > 0) {
-    units.forEach((unit, index) => {
-    let row = document.createElement('tr');
-    row.innerHTML = `
-    <td>${index + 1}</td>
-    <td>${unit.unitName}</td>
-    <td>${unit.pricePerMonth}</td>
-    <td>${unit.unitStatus}</td>
-    <td class="action-icons">
-    <a href="/Units/EditUnitPage/${unit.unitId}" title="Edit"><i class="fas fa-edit edit"></i></a>
-    <form action="/Units/DeleteUnit/${unit.unitId}" method="post" style="display:inline;">
-    <button type="submit" title="Delete" style="background: none; border: none;">
-    <i class="fas fa-trash delete"></i>
-    </button>
-    </form>
-    </td>
-    `;
-    tbody.appendChild(row);
-    });
-    } else {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No units found.</td></tr>';
-    }
-    }
-    </script> *@
+</script>
 
 </body>
 </html>

@@ -60,7 +60,7 @@ namespace PMS.Controllers
             }
             else if (user.Role == "Staff")
             {
-                return RedirectToAction("SMaintenanceAssignment", "Staff");
+                return RedirectToAction("SHomePage", "Staff");
             }
             // If the user is an actual tenant with a value of true for "IsActualTenant" field, redirect to actual tenant site
             else if (user.Role == "Tenant" && tenant.IsActualTenant)
@@ -160,7 +160,7 @@ namespace PMS.Controllers
                 {
                     UserId = newUser.UserID,
                 };
-                return RedirectToAction("SMaintenanceAssignment", "Staff");
+                return RedirectToAction("SHomePage", "Staff");
             }
             else if (newUser.Role == "Tenant")
             {

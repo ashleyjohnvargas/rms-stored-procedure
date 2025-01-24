@@ -17,7 +17,7 @@
             public virtual User? User { get; set; }
 
             // Navigation properties can be added if there are relationships, e.g., Maintenance Requests assigned to the staff
-            public virtual ICollection<MaintenanceRequest>? MaintenanceRequests { get; set; }
+            public virtual ICollection<Request>? Requests { get; set; }
 
             //First shift: 6AM - 2PM
             //Second shift: 2PM - 10PM

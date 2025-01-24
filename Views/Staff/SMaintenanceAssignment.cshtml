@@ -116,6 +116,14 @@
     .table-container th, .table-container td {
         text-align: center;
     }
+
+    .start-btn, .mark-as-done-btn {
+        text-decoration: none;
+    }
+
+    .start-btn:hover, .mark-as-done-btn:hover {
+        color; white-space;
+    }
 </style>
 <div class="requests-container-list" style="min-height: 100vh;">
     <header>
@@ -147,7 +155,7 @@
                         foreach (var item in Model)
                         {
                             <tr>
-                                <td>@index</td>
+                                <td>@index</td> 
                                 <td>@item.TenantName</td>
                                 <td>@item.UnitName</td>
                                 <td>@item.DateRequested</td>
@@ -165,7 +173,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="7" style="text-align:center;">No maintenance requests found.</td>
+                            <td colspan="7" style="text-align:center;">No maintenance requests.</td>
                         </tr>
                     }
                 </tbody>

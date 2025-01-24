@@ -36,8 +36,11 @@ namespace PMS.Controllers
                 return Unauthorized();
             }
 
-            // Get all requests assigned to this staff
-            var requests = staff.Requests;
+            // Get all requests assigned to this staff with RequestStatus = "Pending"
+            var requests = staff.Requests
+                .Where(r => r.RequestStatus == "Pending")
+                .ToList();
+
 
             // Build the view model to pass to the view
             var model = requests.Select(request =>

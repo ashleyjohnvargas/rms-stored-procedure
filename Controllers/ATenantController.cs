@@ -168,19 +168,19 @@ namespace PMS.Controllers
             _context.LeaseDetails.Add(leaseDetails);
             _context.SaveChanges();
 
-            // After the active tenant makes a lease, set the AvailabilityStatus of the selected unit into "Unavailable"
-            // Update the unit's AvailabilityStatus to "Unavailable"
-            var unit = _context.Units.FirstOrDefault(u => u.UnitID == leaseApplication.UnitId);
-            if (unit != null)
-            {
-                unit.AvailabilityStatus = "Occupied";
-                _context.SaveChanges(); // Save changes to update the unit status
-            }
-            else
-            {
-                ModelState.AddModelError("", "The specified unit does not exist.");
-                return RedirectToAction("ATenantApply", new { unitId = leaseApplication.UnitId });
-            }
+            //// After the active tenant makes a lease, set the AvailabilityStatus of the selected unit into "Unavailable"
+            //// Update the unit's AvailabilityStatus to "Unavailable"
+            //var unit = _context.Units.FirstOrDefault(u => u.UnitID == leaseApplication.UnitId);
+            //if (unit != null)
+            //{
+            //    unit.AvailabilityStatus = "Occupied";
+            //    _context.SaveChanges(); // Save changes to update the unit status
+            //}
+            //else
+            //{
+            //    ModelState.AddModelError("", "The specified unit does not exist.");
+            //    return RedirectToAction("ATenantApply", new { unitId = leaseApplication.UnitId });
+            //}
  
 
             try

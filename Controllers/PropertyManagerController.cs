@@ -223,6 +223,14 @@ namespace PMS.Controllers
 
             var tenant = _context.Tenants.FirstOrDefault(t => t.TenantID == lease.TenantID);    
             tenant.IsActualTenant = true; // Set the tenant as the actual tenant
+
+            // Update the AvailabilityStatus of the associated unit
+            var unit = _context.Units.FirstOrDefault(u => u.UnitID == lease.UnitId);
+            if (unit != null)
+            {
+                unit.AvailabilityStatus = "Occupied"; // Set the unit to "Occupied"
+            }
+
             _context.SaveChanges();
 
             TempData["ShowPopup"] = true; // Indicate that the popup should be shown

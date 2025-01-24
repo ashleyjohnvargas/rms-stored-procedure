@@ -184,6 +184,32 @@
                                 </td>
                             </tr>
                             index++;
+                            <!-- Modal -->
+                            <div id="markAsDoneModal" class="modal">
+                                <div class="modal-content">
+                                    <div class="modal-header">Mark As Done</div>
+                                    <form asp-action="CompleteRequest" method="post" id="markAsDoneForm">
+                                        <input type="hidden" name="RequestId" value="@item.RequestID"/>
+
+                                        <label for="done-date">Date:</label>
+                                        <input type="text" id="done-date" name="Date" placeholder="Select a date" required>
+
+                                        <label for="done-time">Time:</label>
+                                        <input type="time" id="done-time" name="Time" required>
+                                     
+                                        <label for="done-comment">Comment:</label>
+                                        <textarea id="done-comment" rows="4" name="Comment" placeholder="Enter your comment"></textarea>
+
+                                        <label for="done-fee">Fee:</label>
+                                        <input type="number" id="done-fee" name="Cost" placeholder="Enter fee amount" required>
+
+                                        <div class="modal-buttons">
+                                            <button type="button" class="close-btn" id="closeModalBtn">Close</button>
+                                            <button type="submit" class="save-btn">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         }
                     }
                     else
@@ -200,38 +226,17 @@
 
     </main>
 
-
-    <!-- Modal -->
-    <div id="markAsDoneModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">Mark As Done</div>
-            <form id="markAsDoneForm">
-                <label for="done-date">Date:</label>
-                <input type="text" id="done-date" placeholder="Select a date" required>
-
-                <label for="done-time">Time:</label>
-                <input type="time" id="done-time" required>
-
-                <label for="done-comment">Comment:</label>
-                <textarea id="done-comment" rows="4" placeholder="Enter your comment"></textarea>
-
-                <label for="done-fee">Fee:</label>
-                <input type="number" id="done-fee" placeholder="Enter fee amount" required>
-
-                <div class="modal-buttons">
-                    <button type="button" class="close-btn" id="closeModalBtn">Close</button>
-                    <button type="submit" class="save-btn">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    // Initialize flatpickr for date picker
+    flatpickr("#done-date", {
+      dateFormat: "F j, Y",
+      defaultDate: new Date() // Default to today
+    });
 
-    // Modal functionality
+    //Modal functionality
     const modal = document.getElementById('markAsDoneModal');
     const openModalBtn = document.getElementById('markAsDoneBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -253,20 +258,4 @@
         modal.style.display = 'none';
       }
     });
-
-    // // Handle form submission
-    // form.addEventListener('submit', (event) => {
-    //   event.preventDefault();
-    //   const date = document.getElementById('done-date').value;
-    //   const time = document.getElementById('done-time').value;
-    //   const comment = document.getElementById('done-comment').value;
-    //   const fee = document.getElementById('done-fee').value;
-
-    //   // Save the data (you can replace this with an API call or database logic)
-    //   console.log({ date, time, comment, fee });
-
-    //   alert('Marked as done successfully!');
-    //   modal.style.display = 'none';
-    //   form.reset();
-    // });
 </script>

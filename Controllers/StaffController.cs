@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PMS.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PMS.Controllers
 {
@@ -97,7 +98,7 @@ namespace PMS.Controllers
 
             // Get all requests assigned to this staff where RequestStatus is not "Pending"
             var requests = staff.Requests
-                .Where(r => r.RequestStatus != "Pending")
+                .Where(r => r.RequestStatus == "Completed")
                 .ToList();
 
             // Build the view model to pass to the view
@@ -156,6 +157,60 @@ namespace PMS.Controllers
             // Redirect to the SMaintenanceAssignment view or wherever is appropriate
             return RedirectToAction("SMaintenanceAssignment");
         }
+
+
+        [HttpPost]
+        public IActionResult CompleteRequest(CompleteRequestViewModel model)
+        {
+            // Validate that all required fields are provided
+            if (model.Date == default || model.Time == null || model.Cost <= 0)
+            {
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Date, Time, and Cost are required fields.";
+                TempData["PopupTitle"] = "Missing required fields!";  // Set the custom title
+                TempData["PopupIcon"] = "error";  // Set the icon dynamically (can be success, error, info, warning)
+                return RedirectToAction("SMaintenanceAssignment");
+            }
+
+            // Retrieve the request from the database using the RequestId
+            var request = _context.Requests.FirstOrDefault(r => r.RequestID == model.RequestId);
+
+            if (request == null)
+            {
+                TempData["Error"] = "The specified request does not exist.";
+                return RedirectToAction("SMaintenanceAssignment");
+            }
+
+            // Update the CompletedDateTime with the combined Date and Time from the form
+            request.CompletedDateTime = model.Date.Add(model.Time);
+
+            // Update the RequestStatus to "Completed"
+            request.RequestStatus = "Completed";
+
+            // Update the Cost field of the request
+            request.Cost = model.Cost;
+
+            // Retrieve the associated staff using the StaffID from the request
+            var staff = _context.Staffs.FirstOrDefault(s => s.StaffID == request.StaffID);
+
+            if (staff != null)
+            {
+                // Set the IsVacant field of the staff to true
+                staff.IsVacant = true;
+            }
+
+            // Save the changes to the database
+            _context.SaveChanges();
+
+            // Set TempData for success message
+            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+            TempData["PopupMessage"] = "Request has been successfully completed.";
+            TempData["PopupTitle"] = "Request Completed!";  // Set the custom title
+            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
+
+            return RedirectToAction("SMaintenanceAssignment");
+        }
+
 
 
 

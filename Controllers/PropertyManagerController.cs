@@ -306,11 +306,6 @@ namespace PMS.Controllers
             return View(invoicePreviewModel);
         }
 
-
-        public IActionResult PMRequest()
-        {
-            return View();
-        }
         public IActionResult PMTenants()
         {
             return View();
@@ -967,6 +962,59 @@ namespace PMS.Controllers
 
             return RedirectToAction("PMActiveLease");
         }
+
+
+        public async Task<IActionResult> PMRequest()
+        {
+            // Get the logged-in user's ID from the session (for access control purposes if needed)
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account"); // Redirect to login if not logged in
+            }
+
+            // Fetch all requests where the associated tenant is an actual tenant
+            var requests = await _context.Requests
+                .Include(r => r.Tenant)
+                .ThenInclude(t => t.User) // Include tenant user details
+                .Include(r => r.Staff)
+                .ThenInclude(s => s.User) // Include staff user details
+                .Where(r => r.Tenant.IsActualTenant) // Only include requests for tenants where IsActualTenant is true
+                .ToListAsync();
+
+            // Map the requests to a ViewModel
+            var requestViewModels = new List<RequestViewModel>();
+
+            foreach (var request in requests)
+            {
+                // Fetch the unit details via Lease and Unit
+                var lease = await _context.Leases
+                    .Include(l => l.Unit)
+                    .FirstOrDefaultAsync(l => l.TenantID == request.TenantID);
+
+                var unitName = lease?.Unit?.UnitName ?? "N/A";
+
+                // Prepare the ViewModel
+                var requestViewModel = new RequestViewModel
+                {
+                    Tenant = $"{request.Tenant.User?.FirstName} {request.Tenant.User?.LastName}",
+                    Unit = unitName,
+                    RequestDate = request.RequestDateTime?.ToString("MM/dd/yyyy hh:mm tt") ?? "N/A",
+                    Issue = request.RequestType ?? "N/A",
+                    AssignedStaff = request.Staff?.User != null
+                        ? $"{request.Staff.User.FirstName} {request.Staff.User.LastName}"
+                        : "Unassigned",
+                    Status = request.RequestStatus ?? "N/A"
+                };
+
+                requestViewModels.Add(requestViewModel);
+            }
+
+            // Pass the ViewModel list to the view
+            return View(requestViewModels);
+        }
+
 
 
     }

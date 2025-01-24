@@ -2,7 +2,7 @@
     ViewData["Title"] = "Cozy Homes - Units";
     Layout = "~/Views/Shared/_LayoutPM.cshtml";
 }
-@model IEnumerable<LeaseViewModel>
+@model List<RequestViewModel>
 
 
 <!DOCTYPE html>
@@ -185,12 +185,12 @@
                 {
                     <tr>
                         <td>@index</td>
-                        <td>John Doe</td>
-                        <td>Unit 101</td>
-                        <td>2024-01-05</td>
-                        <td>Electrical</td>
-                        <td>Michael James</td>
-                        <td>Pending</td>
+                        <td>@request.Tenant</td>
+                        <td>@request.Unit</td>
+                        <td>@request.RequestDate</td>
+                        <td>@request.Issue</td>
+                        <td>@request.AssignedStaff</td>
+                        <td>@request.Status</td>
                     </tr>
                     index++;
                 }

@@ -3,6 +3,9 @@
     Layout = "~/Views/Shared/_LayoutATenant.cshtml";
 }
 
+@model List<RequestViewModel>
+
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -145,7 +148,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Tenant Name</th>
+                    <th>Tenant</th>
                     <th>Unit</th>
                     <th>Request Date</th>
                     <th>Issue</th>
@@ -161,12 +164,13 @@
                     {
                         <tr>
                             <td>@index</td>
-                            <td>John Doe</td>
-                            <td>Unit 101</td>
-                            <td>2024-01-05</td>
-                            <td>Electrical</td>
-                            <td>Michael James</td>
-                            <td>Pending</td>
+                            <td>@request.Tenant</td>
+                            <td>@request.Unit</td>
+                            <td>@request.RequestDate</td>
+                            <td>@request.Issue</td>
+                            <td>@request.AssignedStaff</td>
+                            <td>@request.Status</td>
+
                         </tr>
                         index++;
                     }

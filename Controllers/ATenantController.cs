@@ -465,12 +465,68 @@ namespace PMS.Controllers
         }
 
 
-
-
-        public IActionResult ATenantMaintenance()
+        public async Task<IActionResult> ATenantMaintenance()
         {
-            return View();
+            // Get the logged-in user's ID from the session
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account"); // Redirect to login if not logged in
+            }
+
+            // Find the Tenant based on the UserId
+            var tenant = await _context.Tenants
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.UserId == userId);
+
+            if (tenant == null)
+            {
+                return View(new List<RequestViewModel>()); // No tenant found, pass an empty list
+            }
+
+            // Fetch all requests for the Tenant
+            var requests = await _context.Requests
+                .Include(r => r.Tenant)
+                .Include(r => r.Staff)
+                .ThenInclude(s => s.User)
+                .Where(r => r.TenantID == tenant.TenantID)
+                .ToListAsync();
+
+            // Map the requests to a ViewModel
+            var requestViewModels = new List<RequestViewModel>();
+
+            foreach (var request in requests)
+            {
+                // Fetch the unit details via Lease and Unit
+                var lease = await _context.Leases
+                    .Include(l => l.Unit)
+                    .FirstOrDefaultAsync(l => l.TenantID == tenant.TenantID);
+
+                var unitName = lease?.Unit?.UnitName ?? "N/A";
+
+                // Prepare the ViewModel
+                var requestViewModel = new RequestViewModel
+                {
+                    Tenant = $"{tenant.User?.FirstName} {tenant.User?.LastName}",
+                    Unit = unitName,
+                    RequestDate = request.RequestDateTime?.ToString("MM/dd/yyyy hh:mm tt") ?? "N/A",
+                    Issue = request.RequestType ?? "N/A",
+                    AssignedStaff = request.Staff?.User != null
+                        ? $"{request.Staff.User.FirstName} {request.Staff.User.LastName}"
+                        : "Unassigned",
+                    Status = request.RequestStatus ?? "N/A"
+                };
+
+                requestViewModels.Add(requestViewModel);
+            }
+
+            // Pass the ViewModel list to the view
+            return View(requestViewModels);
         }
+
+
+
         public IActionResult ATenantEditProfile()
         {
             return View();

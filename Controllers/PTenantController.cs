@@ -20,7 +20,7 @@ namespace PMS.Controllers
         public async Task<IActionResult> PTenantUnits()
         {
             var units = await _context.Units
-            .Where(u => u.UnitStatus == "Active") // Filter for Active units
+            .Where(u => u.UnitStatus == "Active" && u.AvailabilityStatus == "Available") // Filter for Active units
             .Include(u => u.Images)  // Include images
             .ToListAsync();
 

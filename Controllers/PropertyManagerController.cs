@@ -101,6 +101,7 @@ namespace PMS.Controllers
                 {
                     LeaseID = l.LeaseID,
                     TenantName = l.LeaseDetails.FullName, // Tenant's FullName from LeaseDetail
+                    Email = l.LeaseDetails.Email,
                     UnitName = l.Unit.UnitName, // UnitName from Unit
                     MonthlyRent = l.Unit.PricePerMonth, // MonthlyRent from Unit
                     LeaseStartDate = l.LeaseStartDate,
@@ -123,6 +124,7 @@ namespace PMS.Controllers
                 {
                     LeaseID = l.LeaseID,
                     TenantName = l.LeaseDetails.FullName, // Tenant's FullName from LeaseDetail
+                    Email = l.LeaseDetails.Email,
                     UnitName = l.Unit.UnitName, // UnitName from Unit
                     MonthlyRent = l.Unit.PricePerMonth, // MonthlyRent from Unit
                     LeaseStartDate = l.LeaseStartDate,

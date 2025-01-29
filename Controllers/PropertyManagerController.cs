@@ -510,35 +510,8 @@ namespace PMS.Controllers
                 return View("EditUnitPage", unit);
             }
 
-            // Retrieve the unit from the database using the UnitID
-            var existingUnit = await _context.Units.FindAsync(unit.UnitID);
-            if (existingUnit == null)
-            {
-                return NotFound();
-            }
-
-            // Update the properties of the unit
-            existingUnit.UnitName = unit.UnitName;
-            existingUnit.UnitType = unit.UnitType;
-            existingUnit.UnitOwner = unit.UnitOwner;
-            existingUnit.Description = unit.Description;
-            existingUnit.PricePerMonth = unit.PricePerMonth;
-            existingUnit.SecurityDeposit = unit.SecurityDeposit;
-            existingUnit.Town = unit.Town;
-            existingUnit.Location = unit.Location;
-            existingUnit.Country = unit.Country;
-            existingUnit.State = unit.State;
-            existingUnit.City = unit.City;
-            existingUnit.ZipCode = unit.ZipCode;
-            existingUnit.NumberOfUnits = unit.NumberOfUnits;
-            existingUnit.NumberOfBedrooms = unit.NumberOfBedrooms;
-            existingUnit.NumberOfBathrooms = unit.NumberOfBathrooms;
-            existingUnit.NumberOfGarages = unit.NumberOfGarages;
-            existingUnit.NumberOfFloors = unit.NumberOfFloors;
-            existingUnit.UnitStatus = unit.UnitStatus;
-
-
             // Handle image upload if provided
+            string filePath = null;
             if (Images != null && Images.Any())
             {
                 // Define the folder path where images will be stored
@@ -550,57 +523,63 @@ namespace PMS.Controllers
                     Directory.CreateDirectory(imagesFolderPath);
                 }
 
-                // Remove existing images from the database (optional)
-                // _context.UnitImages.RemoveRange(existingUnit.Images);
-                // await _context.SaveChangesAsync();
-
                 foreach (var image in Images)
                 {
                     if (image.Length > 0)
                     {
                         // Define the file path to save the image
-                        var filePath = Path.Combine(imagesFolderPath, image.FileName);
+                        filePath = Path.Combine(imagesFolderPath, image.FileName);
 
                         // Save the image to the server
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
                             await image.CopyToAsync(stream);
                         }
-
-                        // Save the image metadata to the UnitImages table
-                        var unitImage = new UnitImage
-                        {
-                            UnitId = existingUnit.UnitID, // Link to the existing unit
-                            FilePath = $"/images/units/{image.FileName}" // Relative path for access in views
-                        };
-
-                        _context.UnitImages.Add(unitImage);
                     }
                 }
             }
 
-
-
             try
             {
-                // Save changes to the database
-                _context.Update(existingUnit);
-                await _context.SaveChangesAsync();
-                TempData["ShowPopup"] = true; // Indicate that the popup shou
-                TempData["PopupMessage"] = "Unit updated successfully!";
-                //TempData.Keep("ShowPopup");
-                //TempData.Keep("PopupMessage");
+                // Call the stored procedure to update the unit
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC RMS_SP_EDIT_UNIT @UnitID, @UnitName, @UnitType, @UnitOwner, @Description, @PricePerMonth, @SecurityDeposit, @Town, @Location, @Country, @State, @City, @ZipCode, @NumberOfUnits, @NumberOfBedrooms, @NumberOfBathrooms, @NumberOfGarages, @NumberOfFloors, @UnitStatus, @FilePath",
+                    new SqlParameter("@UnitID", unit.UnitID),
+                    new SqlParameter("@UnitName", unit.UnitName ?? (object)DBNull.Value),
+                    new SqlParameter("@UnitType", unit.UnitType ?? (object)DBNull.Value),
+                    new SqlParameter("@UnitOwner", unit.UnitOwner ?? (object)DBNull.Value),
+                    new SqlParameter("@Description", unit.Description ?? (object)DBNull.Value),
+                    new SqlParameter("@PricePerMonth", unit.PricePerMonth ?? (object)DBNull.Value),
+                    new SqlParameter("@SecurityDeposit", unit.SecurityDeposit ?? (object)DBNull.Value),
+                    new SqlParameter("@Town", unit.Town ?? (object)DBNull.Value),
+                    new SqlParameter("@Location", unit.Location ?? (object)DBNull.Value),
+                    new SqlParameter("@Country", unit.Country ?? (object)DBNull.Value),
+                    new SqlParameter("@State", unit.State ?? (object)DBNull.Value),
+                    new SqlParameter("@City", unit.City ?? (object)DBNull.Value),
+                    new SqlParameter("@ZipCode", unit.ZipCode ?? (object)DBNull.Value),
+                    new SqlParameter("@NumberOfUnits", unit.NumberOfUnits ?? (object)DBNull.Value),
+                    new SqlParameter("@NumberOfBedrooms", unit.NumberOfBedrooms ?? (object)DBNull.Value),
+                    new SqlParameter("@NumberOfBathrooms", unit.NumberOfBathrooms ?? (object)DBNull.Value),
+                    new SqlParameter("@NumberOfGarages", unit.NumberOfGarages ?? (object)DBNull.Value),
+                    new SqlParameter("@NumberOfFloors", unit.NumberOfFloors ?? (object)DBNull.Value),
+                    new SqlParameter("@UnitStatus", unit.UnitStatus),
+                    new SqlParameter("@FilePath", filePath ?? (object)DBNull.Value)
+                );
 
+                TempData["ShowPopup"] = true; // Indicate that the popup should be shown
+                TempData["PopupMessage"] = "Unit updated successfully!";
             }
             catch (Exception ex)
             {
-
                 // Log the error and display an error message
                 TempData["ErrorMessage"] = $"An error occurred while updating the unit: {ex.Message}";
             }
+
             // Redirect to the Units page or any other desired page
             return RedirectToAction("PMManageUnits");
         }
+
+
 
 
         // Soft delete unit

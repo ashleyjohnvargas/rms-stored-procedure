@@ -32,6 +32,9 @@ namespace PMS.Models
         // View for Staffs page
         public DbSet<PMStaffView> PMStaffView { get; set; }
 
+        // View for Units page
+        public DbSet<UnitViewModel> ActiveUnits { get; set; }
+
 
 
 
@@ -97,6 +100,12 @@ namespace PMS.Models
             modelBuilder.Entity<PMStaffView>()
                 .HasNoKey()
                 .ToView("RMS_VW_PMStaff");
+
+            modelBuilder.Entity<UnitViewModel>(entity =>
+            {
+                entity.HasNoKey();  // The view doesn't have a primary key
+                entity.ToView("RMS_VW_LIST_OF_UNITS");  // Map the view to the UnitViewModel
+            });
 
         }
     }

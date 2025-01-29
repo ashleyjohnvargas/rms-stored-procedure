@@ -166,17 +166,8 @@ namespace PMS.Controllers
         {
             try
             {
-                // Fetch data from the Units table
-                var units = await _context.Units
-                    .Where(u => u.UnitStatus == "Active") // Filter for active units
-                    .Select(u => new UnitViewModel
-                    {
-                        UnitId = u.UnitID,
-                        UnitName = u.UnitName,
-                        PricePerMonth = u.PricePerMonth,
-                        UnitStatus = u.UnitStatus
-                    })
-                    .ToListAsync();
+                // Fetch data from the view that filters active units
+                var units = await _context.ActiveUnits.ToListAsync();
 
                 // Pass the list of units to the view
                 return View(units);
@@ -187,6 +178,8 @@ namespace PMS.Controllers
                 return View(new List<UnitViewModel>()); // Return an empty list in case of error
             }
         }
+
+
 
 
         [HttpPost]

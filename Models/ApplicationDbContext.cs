@@ -23,6 +23,9 @@ namespace PMS.Models
         // View for Active Leases
         public DbSet<LeaseViewModel> LeaseView { get; set; }
 
+        // View for Payments page
+        public DbSet<ManagerPaymentViewModel> ManagerPaymentView { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -73,6 +76,12 @@ namespace PMS.Models
             modelBuilder.Entity<LeaseViewModel>()
                 .HasNoKey() // Specify that this entity does not have a primary key.
                 .ToView("VW_PMActiveLease"); // Map it to the database view.
+
+            modelBuilder.Entity<ManagerPaymentViewModel>(entity =>
+            {
+                entity.HasNoKey(); // No primary key since it's a view
+                entity.ToView("ManagerPaymentView"); // Specify the view name in the database
+            });
         }
     }
 }

@@ -113,26 +113,11 @@ namespace PMS.Controllers
 
         public IActionResult PMActiveLease()
         {
-            // Assuming _context is your DbContext instance
-            var leases = _context.Leases
-                .Include(l => l.Unit) // Include the related Unit entity
-                .Include(l => l.LeaseDetails) // Include the related LeaseDetail entity
-                .Where(l => l.LeaseStatus == "Active") // Filter leases with LeaseStatus of 'Pending'
-                .Select(l => new LeaseViewModel
-                {
-                    LeaseID = l.LeaseID,
-                    TenantName = l.LeaseDetails.FullName, // Tenant's FullName from LeaseDetail
-                    Email = l.LeaseDetails.Email,
-                    UnitName = l.Unit.UnitName, // UnitName from Unit
-                    MonthlyRent = l.Unit.PricePerMonth, // MonthlyRent from Unit
-                    LeaseStartDate = l.LeaseStartDate,
-                    LeaseEndDate = l.LeaseEndDate,
-                    LeaseStatus = l.LeaseStatus
-                })
-                .ToList();
+            var leases = _context.LeaseView.FromSqlRaw("SELECT * FROM VW_PMActiveLease").ToList();
 
             return View(leases);
         }
+
 
 
         public IActionResult DownloadLeaseAgreement(int id)

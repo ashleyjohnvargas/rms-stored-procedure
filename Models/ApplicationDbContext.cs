@@ -20,6 +20,10 @@ namespace PMS.Models
         // View for Pending Leases
         public DbSet<PendingLeaseViewModel> PendingLeasesView { get; set; }
 
+        // View for Active Leases
+        public DbSet<LeaseViewModel> LeaseView { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,6 +69,10 @@ namespace PMS.Models
             modelBuilder.Entity<PendingLeaseViewModel>()
                .HasNoKey() // Specify that this is a keyless entity since it's based on a view.
                .ToView("PendingLeasesView"); // Link the model to the database view.
+
+            modelBuilder.Entity<LeaseViewModel>()
+                .HasNoKey() // Specify that this entity does not have a primary key.
+                .ToView("VW_PMActiveLease"); // Map it to the database view.
         }
     }
 }

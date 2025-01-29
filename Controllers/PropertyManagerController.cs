@@ -289,22 +289,24 @@ namespace PMS.Controllers
 
 
 
-            // All validations passed, update the lease status
-            // Update the LeaseStatus in the database (pseudo code)
-            var lease = _context.Leases.Find(model.LeaseID);
-            lease.LeaseStatus = "Active";
-
-            var tenant = _context.Tenants.FirstOrDefault(t => t.TenantID == lease.TenantID);    
-            tenant.IsActualTenant = true; // Set the tenant as the actual tenant
-
-            // Update the AvailabilityStatus of the associated unit
-            var unit = _context.Units.FirstOrDefault(u => u.UnitID == lease.UnitId);
-            if (unit != null)
+            // Retrieve the lease record to get UnitID and TenantID
+            var lease = _context.Leases.FirstOrDefault(l => l.LeaseID == model.LeaseID);
+            if (lease == null)
             {
-                unit.AvailabilityStatus = "Occupied"; // Set the unit to "Occupied"
+                TempData["ShowPopup"] = true;
+                TempData["PopupMessage"] = "Lease record not found.";
+                TempData["PopupTitle"] = "Error!";
+                TempData["PopupIcon"] = "error";
+                return RedirectToAction("PMManageLease");
             }
 
-            _context.SaveChanges();
+            int? tenantId = lease.TenantID;
+            int? unitId = lease.UnitId;
+
+            // Call the stored procedure using ExecuteSqlRaw
+            _context.Database.ExecuteSqlRaw("EXEC RMS_SP_UPDATE_A_LEASE @p0, @p1, @p2",
+                parameters: new object[] { model.LeaseID, unitId, tenantId });
+
 
             TempData["ShowPopup"] = true; // Indicate that the popup should be shown
             TempData["PopupMessage"] = "Lease application has been successfully confirmed";

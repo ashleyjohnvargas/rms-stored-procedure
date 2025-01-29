@@ -1,6 +1,6 @@
 ﻿namespace PMS.Models
 {
-    public class StaffViewModel
+    public class PMStaffView
     {
         public int StaffID { get; set; }
         public string StaffName { get; set; } // Full name of the staff

@@ -672,35 +672,12 @@ namespace PMS.Controllers
 
         public IActionResult PMStaff()
         {
-            // Retrieve all staff from the database, including related User information
-            var staffList = _context.Staffs
-                .Where(staff => staff.UserId != null && staff.User.IsActive) // Filter by active users
-                .Select(staff => new
-                {
-                    StaffID = staff.StaffID,
-                    StaffName = staff.UserId != null ? staff.User.FirstName + " " + staff.User.LastName : "Unknown",
-                    StaffRole = staff.StaffRole,
-                    Shift = (staff.ShiftStartTime.HasValue && staff.ShiftEndTime.HasValue)
-                        ? (staff.ShiftStartTime.Value.Hour == 6 && staff.ShiftEndTime.Value.Hour == 14 ? "First"
-                        : staff.ShiftStartTime.Value.Hour == 14 && staff.ShiftEndTime.Value.Hour == 22 ? "Second"
-                        : staff.ShiftStartTime.Value.Hour == 22 || staff.ShiftStartTime.Value.Hour == 0 ? "Third"
-                        : "Unknown")
-                        : "Unknown",
-                    Availability = staff.IsVacant ? "Vacant" : "Occupied"
-                })
-                .ToList()
-                .Select(staff => new StaffViewModel
-                {
-                    StaffID = staff.StaffID,
-                    StaffName = staff.StaffName,
-                    StaffRole = staff.StaffRole,
-                    Shift = staff.Shift,
-                    Availability = staff.Availability
-                })
-                .ToList();
+            // Fetch data from the view
+            var staffList = _context.PMStaffView.ToList();
 
             return View(staffList);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> AddStaff(AddStaffViewModel model)

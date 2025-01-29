@@ -29,6 +29,10 @@ namespace PMS.Models
         // View for Requests page
         public DbSet<PMRequestView> PMRequestViews { get; set; }
 
+        // View for Staffs page
+        public DbSet<PMStaffView> PMStaffView { get; set; }
+
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -89,6 +93,10 @@ namespace PMS.Models
             modelBuilder.Entity<PMRequestView>()
                 .HasNoKey()
                 .ToView("RMS_VW_PMRequestView");
+
+            modelBuilder.Entity<PMStaffView>()
+                .HasNoKey()
+                .ToView("RMS_VW_PMStaff");
 
         }
     }

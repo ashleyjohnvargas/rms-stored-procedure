@@ -96,6 +96,9 @@ namespace PMS.Controllers
         }
 
 
+
+
+
         public IActionResult PMManageLease()
         {
             // Fetch data from the view using the DbContext

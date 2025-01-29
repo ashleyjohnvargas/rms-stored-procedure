@@ -19,31 +19,16 @@ namespace PMS.Controllers
 
         public async Task<IActionResult> PTenantUnits()
         {
-            var units = await _context.Units
-            .Where(u => u.UnitStatus == "Active" && u.AvailabilityStatus == "Available") // Filter for Active units
-            .Include(u => u.Images)  // Include images
-            .ToListAsync();
-
-
-
-            var unitViewModels = units.Select(u => new PTenantUnitViewModel
-            {
-                UnitId = u.UnitID,
-                UnitName = u.UnitName,
-                Description = u.Description,
-                NumberOfUnits = u.NumberOfUnits ?? 0,
-                NumberOfRooms = u.NumberOfBedrooms ?? 0 + (u.NumberOfBathrooms ?? 0), // Assuming total rooms = bedrooms + bathrooms
-                FirstImagePath = u.Images?.FirstOrDefault()?.FilePath ?? "" // Get the first image path
-            }).ToList();
+            var unitViewModels = await _context.PTenantUnitsView.ToListAsync();
 
             foreach (var unit in unitViewModels)
             {
-                Console.WriteLine($"Unit ID from Units list: {unit.UnitId}"); // For debugging
+                Console.WriteLine($"Unit ID from view: {unit.UnitId}"); // For debugging
             }
-
 
             return View(unitViewModels); // Return the view with the unit list
         }
+
 
 
         [HttpGet]

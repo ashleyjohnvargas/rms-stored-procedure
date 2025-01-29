@@ -35,6 +35,10 @@ namespace PMS.Models
         // View for Units page
         public DbSet<UnitViewModel> ActiveUnits { get; set; }
 
+        // View for Units page in Prospective Tenant    
+        public DbSet<PTenantUnitViewModel> PTenantUnitsView { get; set; }
+
+
 
 
 
@@ -106,6 +110,10 @@ namespace PMS.Models
                 entity.HasNoKey();  // The view doesn't have a primary key
                 entity.ToView("RMS_VW_LIST_OF_UNITS");  // Map the view to the UnitViewModel
             });
+
+            modelBuilder.Entity<PTenantUnitViewModel>()
+                .HasNoKey()
+                .ToView("RMS_VW_PTenantUnits");
 
         }
     }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PMS.Models;
+using Microsoft.Data.SqlClient;
+
 
 namespace PMS.Controllers
 {
@@ -1000,19 +1002,16 @@ namespace PMS.Controllers
                 return NotFound("Lease not found.");
             }
 
-            if (editLeaseFormModel.StartDate != null)
+            // Check for valid StartDate and EndDate in the form model, and only call the stored procedure if dates are provided
+            if (editLeaseFormModel.StartDate != null && editLeaseFormModel.EndDate != null)
             {
-                lease.LeaseStartDate = editLeaseFormModel.StartDate;
-                _context.Leases.Update(lease);
-            }
+                // Call the stored procedure to update the lease's start and end date
+                var leaseIdParam = new SqlParameter("@LeaseID", editLeaseFormModel.LeaseId);
+                var startDateParam = new SqlParameter("@StartDate", editLeaseFormModel.StartDate);
+                var endDateParam = new SqlParameter("@EndDate", editLeaseFormModel.EndDate);
 
-            if (editLeaseFormModel.EndDate != null)
-            {
-                lease.LeaseEndDate = editLeaseFormModel.EndDate;
-                _context.Leases.Update(lease);
+                _context.Database.ExecuteSqlRaw("EXEC RMS_SP_UPDATE_ACTIVE_LEASE @LeaseID, @StartDate, @EndDate", leaseIdParam, startDateParam, endDateParam);
             }
-
-            _context.SaveChanges();
 
             TempData["ShowPopup"] = true; // Indicate that the popup should be shown
             TempData["PopupMessage"] = "Lease has been updated successfully!";

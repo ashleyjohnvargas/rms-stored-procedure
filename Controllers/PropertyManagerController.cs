@@ -585,23 +585,22 @@ namespace PMS.Controllers
         // Soft delete unit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteUnit(int id)
+        public async Task<IActionResult> DeleteUnit(int id)
         {
             // Retrieve the unit from the database using the UnitID
-            var unit = _context.Units.FirstOrDefault(u => u.UnitID == id);
+            var unit = await _context.Units.FirstOrDefaultAsync(u => u.UnitID == id);
             if (unit == null)
             {
                 return NotFound();
             }
 
-            // Set the UnitStatus to "Inactive" for soft deletion
-            unit.UnitStatus = "Inactive";
-
             try
             {
-                // Update the unit status and save changes to the database
-                _context.Update(unit);
-                _context.SaveChanges();  // Synchronous save
+                // Call the stored procedure to soft delete the unit by setting the UnitStatus to "Inactive"
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC RMS_SP_SOFT_DELETE_UNIT @UnitID",
+                    new SqlParameter("@UnitID", id)
+                );
 
                 // Set a success message to show in the view
                 TempData["ShowPopup"] = true;  // Indicate that the popup should be shown
@@ -616,6 +615,7 @@ namespace PMS.Controllers
             // Redirect to the Units page after the action
             return RedirectToAction("PMManageUnits");
         }
+
 
 
         // Action method to search units by name or type

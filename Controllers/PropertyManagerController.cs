@@ -757,33 +757,27 @@ namespace PMS.Controllers
         //[HttpPost]
         public IActionResult DeleteStaff(int id)
         {
-            // Find the staff record using the provided staff ID
-            var staff = _context.Staffs.FirstOrDefault(s => s.StaffID == id);
-            if (staff == null)
+            try
             {
-                return NotFound("Staff not found.");
-            }
+                // Call the stored procedure to soft delete the staff
+                _context.Database.ExecuteSqlRaw("EXEC RMS_SP_SOFT_DELETE_STAFF @p0", id);
 
-            // Find the associated user using the UserId from the staff record
-            var user = _context.Users.FirstOrDefault(u => u.UserID == staff.UserId);
-            if (user == null)
+                TempData["ShowPopup"] = true;
+                TempData["PopupMessage"] = "Staff deleted successfully!";
+                TempData["PopupTitle"] = "Success!";
+                TempData["PopupIcon"] = "success";
+            }
+            catch (Exception ex)
             {
-                return NotFound("Associated user not found.");
+                TempData["ShowPopup"] = true;
+                TempData["PopupMessage"] = "Error deleting staff: " + ex.Message;
+                TempData["PopupTitle"] = "Error!";
+                TempData["PopupIcon"] = "error";
             }
-
-            // Set the IsActive field to false (soft delete)
-            user.IsActive = false;
-
-            // Save changes to the database
-            _context.SaveChanges();
-
-            TempData["ShowPopup"] = true; // Indicate that the popup should be shown
-            TempData["PopupMessage"] = "Staff deleted successfully!";
-            TempData["PopupTitle"] = "Success!";  // Set the custom title
-            TempData["PopupIcon"] = "success";  // Set the icon dynamically (can be success, error, info, warning)
 
             return RedirectToAction("PMStaff");
         }
+
 
         public IActionResult CancelPendingLease(int id)
         {

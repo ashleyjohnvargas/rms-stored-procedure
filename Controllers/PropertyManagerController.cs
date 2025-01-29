@@ -831,9 +831,8 @@ namespace PMS.Controllers
                 return NotFound("Lease not found.");
             }
 
-            lease.LeaseStatus = "Cancelled";
-            _context.Leases.Update(lease);
-            _context.SaveChanges();
+            // Call the stored procedure to cancel the lease
+            _context.Database.ExecuteSqlRaw("EXEC RMS_SP_CANCEL_PENDING_LEASE @p0", new object[] { id });
 
             TempData["ShowPopup"] = true; // Indicate that the popup should be shown
             TempData["PopupMessage"] = "Lease has been cancelled successfully!";

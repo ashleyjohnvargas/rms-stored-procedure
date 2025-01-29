@@ -17,6 +17,10 @@ namespace PMS.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Request> Requests { get; set; }
 
+        // View for Pending Leases
+        public DbSet<PendingLeaseViewModel> PendingLeasesView { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -57,6 +61,10 @@ namespace PMS.Models
             modelBuilder.Entity<Request>()
                 .Property(r => r.RequestStatus)
                 .HasDefaultValue("Pending");
+
+            modelBuilder.Entity<PendingLeaseViewModel>()
+               .HasNoKey() // Specify that this is a keyless entity since it's based on a view.
+               .ToView("PendingLeasesView"); // Link the model to the database view.
         }
     }
 }

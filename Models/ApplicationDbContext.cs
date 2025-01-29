@@ -26,6 +26,9 @@ namespace PMS.Models
         // View for Payments page
         public DbSet<ManagerPaymentViewModel> ManagerPaymentView { get; set; }
 
+        // View for Requests page
+        public DbSet<PMRequestView> PMRequestViews { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,6 +85,11 @@ namespace PMS.Models
                 entity.HasNoKey(); // No primary key since it's a view
                 entity.ToView("ManagerPaymentView"); // Specify the view name in the database
             });
+
+            modelBuilder.Entity<PMRequestView>()
+                .HasNoKey()
+                .ToView("RMS_VW_PMRequestView");
+
         }
     }
 }

@@ -2,7 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using PMS.Models;
 using Microsoft.Data.SqlClient;
-
+using System.Data;
+using System.IO;                          // For Directory and File operations
+using Microsoft.AspNetCore.Http;          // For IFormFile and file collection handling
+using System.Linq;                        // For LINQ operations (like checking if Images is null or contains any files)
+using System.Threading.Tasks;
 
 namespace PMS.Controllers
 {
@@ -418,47 +422,17 @@ namespace PMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddUnit(Unit model, IFormFileCollection Images)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(model); // Return the form with validation messages
-            //}
-
             try
             {
+                // Start a database transaction
                 using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    // Save Unit details to Units table
-                    var newUnit = new Unit
-                    {
-                        UnitName = model.UnitName,
-                        UnitType = model.UnitType,
-                        UnitStatus = model.UnitStatus,
-                        UnitOwner = model.UnitOwner,
-                        Description = model.Description,
-                        PricePerMonth = model.PricePerMonth,
-                        SecurityDeposit = model.SecurityDeposit,
-                        Town = model.Town,
-                        Location = model.Location,
-                        Country = model.Country,
-                        State = model.State,
-                        City = model.City,
-                        ZipCode = model.ZipCode,
-                        NumberOfUnits = model.NumberOfUnits,
-                        NumberOfBedrooms = model.NumberOfBedrooms,
-                        NumberOfBathrooms = model.NumberOfBathrooms,
-                        NumberOfGarages = model.NumberOfGarages,
-                        NumberOfFloors = model.NumberOfFloors
-                    };
-
-                    _context.Units.Add(newUnit);
-                    await _context.SaveChangesAsync();
-
-                    // Save images to UnitImages table and the filesystem
+                    // Now save images to UnitImages table
                     if (Images != null && Images.Any())
                     {
                         var imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "units");
 
-                        // Ensure the units folder exists
+                        // Ensure the images folder exists
                         if (!Directory.Exists(imagesFolderPath))
                         {
                             Directory.CreateDirectory(imagesFolderPath);
@@ -477,25 +451,41 @@ namespace PMS.Controllers
                                     await image.CopyToAsync(stream);
                                 }
 
-                                // Save metadata to the UnitImages table
-                                var unitImage = new UnitImage
-                                {
-                                    UnitId = newUnit.UnitID, // Link to the newly created unit
-                                    FilePath = $"/images/units/{image.FileName}" // Relative path for access in views
-                                };
-                                _context.UnitImages.Add(unitImage);
+                                // Call stored procedure to add Unit and capture the NewUnitID
+                                await _context.Database.ExecuteSqlRawAsync(
+                                    "EXEC RMS_SP_ADD_UNIT @UnitName, @UnitType, @UnitOwner, @Description, @PricePerMonth, @SecurityDeposit, @Town, @Location, @Country, @State, @City, @ZipCode, @NumberOfUnits, @NumberOfBedrooms, @NumberOfBathrooms, @NumberOfGarages, @NumberOfFloors, @UnitStatus,  @FilePath",
+                                    new SqlParameter("@UnitName", model.UnitName),
+                                    new SqlParameter("@UnitType", model.UnitType),
+                                    new SqlParameter("@UnitOwner", model.UnitOwner),
+                                    new SqlParameter("@Description", model.Description ?? (object)DBNull.Value),
+                                    new SqlParameter("@PricePerMonth", model.PricePerMonth ?? (object)DBNull.Value),
+                                    new SqlParameter("@SecurityDeposit", model.SecurityDeposit ?? (object)DBNull.Value),
+                                    new SqlParameter("@Town", model.Town ?? (object)DBNull.Value),
+                                    new SqlParameter("@Location", model.Location ?? (object)DBNull.Value),
+                                    new SqlParameter("@Country", model.Country ?? (object)DBNull.Value),
+                                    new SqlParameter("@State", model.State ?? (object)DBNull.Value),
+                                    new SqlParameter("@City", model.City ?? (object)DBNull.Value),
+                                    new SqlParameter("@ZipCode", model.ZipCode ?? (object)DBNull.Value),
+                                    new SqlParameter("@NumberOfUnits", model.NumberOfUnits ?? (object)DBNull.Value),
+                                    new SqlParameter("@NumberOfBedrooms", model.NumberOfBedrooms ?? (object)DBNull.Value),
+                                    new SqlParameter("@NumberOfBathrooms", model.NumberOfBathrooms ?? (object)DBNull.Value),
+                                    new SqlParameter("@NumberOfGarages", model.NumberOfGarages ?? (object)DBNull.Value),
+                                    new SqlParameter("@NumberOfFloors", model.NumberOfFloors ?? (object)DBNull.Value),
+                                    new SqlParameter("@UnitStatus", model.UnitStatus),
+                                    new SqlParameter("@FilePath", $"/images/units/{image.FileName}")
+
+                                );
                             }
                         }
-
-                        await _context.SaveChangesAsync();
                     }
 
+                    // Commit the transaction
                     await transaction.CommitAsync();
-                    TempData["ShowPopup"] = true; // Indicate that the popup shou
+                    TempData["ShowPopup"] = true;
                     TempData["PopupMessage"] = "Unit added successfully!";
                 }
 
-                return RedirectToAction("PMManageUnits"); // Redirect to the list of units
+                return RedirectToAction("PMManageUnits");
             }
             catch (Exception ex)
             {
@@ -504,6 +494,9 @@ namespace PMS.Controllers
                 return RedirectToAction("AddUnitPage");
             }
         }
+
+
+
 
 
         // POST: EditUnit

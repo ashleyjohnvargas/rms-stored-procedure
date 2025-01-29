@@ -836,28 +836,10 @@ namespace PMS.Controllers
                 return NotFound("Lease not found.");
             }
 
-            lease.LeaseStatus = "Inactive";
-            _context.Leases.Update(lease);
+            // Call the stored procedure to deactivate the lease
+            var leaseIdParam = new SqlParameter("@LeaseID", id);
 
-            var tenant = _context.Tenants.FirstOrDefault(t => t.TenantID == lease.TenantID);
-            if (tenant == null)
-            {
-                return NotFound("Tenant not found.");
-            }
-
-            tenant.IsActualTenant = false;
-            _context.Tenants.Update(tenant);
-
-            var unit = _context.Units.FirstOrDefault(u => u.UnitID == lease.UnitId);
-            if (unit == null)
-            {
-                return NotFound("Unit not found.");
-            }
-
-            unit.AvailabilityStatus = "Available";
-            _context.Units.Update(unit);
-
-            _context.SaveChanges();
+            _context.Database.ExecuteSqlRaw("EXEC RMS_SP_DEACTIVATE_ACTIVE_LEASE @LeaseID", leaseIdParam);
 
 
             TempData["ShowPopup"] = true; // Indicate that the popup should be shown
